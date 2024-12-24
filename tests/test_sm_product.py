@@ -6,7 +6,7 @@ from pages.product_page import ProductPage
 import pytest
 
 @allure.feature("Smoke Suite for Product Page")
-class TestProductPage:
+class TestSmokeProductPage:
 
     """Создание продукта"""
     @allure.title("Create Product")
