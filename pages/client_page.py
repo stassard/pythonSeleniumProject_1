@@ -21,6 +21,14 @@ class ClientPage(Base):
     # Data
     ignored_exceptions = (
     NoSuchElementException, StaleElementReferenceException, TimeoutException, ElementClickInterceptedException)
+    path_upload = "D:\\PythonEducation\\autoProjectOnlineStore\\files_upload\\магнит.jpg"
+    create_name = f"Test {random.randint(11234, 987659)}"
+    update_name = f"Test {random.randint(11234, 987659)}"
+    create_external_id = f"Test {random.randint(11234, 987659)}"
+    create_parent = f"Test {random.randint(11234, 987659)}"
+    update_parent = f"Test {random.randint(11234, 987659)}"
+    create_type = f"Test {random.randint(11234, 987659)}"
+    update_type = f"Test {random.randint(11234, 987659)}"
 
     # Locators
     head_of_client_page = "//div[@class='ps-font-TopHeader text-indigo-950']"  # Заголовок страницы Клиенты
@@ -37,13 +45,14 @@ class ClientPage(Base):
     input_dispatch_end_before_day = "(//input[contains(@data-pc-name,'pcinput')])[2]"  # Поле Dispatch End Before Day
     list_of_invoice_types_card = f"//li[@aria-posinset='{random.randint(1, 2)}']"  # Список Invoice Types
     list_of_affiliations_card = f"//li[@aria-posinset='{random.randint(1, 2)}']"  # Список Affiliations
-    # button_upload_file = "//button[contains(@class,'prospace-button--secondary')]"  # Кнопка Upload File
+    button_upload_file = "//input[@type='file']"  # Кнопка Upload File
     button_create_card = "//button[contains(@items,'[object Object]')]"  # Кнопка Create
     _3_dots_card = "(//div/div/button[@class='prospace-icon-button'])[4]"  # Троеточие в карточке продукта
     link_delete_in_3_dots_card = "//div[contains(@class,'prospace-dots-item')]"  # Кнопка Delete в троеточии в карточке
     x_icon_card = "(//div/div/button[@class='prospace-icon-button'])[5]"  # Иконка X в карточке создания продукта
+    name_of_added_file = "//span[contains(@class,'text-purple-800')]"     # Имя прикрепленного файла
 
-    ## Грид продуктов
+    ## Грид клиентов
     _3_dots_grid = "//div[@class='flex justify-center']/button[@class='prospace-icon-button']"  # Троеточия в гриде
     link_delete_restore_in_3_dots_grid = "(//div[contains(@class, 'prospace-dots-item')])[2]"  # Кнопка Delete в троеточии в гриде
     client_name = "//div[contains(@class, 'border-dotted')]"  # Имя клиента в гриде
@@ -72,7 +81,7 @@ class ClientPage(Base):
     any_affiliation_in_grid = "//span[text()='Affiliation']/following-sibling::div[@class='text-ellipsis']"  # Affiliation в гриде
     counter_all_filters = "//div[contains(@class,'all-filters')]/span[@class='prospace-counter-box']"  # Каунтер на кнопке All Filters
 
-    ##  Форма созданного продукта
+    ##  Форма созданного клиента
     mode_switcher = "//span[@class='p-inputswitch-slider']"  # Свитчер режимов
     button_save = "//button[contains(@class,'prospace-button--with-icon')]"  # Кнопка Сохранить
     product_id = "//div[contains(@class, 'item-id')]"  # ID продукта в карточке продукта
@@ -97,3 +106,145 @@ class ClientPage(Base):
     button_clear_filters = "//button[contains(@class, 'prospace-button--secondary')]"  # Кнопка Clear
     x_icon_filters = "(//div[contains(@class, 'prospace-boxed-icon-button')]/button[@class='prospace-icon-button'])[3]"  # Иконка X в расширенных фильтрах
     x_icons_input_filters = "//div[@class='header']/div[contains(@class,'items-center')]"  # Иконки X в расширенных фильтрах индивидуально для каждого поля
+
+    # Getters
+    def upload_file(self, file):
+        return self.element_is_present(self.button_upload_file).send_keys(file)
+
+    def get_text_to_be_present_in_element_value_name(self, el1, el2):
+        return self.text_to_be_present_in_element_value(el1, el2)
+
+    def get_input_name_card(self):
+        return self.element_is_clickable(self.input_name_card)
+
+    def get_input_external_id_card(self):
+        return self.element_is_clickable(self.input_external_id_card)
+
+    def get_input_parent_card(self):
+        return self.element_is_clickable(self.input_parent_card)
+
+    def get_input_type_card(self):
+        return self.element_is_clickable(self.input_type_card)
+
+    def get_input_dispatch_start_before_day(self):
+        return self.element_is_clickable(self.input_dispatch_start_before_day)
+
+    def get_input_dispatch_end_before_day(self):
+        return self.element_is_clickable(self.input_dispatch_end_before_day)
+
+    def get_input_search_grid(self):
+        return self.element_is_clickable(self.input_search_grid)
+
+    # Actions
+    def click_button(self, el):
+        return self.element_is_clickable(el).click()
+
+    def get_text(self, el):
+        return self.element_is_visible(el).text
+
+    def is_visible(self, el):
+        return self.element_is_visible(el)
+
+    def is_not_visible(self, el):
+        return self.element_is_not_visible(el)
+
+
+    def enter_in_name_input(self, el):
+        return self.get_input_name_card().send_keys(el)
+
+    def enter_in_external_id_input(self, el):
+        return self.get_input_external_id_card().send_keys(el)
+
+    def enter_in_parent_input(self, el):
+        return self.element_is_clickable(self.input_parent_card).send_keys(el)
+
+    def enter_in_type_input(self, el):
+        return self.get_input_type_card().send_keys(el)
+
+    # def enter_in_dispatch_start_before_day_input(self, el):
+    #     return self.get_input_dispatch_start_before_day().send_keys(el)
+
+    # def enter_in_dispatch_end_before_day_input(self, el):
+    #     return self.get_input_dispatch_end_before_day().send_keys(el)
+
+    def open_last_client(self):
+        return self.element_is_clickable(self.last_client_name_in_grid).click()
+
+    def open_any_client(self):
+        return self.element_is_clickable(self.client_name).click()
+
+    def enter_in_search_field(self, name):
+        return self.get_input_search_grid().send_keys(name)
+
+    def open_deleted_tab(self):
+        return self.element_is_clickable(self.deleted_tab_grid).click()
+
+    def open_all_tab(self):
+        return self.element_is_clickable(self.all_tab_grid).click()
+
+    def enter_in_name_input_filters(self, el):
+        return self.element_is_clickable(self.input_name_filters).send_keys(el)
+
+    def enter_in_type_input_filters(self, el):
+        return self.element_is_clickable(self.input_type_filters).send_keys(el)
+
+    def enter_in_dispatch_start_before_day_from_input_filters(self, el):
+        return self.element_is_clickable(self.input_dispatch_start_before_day_from_filters).send_keys(el)
+
+    def enter_in_dispatch_start_before_day_to_input_filters(self, el):
+        return self.element_is_clickable(self.input_dispatch_start_before_day_to_filters).send_keys(el)
+
+    def enter_in_dispatch_end_before_day_from_input_filters(self, el):
+        return self.element_is_clickable(self.input_dispatch_end_before_day_from_filters).send_keys(el)
+
+    def enter_in_dispatch_end_before_day_to_input_filters(self, el):
+        return self.element_is_clickable(self.input_dispatch_end_before_day_to_filters).send_keys(el)
+
+
+    # Methods
+    def open_clients_dict(self):
+        with allure.step("Open Clients page"):
+            Logger.add_start_step(method="open_clients_dict")
+            self.click_button(self.side_button_modules)
+            self.click_button(self.link_clients)
+            self.assert_word(self.is_visible(self.head_of_client_page), "Clients")
+            print("Открыта страница Clients")
+            Logger.add_end_step(url=self.driver.current_url, method="open_clients_dict")
+
+    def create_client(self):
+        """Создание клиента"""
+        with allure.step("Create Client"):
+            Logger.add_start_step(method="create_client")
+            self.click_button(self.button_create_new_card)
+            self.enter_in_name_input(self.create_name)
+            self.enter_in_external_id_input(self.create_external_id)
+            self.enter_in_parent_input(self.create_parent)
+            self.enter_in_type_input(self.create_type)
+            self.click_button(self.selector_invoice_type_card)
+            self.click_button(self.list_of_invoice_types_card)
+            self.click_button(self.selector_affiliation_card)
+            self.click_button(self.list_of_affiliations_card)
+            self.get_input_dispatch_start_before_day().clear()
+            self.get_input_dispatch_start_before_day().send_keys(random.randint(1, 10))
+            self.get_input_dispatch_end_before_day().clear()
+            self.get_input_dispatch_end_before_day().send_keys(random.randint(1, 10))
+            self.upload_file(self.path_upload)
+            name_of_added_file = self.get_text(self.name_of_added_file)
+            self.click_button(self.button_create_card)
+            self.is_not_visible(self.button_create_card)
+            self.browser_refresh()
+
+            """Проверка, что создан корректный клиент"""
+            fact_name = self.get_text(self.last_client_name_in_grid)
+            fact_external_id = self.get_text(self.last_external_id_in_grid)
+            fact_parent = self.get_text(self.last_parent_in_grid)
+            fact_type = self.get_text(self.last_type_in_grid)
+            assert self.create_name == fact_name, "Имя клиента не соответствует созданному"
+            assert str(self.create_external_id) == str(fact_external_id), "External ID клиента не соответствует созданному"
+            assert str(self.create_parent) == str(fact_parent), "Parent клиента не соответствует созданному"
+            assert self.create_type == fact_type, "Type клиента не соответствует созданной"
+            assert "магнит.jpg" == name_of_added_file, "Имя добавленного файла отображается некорректно"
+            print("Создан корректный клиент")
+            Logger.add_end_step(url=self.driver.current_url, method="create_client")
+
+
