@@ -6,6 +6,8 @@ from selenium.common.exceptions import TimeoutException
 from selenium.common.exceptions import ElementClickInterceptedException
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver import Keys
+from selenium.webdriver.common.by import By
+
 from base.base_class import Base
 from utilities.logger import Logger
 
@@ -89,7 +91,7 @@ class ProductPage(Base):
     button_save = "//button[contains(@class,'prospace-button--with-icon')]"              # Кнопка Сохранить
     product_id = "//div[contains(@class, 'item-id')]"                                    # ID продукта в карточке продукта
     x_icon = "(//div/div/button[@class='prospace-icon-button'])[6]"                      # Иконка X в карточке созданного продукта
-
+    value_of_unit_of_measure_card = "//span[contains(@class,'p-dropdown-label')]/span"   # Значение поля Unit of Measure
 
     ## Окно Delete Item
     button_delete_item = "(//button[contains(@class,'prospace-button--primary')])[2]"    # Кнопка Удалить айтем
@@ -483,36 +485,35 @@ class ProductPage(Base):
             Logger.add_end_step(url=self.driver.current_url, method="update_product")
 
 
-        """TODO: переделать итерацию по именам"""
-    # def restore_product_from_three_dots_grid(self):
-    #     """Восстановление продукта из помеченных на удаление через троеточие в гриде"""
-    #     with allure.step("Restore Product using Dots in Grid"):
-    #         Logger.add_start_step(method="restore_product_from_three_dots_grid")
-    #         self.open_deleted_tab()
-    #         self.is_visible(self.deleted_tab_grid_is_active)
-    #         try:
-    #             name = self.get_text(self.last_prod_name_in_grid)
-    #             self.click_button(self._3_dots_grid)
-    #             self.click_button(self.link_delete_restore_in_3_dots_grid)
-    #         except self.ignored_exceptions:
-    #             try:
-    #                 name = self.get_text(self.last_prod_name_in_grid)
-    #                 self.click_button(self._3_dots_grid)
-    #                 self.click_button(self.link_delete_restore_in_3_dots_grid)
-    #             except self.ignored_exceptions:
-    #                 print("Элемент не найден")
-    #         # self.click_button_delete_item()      # Пока что модального окна нет - баг
-    #
-    #         """Проверка, что продукт переместился во вкладку All"""
-    #         self.browser_refresh()
-    #         self.open_all_tab()
-    #         self.is_visible(self.all_tab_grid_is_active)
-    #         for x in self.product_name:
-    #             if x == name:
-    #                 print(x)
-    #                 assert name == x, "Ошибка при восстановлении продукта"
-    #         print("Продукт успешно восстановлен")
-    #         Logger.add_end_step(url=self.driver.current_url, method="restore_product_from_three_dots_grid")
+    def restore_product_from_three_dots_grid(self):
+        """Восстановление продукта из помеченных на удаление через троеточие в гриде"""
+        with allure.step("Restore Product using Dots in Grid"):
+            Logger.add_start_step(method="restore_product_from_three_dots_grid")
+            self.open_deleted_tab()
+            self.is_visible(self.deleted_tab_grid_is_active)
+            count_of_items_before = self.get_text(self.count_items_in_footer_grid)
+            print(f"Количество продуктов на вкладке Deleted до рестора: {count_of_items_before}")
+            try:
+                self.click_button(self._3_dots_grid)
+                self.click_button(self.link_delete_restore_in_3_dots_grid)
+            except self.ignored_exceptions:
+                try:
+                    self.click_button(self._3_dots_grid)
+                    self.click_button(self.link_delete_restore_in_3_dots_grid)
+                except self.ignored_exceptions:
+                    print("Элемент не найден")
+            # self.click_button_delete_item()      # Пока что модального окна нет - баг
+
+            """Проверка, что продукт переместился во вкладку All"""
+            self.browser_refresh()
+            self.open_deleted_tab()
+            self.is_visible(self.deleted_tab_grid_is_active)
+            count_of_items_after = self.get_text(self.count_items_in_footer_grid)
+            print(f"Количество продуктов на вкладке Deleted после рестора: {count_of_items_after}")
+            assert int(count_of_items_after) == int(count_of_items_before) - 1, \
+                "Ошибка при восстановлении продукта через троеточие в гриде"
+            print("Продукт успешно восстановлен")
+            Logger.add_end_step(url=self.driver.current_url, method="restore_product_from_three_dots_grid")
 
 
 
@@ -524,7 +525,6 @@ class ProductPage(Base):
             print(f"Количество продуктов на вкладке All до фильтрации: {count_of_items_before}")
             any_name_in_grid = self.get_text(self.product_name)
             print(f"Выбранное для фильтрации имя продукта: {any_name_in_grid}")
-            print(any_name_in_grid)
             self.click_button(self.button_all_fiters)
             self.enter_in_sku_name_input_filters(any_name_in_grid)
             print("Имя продукта введено в поле SKU Name")
@@ -551,10 +551,10 @@ class ProductPage(Base):
         with allure.step("Filter Products by Category using All Filters"):
             Logger.add_start_step(method="filters_product_by_category")
             any_category_in_grid_before = self.get_text(self.any_category_in_grid)
-            print(any_category_in_grid_before)
+            print(f"Выбранная для фильтрации категория продукта: {any_category_in_grid_before}")
             self.click_button(self.button_all_fiters)
             self.enter_in_category_input_filters(any_category_in_grid_before)
-            print("Категория продукта введена в поле Category")
+            print(f"Категория продукта '{any_category_in_grid_before}' введена в поле Category")
             if self.get_text(self.counter_filters) == "1":
                 self.click_button(self.button_apply_filters)
             print("Клик Apply")
@@ -562,6 +562,7 @@ class ProductPage(Base):
             """Проверка, что продукты отфильтровались по категории"""
             self.is_not_visible(self.button_apply_filters)
             any_category_in_grid_after = self.get_text(self.any_category_in_grid)
+            print(f"Категории отфильтрованных продуктов в гриде: {any_category_in_grid_after}")
             assert self.is_visible(self.counter_all_filters), "Не отображается каунтер на All Filters"
             assert str(any_category_in_grid_before) == str(any_category_in_grid_after), "Ошибка при фильтрации по категории или категории продуктов не совпадают"
             print("Фильтрация корректна")
@@ -574,10 +575,10 @@ class ProductPage(Base):
         with allure.step("Filter Products by Brand using All Filters"):
             Logger.add_start_step(method="filters_product_by_brand")
             any_brand_in_grid_before = self.get_text(self.any_brand_in_grid)
-            print(any_brand_in_grid_before)
+            print(f"Выбранный для фильтрации бренд продукта: {any_brand_in_grid_before}")
             self.click_button(self.button_all_fiters)
             self.enter_in_brand_input_filters(any_brand_in_grid_before)
-            print("Бренд продукта введен в поле Category")
+            print(f"Бренд продукта '{any_brand_in_grid_before}' введен в поле Brand")
             if self.get_text(self.counter_filters) == "1":
                 self.click_button(self.button_apply_filters)
             print("Клик Apply")
@@ -585,6 +586,7 @@ class ProductPage(Base):
             """Проверка, что продукты отфильтровались по бренду"""
             self.is_not_visible(self.button_apply_filters)
             any_brand_in_grid_after = self.get_text(self.any_brand_in_grid)
+            print(f"Бренды отфильтрованных продуктов в гриде: {any_brand_in_grid_after}")
             print(any_brand_in_grid_after)
             assert self.is_visible(self.counter_all_filters), "Не отображается каунтер на All Filters"
             assert str(any_brand_in_grid_before) == str(any_brand_in_grid_after), "Ошибка при фильтрации по бренду или бренды продуктов не совпадают"
@@ -598,10 +600,10 @@ class ProductPage(Base):
         with allure.step("Filter Products by Unit of Measure using All Filters"):
             Logger.add_start_step(method="filters_product_by_unit_of_measure")
             any_unit_of_measure_in_grid_before = self.get_text(self.any_unit_of_measure_in_grid)
-            print(any_unit_of_measure_in_grid_before)
+            print(f"Выбранная для фильтрации единица измерения продукта: {any_unit_of_measure_in_grid_before}")
             self.click_button(self.button_all_fiters)
             self.enter_in_unit_of_measure_input_filters(any_unit_of_measure_in_grid_before)
-            print("Единица измерения продукта введена в поле Unit of Measure")
+            print(f"Единица измерения продукта '{any_unit_of_measure_in_grid_before}' введена в поле Unit of Measure")
             if self.get_text(self.counter_filters) == "1":
                 self.click_button(self.button_apply_filters)
             print("Клик Apply")
@@ -609,7 +611,7 @@ class ProductPage(Base):
             """Проверка, что продукты отфильтровались по единице измерения"""
             self.is_not_visible(self.button_apply_filters)
             any_unit_of_measure_in_grid_after = self.get_text(self.last_unit_of_measure_in_grid)
-            print(any_unit_of_measure_in_grid_after)
+            print(f"Единицы измерения отфильтрованных продуктов в гриде: {any_unit_of_measure_in_grid_after}")
             assert self.is_visible(self.counter_all_filters), "Не отображается каунтер на All Filters"
             assert str(any_unit_of_measure_in_grid_before) in str(any_unit_of_measure_in_grid_after), "Ошибка при фильтрации по единице измерения или единицы измерения продуктов не совпадают"
             print("Фильтрация корректна")
@@ -622,11 +624,11 @@ class ProductPage(Base):
         with allure.step("Filter Products by Unit using All Filters"):
             Logger.add_start_step(method="filters_product_by_unit")
             any_unit_in_grid_before = self.get_text(self.any_unit_in_grid)
-            print(any_unit_in_grid_before)
+            print(f"Выбранный для фильтрации юнит продукта: {any_unit_in_grid_before}")
             self.click_button(self.button_all_fiters)
             self.enter_in_unit_from_input_filters(any_unit_in_grid_before)
             self.enter_in_unit_to_input_filters(any_unit_in_grid_before)
-            print("Юнит продукта введен в поля Unit from и Unit to")
+            print(f"Юнит продукта '{any_unit_in_grid_before}' введен в поля Unit from и Unit to")
             if self.get_text(self.counter_filters) == "2":
                 self.click_button(self.button_apply_filters)
             print("Клик Apply")
@@ -634,7 +636,7 @@ class ProductPage(Base):
             """Проверка, что продукты отфильтровались по юниту"""
             self.is_not_visible(self.button_apply_filters)
             any_unit_in_grid_after = self.get_text(self.any_unit_in_grid)
-            print(any_unit_in_grid_after)
+            print(f"Юниты отфильтрованных продуктов в гриде: {any_unit_in_grid_after}")
             assert self.is_visible(self.counter_all_filters), "Не отображается каунтер на All Filters"
             assert str(any_unit_in_grid_before) == str(any_unit_in_grid_after), "Ошибка при фильтрации по юниту или юниты продуктов не совпадают"
             print("Фильтрация корректна")
@@ -643,28 +645,39 @@ class ProductPage(Base):
 
 
     def read_product(self):
-        """Прочесть информацию в правой панели продукта"""
+        """Получить информацию о последнем созданном продукте из грида"""
         with allure.step("Read Product"):
             Logger.add_start_step(method="read_product")
             self.open_last_product()
-            expected_name = self.get_text(self.last_prod_name_in_grid)
-            expected_eanc = self.get_text(self.last_eanc_in_grid)
-            expected_eanp = self.get_text(self.last_eanp_in_grid)
-            expected_category = self.get_text(self.last_category_in_grid)
-            expected_technology = self.get_text(self.last_technology_in_grid)
-            expected_brand = self.get_text(self.last_brand_in_grid)
-            # expected_unit_of_measure = self.get_last_unit_of_measure_in_grid()
-            # expected_unit = self.get_last_unit_in_grid()
+            grid_name = self.get_text(self.last_prod_name_in_grid)
+            grid_eanc = self.get_text(self.last_eanc_in_grid)
+            grid_eanp = self.get_text(self.last_eanp_in_grid)
+            grid_category = self.get_text(self.last_category_in_grid)
+            grid_brand = self.get_text(self.last_brand_in_grid)
+            grid_unit_of_measure = self.get_text(self.last_unit_of_measure_in_grid)
+            grid_unit = self.get_text(self.last_unit_in_grid)
 
             """Проверка, что информация в правой панели соответствует информации в гриде"""
-            self.get_text_to_be_present_in_element_value_name(self.input_name_card, expected_name)
-            self.get_text_to_be_present_in_element_value_name(self.input_EANC_card, expected_eanc)
-            self.get_text_to_be_present_in_element_value_name(self.input_EANP_card, expected_eanp)
-            self.get_text_to_be_present_in_element_value_name(self.input_category_card, expected_category)
-            self.get_text_to_be_present_in_element_value_name(self.input_technology_card, expected_technology)
-            self.get_text_to_be_present_in_element_value_name(self.input_brand_card, expected_brand)
-            # # self.get_text_to_be_present_in_element_value_name(self.unit_of_measure_card, expected_unit_of_measure)
-            # self.get_text_to_be_present_in_element_value_name(self.input_unit_card, expected_unit)
+            card_name = self.driver.find_element(By.XPATH, self.input_name_card).get_attribute("value")
+            card_eanc = self.driver.find_element(By.XPATH, self.input_EANC_card).get_attribute("value")
+            card_eanp = self.driver.find_element(By.XPATH, self.input_EANP_card).get_attribute("value")
+            card_category = self.driver.find_element(By.XPATH, self.input_category_card).get_attribute("value")
+            card_brand = self.driver.find_element(By.XPATH, self.input_brand_card).get_attribute("value")
+            card_unit = self.driver.find_element(By.XPATH, self.input_unit_card).get_attribute("value")
+            card_unit_of_measure = self.get_text(self.value_of_unit_of_measure_card)
+            assert grid_name == card_name, "Имена продуктов не совпадают"
+            assert grid_eanc == card_eanc, "EAN Case продуктов не совпадают"
+            assert grid_eanp == card_eanp, "EAN Pc продуктов не совпадают"
+            assert grid_category == card_category, "Category продуктов не совпадают"
+            assert grid_brand == card_brand, "Brand продуктов не совпадают"
+            assert grid_unit == card_unit, "Unit продуктов не совпадают"
+            assert grid_unit_of_measure == card_unit_of_measure, "Unit of Measure продуктов не совпадают"
+            print(f"Имя продукта в гриде: {grid_name}, в карточке: {card_name}")
+            print(f"EAN Case продукта в гриде: {grid_eanc}, в карточке: {card_eanc}")
+            print(f"Category продукта в гриде: {grid_category}, в карточке: {card_category}")
+            print(f"Brand продукта в гриде: {grid_brand}, в карточке: {card_brand}")
+            print(f"Unit продукта в гриде: {grid_unit}, в карточке: {card_unit}")
+            print(f"Unit of Measure продукта в гриде: {grid_unit_of_measure}, в карточке: {card_unit_of_measure}")
             Logger.add_end_step(url=self.driver.current_url, method="read_product")
 
 
@@ -726,7 +739,7 @@ class ProductPage(Base):
             self.enter_in_unit_to_input_filters(random.randint(1, 10))
             self.click_button(self.x_icons_input_filters)
             assert self.is_not_visible(self.counter_filters), "Индивидуальные кнопки очистки расширенных фильтров не работают"
-            print("Индивидуальные кнопки очистки расширенных фильтров не работают")
+            print("Индивидуальные кнопки очистки расширенных фильтров работают")
             Logger.add_end_step(url=self.driver.current_url, method="check_x_icon_inside_filters")
 
 
