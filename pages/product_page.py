@@ -249,6 +249,13 @@ class ProductPage(Base):
             assert self.create_technology == fact_technology, "Технология продукта не соответствует созданной"
             assert self.create_brand == fact_brand, "Бренд продукта не соответствует созданному"
             assert str(self.create_unit) == str(fact_unit), "Юнит продукта не соответствует созданному"
+            print(f"Ожидаемое имя продукта: {self.create_name}, фактическое: {fact_name}")
+            print(f"Ожидаемый EAN Case продукта: {self.create_eanc}, фактический: {fact_eanc}")
+            print(f"Ожидаемый EAN Pc продукта: {self.create_eanp}, фактический: {fact_eanp}")
+            print(f"Ожидаемый Category продукта: {self.create_category}, фактический: {fact_category}")
+            print(f"Ожидаемый Technology продукта: {self.create_technology}, фактический: {fact_technology}")
+            print(f"Ожидаемый Brand продукта: {self.create_brand}, фактический: {fact_brand}")
+            print(f"Ожидаемый Unit продукта: {self.create_unit}, фактический: {fact_unit}")
             print("Создан корректный продукт")
             Logger.add_end_step(url=self.driver.current_url, method="create_product")
 
@@ -259,13 +266,15 @@ class ProductPage(Base):
         with allure.step("Delete Product using Dots In Grid"):
             Logger.add_start_step(method="delete_product_from_three_dots_grid")
             count_of_items_before = self.get_text(self.count_items_in_footer_grid)
+            print(f"Количество продуктов на вкладке All до удаления: {count_of_items_before}")
             self.click_button(self._3_dots_grid)
             self.click_button(self.link_delete_restore_in_3_dots_grid)
             self.click_button(self.button_delete_item)
 
             """Проверка, что продукт переместился во вкладку Deleted"""
             self.browser_refresh()
-            count_of_items_after = int(count_of_items_before) - 1
+            count_of_items_after = self.get_text(self.count_items_in_footer_grid)
+            print(f"Количество продуктов на вкладке All после удаления: {count_of_items_after}")
             assert int(count_of_items_after) == int(count_of_items_before) - 1, \
                 "Ошибка при удалении через троеточие в гриде"
             print("Продукт успешно удален")
@@ -278,6 +287,7 @@ class ProductPage(Base):
         with allure.step("Delete Product using Checkbox in Grid"):
             Logger.add_start_step(method="delete_product_from_checkbox_grid")
             count_of_items_before = self.get_text(self.count_items_in_footer_grid)
+            print(f"Количество продуктов на вкладке All до удаления: {count_of_items_before}")
             self.click_button(self.checkbox)
             count_deleted_items = self.get_text(self.counter_upper_panel)
             self.click_button(self.delete_button_upper_panel)
@@ -286,7 +296,8 @@ class ProductPage(Base):
 
             """Проверка, что продукт переместился во вкладку Deleted"""
             self.browser_refresh()
-            count_of_items_after = int(count_of_items_before) - int(count_deleted_items)
+            count_of_items_after = self.get_text(self.count_items_in_footer_grid)
+            print(f"Количество продуктов на вкладке All после удаления: {count_of_items_after}")
             assert int(count_of_items_after) == int(count_of_items_before) - int(count_deleted_items), \
                 "Ошибка при удалении продукта через чекбокс"
             print("Продукт успешно удален")
@@ -299,6 +310,7 @@ class ProductPage(Base):
         with allure.step("Multiselection Deleted Product using Checkboxes in Grid"):
             Logger.add_start_step(method="delete_4_product_from_checkbox_grid")
             count_of_items_before = self.get_text(self.count_items_in_footer_grid)
+            print(f"Количество продуктов на вкладке All до удаления: {count_of_items_before}")
             try:
                 self.click_button(self.checkbox)
                 while self.get_text(self.counter_upper_panel) != "4":
@@ -317,7 +329,8 @@ class ProductPage(Base):
 
             """Проверка, что продукты переместились во вкладку Deleted"""
             self.browser_refresh()
-            count_of_items_after = int(count_of_items_before) - 4
+            count_of_items_after = self.get_text(self.count_items_in_footer_grid)
+            print(f"Количество продуктов на вкладке All после удаления: {count_of_items_after}")
             assert int(count_of_items_after) == int(count_of_items_before) - 4, \
                 "Ошибка при удалении продуктов через чекбоксы"
             print("Продукты успешно удалены")
@@ -332,8 +345,10 @@ class ProductPage(Base):
             Logger.add_start_step(method="select_all_delete_product")
             try:
                 count_of_items_before = self.get_text(self.count_items_in_footer_grid)
+                print(f"Количество продуктов на вкладке All до удаления: {count_of_items_before}")
             except self.ignored_exceptions:
                 count_of_items_before = self.get_text(self.count_items_in_footer_grid)
+                print(f"Количество продуктов на вкладке All до удаления: {count_of_items_before}")
             self.click_button(self.select_all_checkbox)
             count_deleted_items = self.get_text(self.counter_upper_panel)
             self.click_button(self.delete_button_upper_panel)
@@ -341,7 +356,8 @@ class ProductPage(Base):
 
             """Проверка, что продукты переместился во вкладку Deleted"""
             self.browser_refresh()
-            count_of_items_after = int(count_of_items_before) - int(count_deleted_items)
+            count_of_items_after = self.get_text(self.count_items_in_footer_grid)
+            print(f"Количество продуктов на вкладке All после удаления: {count_of_items_after}")
             assert int(count_of_items_after) == int(count_of_items_before) - int(count_deleted_items), \
                 "Ошибка при удалении продуктов через Select All"
             print("Продукты успешно удалены")
@@ -353,7 +369,8 @@ class ProductPage(Base):
         """Удаление продукта через карточку продукта"""
         with allure.step("Delete Product from Card"):
             Logger.add_start_step(method="delete_product_from_card")
-            name = self.get_text(self.product_name)
+            count_of_items_before = self.get_text(self.count_items_in_footer_grid)
+            print(f"Количество продуктов на вкладке All до удаления: {count_of_items_before}")
             self.open_last_product()
             print("Карточка продукта открыта")
             self.click_button(self._3_dots_card)
@@ -363,11 +380,10 @@ class ProductPage(Base):
 
             """Проверка, что продукт переместился во вкладку Deleted"""
             self.browser_refresh()
-            self.open_deleted_tab()
-            self.is_visible(self.deleted_tab_grid_is_active)
-            for x in self.product_name:
-                if x == name:
-                    assert name == x, "Ошибка при удалении продукта"
+            count_of_items_after = self.get_text(self.count_items_in_footer_grid)
+            print(f"Количество продуктов на вкладке All до удаления: {count_of_items_after}")
+            assert int(count_of_items_after) == int(count_of_items_before) - 1, \
+                "Ошибка при удалении продукта через карточку"
             print("Продукт успешно удален")
             Logger.add_end_step(url=self.driver.current_url, method="delete_product_from_card")
 
@@ -378,16 +394,16 @@ class ProductPage(Base):
         with allure.step("Find Product by Name"):
             Logger.add_start_step(method="find_product_by_name")
             any_name_in_grid = self.get_text(self.product_name)
-            print(any_name_in_grid)
+            print(f"Выбранное для поиска имя продукта: {any_name_in_grid}")
             self.enter_in_search_field(any_name_in_grid)
-            print("Имя продукта введено в поле поиска")
+            print(f"Имя продукта {any_name_in_grid} введено в поле поиска")
             self.get_input_search_grid().send_keys(Keys.RETURN)
             print("Enter")
 
             """Проверка, что найден корректный продукт"""
             if self.get_text(self.count_items_in_footer_grid) == "1":
                 first_name_in_grid = self.get_text(self.last_prod_name_in_grid)
-                print(first_name_in_grid)
+                print(f"Имя первого отображаемого продукта в гриде: {first_name_in_grid}")
                 assert str(any_name_in_grid) == str(first_name_in_grid), "Ошибка при поиске или имена продуктов не совпадают"
             print("Найден корректный продукт")
             Logger.add_end_step(url=self.driver.current_url, method="find_product_by_name")
@@ -400,10 +416,11 @@ class ProductPage(Base):
             Logger.add_start_step(method="find_product_by_id")
             self.open_any_product()
             any_id = self.get_text(self.product_id)
+            print(f"Выбранное для поиска ID продукта: {any_id}")
             self.click_button(self.x_icon_card)
             self.is_not_visible(self.button_create_card)
             self.enter_in_search_field(any_id)
-            print("ID продукта введено в поле поиска")
+            print(f"ID продукта {any_id} введено в поле поиска")
             self.get_input_search_grid().send_keys(Keys.RETURN)
             print("Enter")
 
@@ -411,6 +428,7 @@ class ProductPage(Base):
             if self.get_text(self.count_items_in_footer_grid) == "1":
                 self.open_last_product()
                 first_id = self.get_text(self.product_id)
+                print(f"ID первого отображаемого продукта в гриде: {first_id}")
                 assert str(any_id) == str(first_id), "Ошибка при поиске или id продуктов не совпадают"
             print("Найден корректный продукт")
             Logger.add_end_step(url=self.driver.current_url, method="find_product_by_id")
@@ -455,40 +473,46 @@ class ProductPage(Base):
             assert self.update_technology == fact_technology, "Технология продукта не соответствует обновленной"
             assert self.update_brand == fact_brand, "Бренд продукта не соответствует обновленному"
             assert str(self.update_unit) == str(fact_unit), "Юнит продукта не соответствует обновленному"
+            print(f"Ожидаемое имя продукта: {self.update_name}, фактическое: {fact_name}")
+            print(f"Ожидаемый EAN Case продукта: {self.update_eanc}, фактический: {fact_eanc}")
+            print(f"Ожидаемый Category продукта: {self.update_category}, фактический: {fact_category}")
+            print(f"Ожидаемый Technology продукта: {self.update_technology}, фактический: {fact_technology}")
+            print(f"Ожидаемый Brand продукта: {self.update_brand}, фактический: {fact_brand}")
+            print(f"Ожидаемый Unit продукта: {self.update_unit}, фактический: {fact_unit}")
             print("Продукт успешно отредактирован")
             Logger.add_end_step(url=self.driver.current_url, method="update_product")
 
 
-
-    def restore_product_from_three_dots_grid(self):
-        """Восстановление продукта из помеченных на удаление через троеточие в гриде"""
-        with allure.step("Restore Product using Dots in Grid"):
-            Logger.add_start_step(method="restore_product_from_three_dots_grid")
-            self.open_deleted_tab()
-            self.is_visible(self.deleted_tab_grid_is_active)
-            try:
-                name = self.get_text(self.last_prod_name_in_grid)
-                self.click_button(self._3_dots_grid)
-                self.click_button(self.link_delete_restore_in_3_dots_grid)
-            except self.ignored_exceptions:
-                try:
-                    name = self.get_text(self.last_prod_name_in_grid)
-                    self.click_button(self._3_dots_grid)
-                    self.click_button(self.link_delete_restore_in_3_dots_grid)
-                except self.ignored_exceptions:
-                    print("Элемент не найден")
-            # self.click_button_delete_item()      # Пока что модального окна нет - баг
-
-            """Проверка, что продукт переместился во вкладку All"""
-            self.browser_refresh()
-            self.open_all_tab()
-            self.is_visible(self.all_tab_grid_is_active)
-            for x in self.product_name:
-                if x == name:
-                    print(x)
-                    assert name == x, "Ошибка при восстановлении продукта"
-            print("Продукт успешно восстановлен")
-            Logger.add_end_step(url=self.driver.current_url, method="restore_product_from_three_dots_grid")
+        """TODO: переделать итерацию по именам"""
+    # def restore_product_from_three_dots_grid(self):
+    #     """Восстановление продукта из помеченных на удаление через троеточие в гриде"""
+    #     with allure.step("Restore Product using Dots in Grid"):
+    #         Logger.add_start_step(method="restore_product_from_three_dots_grid")
+    #         self.open_deleted_tab()
+    #         self.is_visible(self.deleted_tab_grid_is_active)
+    #         try:
+    #             name = self.get_text(self.last_prod_name_in_grid)
+    #             self.click_button(self._3_dots_grid)
+    #             self.click_button(self.link_delete_restore_in_3_dots_grid)
+    #         except self.ignored_exceptions:
+    #             try:
+    #                 name = self.get_text(self.last_prod_name_in_grid)
+    #                 self.click_button(self._3_dots_grid)
+    #                 self.click_button(self.link_delete_restore_in_3_dots_grid)
+    #             except self.ignored_exceptions:
+    #                 print("Элемент не найден")
+    #         # self.click_button_delete_item()      # Пока что модального окна нет - баг
+    #
+    #         """Проверка, что продукт переместился во вкладку All"""
+    #         self.browser_refresh()
+    #         self.open_all_tab()
+    #         self.is_visible(self.all_tab_grid_is_active)
+    #         for x in self.product_name:
+    #             if x == name:
+    #                 print(x)
+    #                 assert name == x, "Ошибка при восстановлении продукта"
+    #         print("Продукт успешно восстановлен")
+    #         Logger.add_end_step(url=self.driver.current_url, method="restore_product_from_three_dots_grid")
 
 
 
@@ -497,7 +521,9 @@ class ProductPage(Base):
         with allure.step("Filter Products by Name using All Filters"):
             Logger.add_start_step(method="filters_product_by_sku_name")
             count_of_items_before = self.get_text(self.count_items_in_footer_grid)
+            print(f"Количество продуктов на вкладке All до фильтрации: {count_of_items_before}")
             any_name_in_grid = self.get_text(self.product_name)
+            print(f"Выбранное для фильтрации имя продукта: {any_name_in_grid}")
             print(any_name_in_grid)
             self.click_button(self.button_all_fiters)
             self.enter_in_sku_name_input_filters(any_name_in_grid)
@@ -509,8 +535,10 @@ class ProductPage(Base):
             """Проверка, что продукты отфильтровались по SKU"""
             self.is_not_visible(self.button_apply_filters)
             count_of_items_after = self.get_text(self.count_items_in_footer_grid)
+            print(f"Количество продуктов на вкладке All после фильтрации: {count_of_items_after}")
             if count_of_items_after < count_of_items_before:
                 first_sku_name_in_grid = self.get_text(self.last_prod_name_in_grid)
+                print(f"Имя первого отображаемого продукта в гриде: {first_sku_name_in_grid}")
                 assert self.is_visible(self.counter_all_filters), "Не отображается каунтер на All Filters"
                 assert str(any_name_in_grid) == str(first_sku_name_in_grid), "Ошибка при фильтрации по имени или имена продуктов не совпадают"
             print("Фильтрация корректна")
