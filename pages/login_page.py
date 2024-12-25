@@ -1,5 +1,4 @@
 from base.base_class import Base
-from data.links import Links
 import os
 from dotenv import load_dotenv, find_dotenv
 import allure
@@ -10,7 +9,6 @@ class LoginPage(Base):
     """ Класс содержащий локаторы и методы для страницы Авторизации"""
 
     load_dotenv(find_dotenv())
-    URL = Links.DEV_1
 
     def __init__(self, driver):
         super().__init__(driver)
@@ -46,7 +44,7 @@ class LoginPage(Base):
         """ Авторизация в системе"""
         with allure.step("Authorization"):
             Logger.add_start_step(method="authorization")
-            self.driver.get(self.URL)
+            self.driver.get(os.getenv("DEV_1"))
             self.driver.maximize_window()
             self.click_button_login()
             self.input_login(os.getenv("ADMIN_LOGIN"))
