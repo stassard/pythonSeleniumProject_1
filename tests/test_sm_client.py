@@ -20,3 +20,64 @@ class TestSmokeClientPage:
         cp.open_clients_dict()
 
         cp.create_client()
+
+    """Удаление клиента через троеточие в гриде"""
+    @allure.title("Delete Client using Dots In Grid")
+    @allure.severity("Critical")
+    @pytest.mark.smoke
+    def test_delete_client_from_three_dots_grid(self, driver):
+
+        lp = LoginPage(driver)
+        lp.authorization()
+        cp = ClientPage(driver)
+        cp.open_clients_dict()
+
+        cp.delete_client_from_three_dots_grid()
+
+
+    """Удаление клиента через чекбокс в гриде"""
+    @allure.title("Delete Client using Checkbox in Grid")
+    @allure.severity("Critical")
+    @pytest.mark.smoke
+    def test_delete_client_from_checkbox_grid(self, driver):
+        lp = LoginPage(driver)
+        lp.authorization()
+        cp = ClientPage(driver)
+        cp.open_clients_dict()
+
+        cp.delete_client_from_checkbox_grid()
+
+    """Удаление 4х клиентов через чекбоксы в гриде"""
+    @allure.title("Multiselection Deleted Clients using Checkboxes in Grid")
+    @allure.severity("Critical")
+    @pytest.mark.smoke
+    def test_delete_4_clients_from_checkbox_grid(self, driver):
+        lp = LoginPage(driver)
+        lp.authorization()
+        cp = ClientPage(driver)
+        cp.open_clients_dict()
+        cp.delete_4_clients_from_checkbox_grid()
+
+
+    """Удаление клиентов через Select All"""
+    @allure.title("Delete Client using Select All")
+    @allure.severity("Critical")
+    @pytest.mark.smoke
+    # @pytest.mark.skip
+    def test_select_all_delete_client(self, driver):
+        lp = LoginPage(driver)
+        lp.authorization()
+        cp = ClientPage(driver)
+        cp.open_clients_dict()
+        cp.select_all_delete_client()
+
+    """Удаление клиента через карточку клиента"""
+    @allure.title("Delete Client from Card")
+    @allure.severity("Critical")
+    @pytest.mark.smoke
+    def test_delete_client_from_card(self, driver):
+        lp = LoginPage(driver)
+        lp.authorization()
+        cp = ClientPage(driver)
+        cp.open_clients_dict()
+        cp.delete_client_from_card()

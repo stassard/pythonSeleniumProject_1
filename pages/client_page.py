@@ -47,7 +47,7 @@ class ClientPage(Base):
     list_of_affiliations_card = f"//li[@aria-posinset='{random.randint(1, 2)}']"  # Список Affiliations
     button_upload_file = "//input[@type='file']"  # Кнопка Upload File
     button_create_card = "//button[contains(@items,'[object Object]')]"  # Кнопка Create
-    _3_dots_card = "(//div/div/button[@class='prospace-icon-button'])[4]"  # Троеточие в карточке продукта
+    _3_dots_card = "(//div/div/button[@class='prospace-icon-button'])[3]"  # Троеточие в карточке продукта
     link_delete_in_3_dots_card = "//div[contains(@class,'prospace-dots-item')]"  # Кнопка Delete в троеточии в карточке
     x_icon_card = "(//div/div/button[@class='prospace-icon-button'])[5]"  # Иконка X в карточке создания продукта
     name_of_added_file = "//span[contains(@class,'text-purple-800')]"     # Имя прикрепленного файла
@@ -161,12 +161,6 @@ class ClientPage(Base):
     def enter_in_type_input(self, el):
         return self.get_input_type_card().send_keys(el)
 
-    # def enter_in_dispatch_start_before_day_input(self, el):
-    #     return self.get_input_dispatch_start_before_day().send_keys(el)
-
-    # def enter_in_dispatch_end_before_day_input(self, el):
-    #     return self.get_input_dispatch_end_before_day().send_keys(el)
-
     def open_last_client(self):
         return self.element_is_clickable(self.last_client_name_in_grid).click()
 
@@ -244,7 +238,134 @@ class ClientPage(Base):
             assert str(self.create_parent) == str(fact_parent), "Parent клиента не соответствует созданному"
             assert self.create_type == fact_type, "Type клиента не соответствует созданной"
             assert "магнит.jpg" == name_of_added_file, "Имя добавленного файла отображается некорректно"
+            print(f"Ожидаемое имя клиента: {self.create_name}, фактическое: {fact_name}")
+            print(f"Ожидаемый External ID клиента: {self.create_external_id}, фактический: {fact_external_id}")
+            print(f"Ожидаемый Parent клиента: {self.create_parent}, фактический: {fact_parent}")
+            print(f"Ожидаемый Type клиента: {self.create_type}, фактический: {fact_type}")
+            print(f"Ожидаемое имя загруженного логотипа клиента: магнит.jpg, фактическое: {name_of_added_file}")
             print("Создан корректный клиент")
             Logger.add_end_step(url=self.driver.current_url, method="create_client")
 
+
+    def delete_client_from_three_dots_grid(self):
+        """Удаление клиента через троеточие в гриде"""
+        with allure.step("Delete Client using Dots In Grid"):
+            Logger.add_start_step(method="delete_client_from_three_dots_grid")
+            count_of_items_before = self.get_text(self.count_items_in_footer_grid)
+            print(f"Количество клиентов на вкладке All до удаления: {count_of_items_before}")
+            self.click_button(self._3_dots_grid)
+            self.click_button(self.link_delete_restore_in_3_dots_grid)
+            self.click_button(self.button_delete_item)
+
+            """Проверка, что клиент переместился во вкладку Deleted"""
+            self.browser_refresh()
+            count_of_items_after = self.get_text(self.count_items_in_footer_grid)
+            print(f"Количество клиентов на вкладке All после удаления: {count_of_items_after}")
+            assert int(count_of_items_after) == int(count_of_items_before) - 1, \
+                "Ошибка при удалении через троеточие в гриде"
+            print("Клиент успешно удален")
+            Logger.add_end_step(url=self.driver.current_url, method="delete_client_from_three_dots_grid")
+
+
+
+    def delete_client_from_checkbox_grid(self):
+        """Удаление клиента через чекбокс в гриде"""
+        with allure.step("Delete Client using Checkbox in Grid"):
+            Logger.add_start_step(method="delete_client_from_checkbox_grid")
+            count_of_items_before = self.get_text(self.count_items_in_footer_grid)
+            print(f"Количество клиентов на вкладке All до удаления: {count_of_items_before}")
+            self.click_button(self.checkbox)
+            count_deleted_items = self.get_text(self.counter_upper_panel)
+            self.click_button(self.delete_button_upper_panel)
+            self.click_button(self.button_delete_item)
+
+
+            """Проверка, что клиент переместился во вкладку Deleted"""
+            self.browser_refresh()
+            count_of_items_after = self.get_text(self.count_items_in_footer_grid)
+            print(f"Количество клиентов на вкладке All после удаления: {count_of_items_after}")
+            assert int(count_of_items_after) == int(count_of_items_before) - int(count_deleted_items), \
+                "Ошибка при удалении клиента через чекбокс"
+            print("Клиент успешно удален")
+            Logger.add_end_step(url=self.driver.current_url, method="delete_client_from_checkbox_grid")
+
+
+
+    def delete_4_clients_from_checkbox_grid(self):
+        """Удаление четырех клиентов через чекбоксы в гриде"""
+        with allure.step("Multiselection Deleted Clients using Checkboxes in Grid"):
+            Logger.add_start_step(method="delete_4_clients_from_checkbox_grid")
+            count_of_items_before = self.get_text(self.count_items_in_footer_grid)
+            print(f"Количество клиентов на вкладке All до удаления: {count_of_items_before}")
+            try:
+                self.click_button(self.checkbox)
+                while self.get_text(self.counter_upper_panel) != "4":
+                    self.click_button(self.checkbox)
+                self.click_button(self.delete_button_upper_panel)
+                self.click_button(self.button_delete_item)
+            except self.ignored_exceptions:
+                try:
+                    self.click_button(self.checkbox)
+                    while self.get_text(self.counter_upper_panel) != "4":
+                        self.click_button(self.checkbox)
+                    self.click_button(self.delete_button_upper_panel)
+                    self.click_button(self.button_delete_item)
+                except self.ignored_exceptions:
+                    print("Элемент не найден")
+
+            """Проверка, что клиенты переместились во вкладку Deleted"""
+            self.browser_refresh()
+            count_of_items_after = self.get_text(self.count_items_in_footer_grid)
+            print(f"Количество клиентов на вкладке All после удаления: {count_of_items_after}")
+            assert int(count_of_items_after) == int(count_of_items_before) - 4, \
+                "Ошибка при удалении клиентов через чекбоксы"
+            print("Клиенты успешно удалены")
+            Logger.add_end_step(url=self.driver.current_url, method="delete_4_clients_from_checkbox_grid")
+
+
+    def select_all_delete_client(self):
+        """Массовое удаление клиентов через Select All в гриде"""
+        with allure.step("Delete Client using Select All"):
+            Logger.add_start_step(method="select_all_delete_client")
+            try:
+                count_of_items_before = self.get_text(self.count_items_in_footer_grid)
+                print(f"Количество клиентов на вкладке All до удаления: {count_of_items_before}")
+            except self.ignored_exceptions:
+                count_of_items_before = self.get_text(self.count_items_in_footer_grid)
+                print(f"Количество клиентов на вкладке All до удаления: {count_of_items_before}")
+            self.click_button(self.select_all_checkbox)
+            count_deleted_items = self.get_text(self.counter_upper_panel)
+            self.click_button(self.delete_button_upper_panel)
+            self.click_button(self.button_delete_item)
+
+            """Проверка, что клиенты переместились во вкладку Deleted"""
+            self.browser_refresh()
+            count_of_items_after = self.get_text(self.count_items_in_footer_grid)
+            print(f"Количество клиентов на вкладке All после удаления: {count_of_items_after}")
+            assert int(count_of_items_after) == int(count_of_items_before) - int(count_deleted_items), \
+                "Ошибка при удалении клиентов через Select All"
+            print("Клиенты успешно удалены")
+            Logger.add_end_step(url=self.driver.current_url, method="select_all_delete_client")
+
+    def delete_client_from_card(self):
+        """Удаление клиента через карточку продукта"""
+        with allure.step("Delete Client from Card"):
+            Logger.add_start_step(method="delete_client_from_card")
+            count_of_items_before = self.get_text(self.count_items_in_footer_grid)
+            print(f"Количество клиентов на вкладке All до удаления: {count_of_items_before}")
+            self.open_last_client()
+            print("Карточка Клиента открыта")
+            self.click_button(self._3_dots_card)
+            print("Клик на троеточие")
+            self.click_button(self.link_delete_in_3_dots_card)
+            print("Клик на Delete")
+
+            """Проверка, что клиент переместился во вкладку Deleted"""
+            self.browser_refresh()
+            count_of_items_after = self.get_text(self.count_items_in_footer_grid)
+            print(f"Количество клиентов на вкладке All после удаления: {count_of_items_after}")
+            assert int(count_of_items_after) == int(count_of_items_before) - 1, \
+                "Ошибка при удалении клиента через карточку"
+            print("Клиент успешно удален")
+            Logger.add_end_step(url=self.driver.current_url, method="delete_client_from_card")
 

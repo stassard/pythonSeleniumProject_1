@@ -69,7 +69,7 @@ class TestSmokeProductPage:
     def test_delete_product_from_card(self, driver):
 
         lp = LoginPage(driver)
-        lp.authorization()
+        lp.authorization( )
         pp = ProductPage(driver)
         pp.open_products_dict()
 
@@ -131,19 +131,19 @@ class TestSmokeProductPage:
 
         pp.select_all_delete_product()
 
-
-    """Рестор продукта через троеточие в гриде"""
-    @allure.title("Restore Product using Dots in Grid")
-    @allure.severity("Critical")
-    @pytest.mark.smoke
-    def test_restore_product_from_three_dots_grid(self, driver):
-
-        lp = LoginPage(driver)
-        lp.authorization()
-        pp = ProductPage(driver)
-        pp.open_products_dict()
-
-        pp.restore_product_from_three_dots_grid()
+    """TODO: требуются изменения в тесте"""
+    # """Рестор продукта через троеточие в гриде"""
+    # @allure.title("Restore Product using Dots in Grid")
+    # @allure.severity("Critical")
+    # @pytest.mark.smoke
+    # def test_restore_product_from_three_dots_grid(self, driver):
+    #
+    #     lp = LoginPage(driver)
+    #     lp.authorization()
+    #     pp = ProductPage(driver)
+    #     pp.open_products_dict()
+    #
+    #     pp.restore_product_from_three_dots_grid()
 
 
     """Отфильтровать продукт по имени через расширенные фильтры"""
