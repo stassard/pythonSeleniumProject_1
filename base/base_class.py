@@ -20,7 +20,8 @@ class Base:
 
     # Locators
     side_button_modules = "(//div[contains(@data-test,'prospace-sidebar-item')])[3]"
-    link_product = "//a[text()='Products']"
+    link_products = "//a[text()='Products']"
+    link_clients = "//a[text()='Clients']"
 
     # Actions
     def element_is_visible(self, locator):

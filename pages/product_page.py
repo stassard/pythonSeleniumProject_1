@@ -34,8 +34,6 @@ class ProductPage(Base):
     update_brand = f"Test {random.randint(11234, 98765)}"
     create_unit = random.randint(1, 9) / 10
     update_unit = random.randint(1, 9) / 10
-    unit_of_measure = random.randint(1, 7)
-    any_prod_in_grid = random.randint(1, 10)
 
     # Locators
     head_of_product_page = "//div[@class='ps-font-TopHeader text-indigo-950']"                # Заголовок страницы Продукты
@@ -109,6 +107,7 @@ class ProductPage(Base):
     button_clear_filters = "//button[contains(@class, 'prospace-button--secondary')]"                    # Кнопка Clear
     x_icon_filters = "(//div[contains(@class, 'prospace-boxed-icon-button')]/button[@class='prospace-icon-button'])[3]"       # Иконка X в расширенных фильтрах
     x_icons_input_filters = "//div[@class='header']/div[contains(@class,'items-center')]"                                     # Иконки X в расширенных фильтрах индивидуально для каждого поля
+
     # Getters
     def get_text_to_be_present_in_element_value_name(self, el1, el2):
         return self.text_to_be_present_in_element_value(el1, el2)
@@ -210,10 +209,9 @@ class ProductPage(Base):
     def open_products_dict(self):
         with allure.step("Open Products page"):
             Logger.add_start_step(method="open_products_dict")
-            pp = ProductPage(self.driver)
             self.click_button(self.side_button_modules)
-            self.click_button(self.link_product)
-            self.assert_word(pp.is_visible(self.head_of_product_page), "Products")
+            self.click_button(self.link_products)
+            self.assert_word(self.is_visible(self.head_of_product_page), "Products")
             print("Открыта страница Products")
             Logger.add_end_step(url=self.driver.current_url, method="open_products_dict")
 
