@@ -84,13 +84,14 @@ class ProductPage(Base):
     any_unit_of_measure_in_grid = "//span[text()='Unit Of Measure']/following-sibling::div[@class='text-ellipsis']"  # Единица измерения в гриде
     any_unit_in_grid = "//span[text()='Unit']/following-sibling::div[@class='text-ellipsis']"             # Юнит в гриде
     any_technology_in_grid = "//span[text()='Technology']/following-sibling::div[@class='text-ellipsis']"     # Технология в гриде
+    counter_all_filters = "//div[contains(@class,'all-filters')]/span[@class='prospace-counter-box']"     # Каунтер на кнопке All Filters
 
     ##  Форма созданного продукта
     mode_switcher = "//span[@class='p-inputswitch-slider']"                              # Свитчер режимов
     button_save = "//button[contains(@class,'prospace-button--with-icon')]"              # Кнопка Сохранить
     product_id = "//div[contains(@class, 'item-id')]"                                    # ID продукта в карточке продукта
     x_icon = "(//div/div/button[@class='prospace-icon-button'])[6]"                      # Иконка X в карточке созданного продукта
-    counter_all_filters = "//div[contains(@class,'all-filters')]/span[@class='prospace-counter-box']"     # Каунтер на кнопке All Filters
+
 
     ## Окно Delete Item
     button_delete_item = "(//button[contains(@class,'prospace-button--primary')])[2]"    # Кнопка Удалить айтем
@@ -512,6 +513,7 @@ class ProductPage(Base):
             count_of_items_after = self.get_text(self.count_items_in_footer_grid)
             if count_of_items_after < count_of_items_before:
                 first_sku_name_in_grid = self.get_text(self.last_prod_name_in_grid)
+                assert self.is_visible(self.counter_all_filters), "Не отображается каунтер на All Filters"
                 assert str(any_name_in_grid) == str(first_sku_name_in_grid), "Ошибка при фильтрации по имени или имена продуктов не совпадают"
             print("Фильтрация корректна")
             Logger.add_end_step(url=self.driver.current_url, method="filters_product_by_sku_name")
@@ -534,6 +536,7 @@ class ProductPage(Base):
             """Проверка, что продукты отфильтровались по категории"""
             self.is_not_visible(self.button_apply_filters)
             any_category_in_grid_after = self.get_text(self.any_category_in_grid)
+            assert self.is_visible(self.counter_all_filters), "Не отображается каунтер на All Filters"
             assert str(any_category_in_grid_before) == str(any_category_in_grid_after), "Ошибка при фильтрации по категории или категории продуктов не совпадают"
             print("Фильтрация корректна")
             Logger.add_end_step(url=self.driver.current_url, method="filters_product_by_category")
@@ -557,6 +560,7 @@ class ProductPage(Base):
             self.is_not_visible(self.button_apply_filters)
             any_brand_in_grid_after = self.get_text(self.any_brand_in_grid)
             print(any_brand_in_grid_after)
+            assert self.is_visible(self.counter_all_filters), "Не отображается каунтер на All Filters"
             assert str(any_brand_in_grid_before) == str(any_brand_in_grid_after), "Ошибка при фильтрации по бренду или бренды продуктов не совпадают"
             print("Фильтрация корректна")
             Logger.add_end_step(url=self.driver.current_url, method="filters_product_by_brand")
@@ -580,6 +584,7 @@ class ProductPage(Base):
             self.is_not_visible(self.button_apply_filters)
             any_unit_of_measure_in_grid_after = self.get_text(self.last_unit_of_measure_in_grid)
             print(any_unit_of_measure_in_grid_after)
+            assert self.is_visible(self.counter_all_filters), "Не отображается каунтер на All Filters"
             assert str(any_unit_of_measure_in_grid_before) in str(any_unit_of_measure_in_grid_after), "Ошибка при фильтрации по единице измерения или единицы измерения продуктов не совпадают"
             print("Фильтрация корректна")
             Logger.add_end_step(url=self.driver.current_url, method="filters_product_by_unit_of_measure")
@@ -604,6 +609,7 @@ class ProductPage(Base):
             self.is_not_visible(self.button_apply_filters)
             any_unit_in_grid_after = self.get_text(self.any_unit_in_grid)
             print(any_unit_in_grid_after)
+            assert self.is_visible(self.counter_all_filters), "Не отображается каунтер на All Filters"
             assert str(any_unit_in_grid_before) == str(any_unit_in_grid_after), "Ошибка при фильтрации по юниту или юниты продуктов не совпадают"
             print("Фильтрация корректна")
             Logger.add_end_step(url=self.driver.current_url, method="filters_product_by_unit")
