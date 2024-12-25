@@ -11,7 +11,7 @@ from utilities.logger import Logger
 
 
 class ProductPage(Base):
-    """ Класс содержащий локаторы и методы для страницы Авторизации"""
+    """ Класс содержащий локаторы и методы для справочника Продукты"""
 
     def __init__(self, driver):
         super().__init__(driver)
