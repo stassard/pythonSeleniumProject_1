@@ -54,8 +54,8 @@ class Base:
     def browser_refresh(self):
         return self.driver.refresh()
 
-    def element_is_selected(self, locator, timeout=30):
-        return self.wait.until(EC.element_located_to_be_selected((By.XPATH, locator)))
+    def element_is_selected(self, locator):
+        return self.wait.until(EC.element_located_selection_state_to_be((By.XPATH, locator), True))
 
     def make_screenshot(self, screenshot_name):
         allure.attach(
