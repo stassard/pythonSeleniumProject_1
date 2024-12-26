@@ -81,3 +81,38 @@ class TestSmokeClientPage:
         cp = ClientPage(driver)
         cp.open_clients_dict()
         cp.delete_client_from_card()
+
+
+    """Найти клиента по имени через поле Search"""
+    @allure.title("Find Client by Name")
+    @allure.severity("Critical")
+    @pytest.mark.smoke
+    def test_find_client_by_name(self, driver):
+        lp = LoginPage(driver)
+        lp.authorization()
+        cp = ClientPage(driver)
+        cp.open_clients_dict()
+        cp.find_client_by_name()
+
+
+    """Найти клиента по ID через поле Search"""
+    @allure.title("Find Client by ID")
+    @allure.severity("Critical")
+    @pytest.mark.smoke
+    def test_find_client_by_id(self, driver):
+        lp = LoginPage(driver)
+        lp.authorization()
+        cp = ClientPage(driver)
+        cp.open_clients_dict()
+        cp.find_client_by_id()
+
+    """Редактирование клиента"""
+    @allure.title("Update Client")
+    @allure.severity("Critical")
+    @pytest.mark.smoke
+    def test_update_client(self, driver):
+        lp = LoginPage(driver)
+        lp.authorization()
+        cp = ClientPage(driver)
+        cp.open_clients_dict()
+        cp.update_client()
