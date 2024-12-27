@@ -49,7 +49,11 @@ class ClientPage(Base):
     input_dispatch_start_before_day = "(//input[contains(@data-pc-name,'pcinput')])[1]"  # Поле Dispatch Start Before Day
     input_dispatch_end_before_day = "(//input[contains(@data-pc-name,'pcinput')])[2]"  # Поле Dispatch End Before Day
     list_of_invoice_types_card = f"//li[@aria-posinset='{random.randint(1, 2)}']"  # Список Invoice Types
+    on_invoice_type_card = "//li[@aria-posinset='1']"  # Тип Invoice Types - On invoice
+    off_invoice_type_card = "//li[@aria-posinset='2']"  # Тип Invoice Types - Off invoice
     list_of_affiliations_card = f"//li[@aria-posinset='{random.randint(1, 2)}']"  # Список Affiliations
+    international_affiliation_card = "//li[@aria-posinset='1']"  # Тип Affiliation - International
+    local_affiliation_card = "//li[@aria-posinset='2']"  # Тип Affiliation - Local
     button_upload_file = "//input[@type='file']"  # Кнопка Upload File
     button_create_card = "//button[contains(@items,'[object Object]')]"  # Кнопка Create
     _3_dots_card = "(//div/div/button[@class='prospace-icon-button'])[3]"  # Троеточие в карточке продукта
@@ -74,7 +78,8 @@ class ClientPage(Base):
     all_tab_grid = "(//div[contains(@class, 'h-8')])[1]"  # Кнопка-вкладка All
     all_tab_grid_is_active = "//div[contains(@class, 'active')]/span[text()='All']"  # Кнопка-вкладка All активна
     count_items_in_footer_grid = "(//span[@class='text-indigo-950'])[2]"  # Количество айтемов в футере
-    checkbox = f"(//input[@type='checkbox' and @aria-label='Row Unselected']/ancestor::div[@class='p-checkbox p-component'])[{random.randint(1, 20)}]"  # Чекбоксы в гриде
+    unselected_checkbox = f"(//input[@type='checkbox' and @aria-label='Row Unselected']/ancestor::div[@class='p-checkbox p-component'])[{random.randint(1, 20)}]"  # Чекбоксы в гриде
+    selected_checkbox = f"(//div[contains(@class,'p-highlight')])[{random.randint(1, 20)}]"      # Выбранный чекбокс в гриде
     select_all_checkbox = "(//div[@class='p-checkbox p-component'])[1]"  # Чекбокс Select All в гриде
     delete_button_upper_panel = "//button[contains(@class,'prospace-action bg-white transition')]"  # Кнопка Delete в верхней сервисной панели
     counter_upper_panel = "//span[@class='prospace-counter-box']"  # Каунтер в верхней сервисной панели
@@ -291,14 +296,7 @@ class ClientPage(Base):
             Logger.add_start_step(method="delete_client_from_checkbox_grid")
             count_of_items_before = self.get_text(self.count_items_in_footer_grid)
             print(f"Количество клиентов на вкладке All до удаления: {count_of_items_before}")
-            self.click_button(self.checkbox)
-            selected_checkbox = self.is_visible(self.checkbox)
-            try:
-                selected_checkbox.is_selected()
-                print("Чекбокс выбран")
-            except self.ignored_exceptions:
-                selected_checkbox.is_selected()
-                print("Чекбокс выбран")
+            self.click_button(self.unselected_checkbox)
             count_deleted_items = self.get_text(self.counter_upper_panel)
             self.click_button(self.delete_button_upper_panel)
             try:
@@ -324,12 +322,15 @@ class ClientPage(Base):
             Logger.add_start_step(method="delete_4_clients_from_checkbox_grid")
             count_of_items_before = self.get_text(self.count_items_in_footer_grid)
             print(f"Количество клиентов на вкладке All до удаления: {count_of_items_before}")
-            self.click_button(self.checkbox)
+            self.element_is_visible(self.unselected_checkbox)
+            self.click_button(self.unselected_checkbox)
             while self.get_text(self.counter_upper_panel) != "4":
-                self.click_button(self.checkbox)
+                self.element_is_visible(self.unselected_checkbox)
+                self.click_button(self.unselected_checkbox)
             print(f"Выбрано '{self.get_text(self.counter_upper_panel)}' чекбокса")
             self.click_button(self.delete_button_upper_panel)
             try:
+                self.element_is_visible(self.button_delete_item)
                 self.click_button(self.button_delete_item)
             except self.ignored_exceptions:
                 print("Баг: Окно подтверждения не отобразилось")
@@ -362,6 +363,7 @@ class ClientPage(Base):
 
             """Проверка, что клиенты переместились во вкладку Deleted"""
             self.browser_refresh()
+            self.element_is_visible(self.count_items_in_footer_grid)
             count_of_items_after = self.get_text(self.count_items_in_footer_grid)
             print(f"Количество клиентов на вкладке All после удаления: {count_of_items_after}")
             assert int(count_of_items_after) == int(count_of_items_before) - int(count_deleted_items), \
@@ -440,13 +442,13 @@ class ClientPage(Base):
         with allure.step("Update Client"):
             Logger.add_start_step(method="update_client")
             """Информация о последнем созданном в гриде клиенте до апдейта"""
-            id_before = self.get_text(self.last_id_in_grid)
-            external_id_before = self.get_text(self.last_external_id_in_grid)
+            id_before = self.is_visible(self.last_id_in_grid).get_attribute("title")
+            external_id_before = self.is_visible(self.last_external_id_in_grid).get_attribute("title")
             name_before = self.get_text(self.last_client_name_in_grid)
-            # parent_before = self.get_text(self.last_parent_in_grid)   # не обязательное поле, может быть пустым
-            type_before = self.get_text(self.last_type_in_grid)
-            affiliation_before = self.get_text(self.last_affiliation_in_grid)
-            invoice_type_before = self.get_text(self.last_invoice_type_in_grid)
+            parent_before = self.element_is_present(self.last_parent_in_grid).get_attribute("title")
+            type_before = self.is_visible(self.last_type_in_grid).get_attribute("title")
+            affiliation_before = self.is_visible(self.last_affiliation_in_grid).get_attribute("title")
+            invoice_type_before = self.is_visible(self.last_invoice_type_in_grid).get_attribute("title")
 
             """Открытие правой панели и редактирование информации"""
             self.open_last_client()
@@ -457,10 +459,19 @@ class ClientPage(Base):
             self.enter_in_parent_input(self.update_parent)
             self.get_input_type_card().clear()
             self.enter_in_type_input(self.update_type)
-            # self.click_button(self.selector_invoice_type_card)
-            # self.click_button(self.list_of_invoice_types_card)
-            # self.click_button(self.selector_affiliation_card)
-            # self.click_button(self.list_of_affiliations_card)
+            if self.get_text(self.value_of_invoice_type_card) == "On Invoice":
+                self.click_button(self.selector_invoice_type_card)
+                self.click_button(self.off_invoice_type_card)
+            else:
+                self.click_button(self.selector_invoice_type_card)
+                self.click_button(self.on_invoice_type_card)
+
+            if self.get_text(self.value_of_affiliation_card) == "Local":
+                self.click_button(self.selector_affiliation_card)
+                self.click_button(self.international_affiliation_card)
+            else:
+                self.click_button(self.selector_affiliation_card)
+                self.click_button(self.local_affiliation_card)
             self.get_input_dispatch_start_before_day().clear()
             self.enter_in_dispatch_start_before_day(self.update_dispatch_start)
             self.get_input_dispatch_end_before_day().clear()
@@ -472,27 +483,27 @@ class ClientPage(Base):
 
             """Информация о последнем созданном в гриде клиенте после апдейта"""
             name_after = self.get_text(self.last_client_name_in_grid)
-            parent_after = self.get_text(self.last_parent_in_grid)
-            type_after = self.get_text(self.last_type_in_grid)
-            affiliation_after = self.get_text(self.last_affiliation_in_grid)
-            invoice_type_after = self.get_text(self.last_invoice_type_in_grid)
-            id_after = self.get_text(self.last_id_in_grid)
-            external_id_after = self.get_text(self.last_external_id_in_grid)
+            parent_after = self.element_is_present(self.last_parent_in_grid).get_attribute("title")
+            type_after = self.is_visible(self.last_type_in_grid).get_attribute("title")
+            affiliation_after = self.is_visible(self.last_affiliation_in_grid).get_attribute("title")
+            invoice_type_after = self.is_visible(self.last_invoice_type_in_grid).get_attribute("title")
+            id_after = self.is_visible(self.last_id_in_grid).get_attribute("title")
+            external_id_after = self.is_visible(self.last_external_id_in_grid).get_attribute("title")
 
             """Проверка, что информация о продукте успешно отредактирована"""
             print(f"ID клиента до: {id_before}, после: {id_after} - не изменялся")
             print(f"Имя клиента до: {name_before}, после: {name_after}")
             print(f"External ID клиента до: {external_id_before}, после: {external_id_after} - не изменялся")
-            # print(f"Parent клиента до: {parent_before}, после: {parent_after}")
+            print(f"Parent клиента до: {parent_before}, после: {parent_after}")
             print(f"Type клиента до: {type_before}, после: {type_after}")
-            # print(f"Affiliation клиента до: {affiliation_before}, после: {affiliation_after}")
-            # print(f"Invoice Type клиента до: {invoice_type_before}, после: {invoice_type_after}")
+            print(f"Affiliation клиента до: {affiliation_before}, после: {affiliation_after}")
+            print(f"Invoice Type клиента до: {invoice_type_before}, после: {invoice_type_after}")
             assert id_before == id_after, "ID клиента изменился"
             assert name_before != name_after, "Имя клиента не обновилось"
             assert str(external_id_before) == str(external_id_after), "External ID клиента изменился"
-            # assert parent_before != parent_after, "Parent клиента не обновился"
+            assert parent_before != parent_after, "Parent клиента не обновился"
             assert type_before != type_after, "Type клиента не обновился"
-            # assert affiliation_before != affiliation_after, "Affiliation клиента не обновился"
-            # assert invoice_type_before != invoice_type_after, "Invoice Type клиента нне обновился"
+            assert affiliation_before != affiliation_after, "Affiliation клиента не обновился"
+            assert invoice_type_before != invoice_type_after, "Invoice Type клиента нне обновился"
             print("Продукт успешно отредактирован")
             Logger.add_end_step(url=self.driver.current_url, method="update_client")

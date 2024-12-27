@@ -6,8 +6,6 @@ from selenium.common.exceptions import TimeoutException
 from selenium.common.exceptions import ElementClickInterceptedException
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver import Keys
-from selenium.webdriver.common.by import By
-
 from base.base_class import Base
 from utilities.logger import Logger
 
@@ -74,7 +72,8 @@ class ProductPage(Base):
     all_tab_grid = "(//div[contains(@class, 'h-8')])[1]"                                        # Кнопка-вкладка All
     all_tab_grid_is_active = "//div[contains(@class, 'active')]/span[text()='All']"             # Кнопка-вкладка All активна
     count_items_in_footer_grid = "(//span[@class='text-indigo-950'])[2]"                        # Количество айтемов в футере
-    checkbox = "//input[@type='checkbox' and @aria-label='Row Unselected']/ancestor::div[@class='p-checkbox p-component']"    # Чекбокс в гриде
+    unselected_checkbox = "//input[@type='checkbox' and @aria-label='Row Unselected']/ancestor::div[@class='p-checkbox p-component']"    # Невыбранный чекбокс в гриде
+    selected_checkbox = f"(//div[contains(@class,'p-highlight')])[{random.randint(1, 20)}]"      # Выбранный чекбокс в гриде
     select_all_checkbox = "(//div[@class='p-checkbox p-component'])[1]"                                   # Чекбокс Select All в гриде
     delete_button_upper_panel = "//button[contains(@class,'prospace-action bg-white transition')]"        # Кнопка Delete в верхней сервисной панели
     counter_upper_panel = "//span[@class='prospace-counter-box']"                                         # Каунтер в верхней сервисной панели
@@ -273,6 +272,7 @@ class ProductPage(Base):
             self.click_button(self._3_dots_grid)
             self.click_button(self.link_delete_restore_in_3_dots_grid)
             try:
+                self.element_is_visible(self.button_delete_item)
                 self.click_button(self.button_delete_item)
             except self.ignored_exceptions:
                 print("Баг: Окно подтверждения не отобразилось")
@@ -294,17 +294,12 @@ class ProductPage(Base):
             Logger.add_start_step(method="delete_product_from_checkbox_grid")
             count_of_items_before = self.get_text(self.count_items_in_footer_grid)
             print(f"Количество продуктов на вкладке All до удаления: {count_of_items_before}")
-            self.click_button(self.checkbox)
-            selected_checkbox = self.is_visible(self.checkbox)
-            try:
-                selected_checkbox.is_selected()
-                print("Чекбокс выбран")
-            except self.ignored_exceptions:
-                selected_checkbox.is_selected()
-                print("Чекбокс выбран")
+            self.element_is_visible(self.unselected_checkbox)
+            self.click_button(self.unselected_checkbox)
             count_deleted_items = self.get_text(self.counter_upper_panel)
             self.click_button(self.delete_button_upper_panel)
             try:
+                self.element_is_visible(self.button_delete_item)
                 self.click_button(self.button_delete_item)
             except self.ignored_exceptions:
                 print("Баг: Окно подтверждения не отобразилось")
@@ -326,9 +321,11 @@ class ProductPage(Base):
             Logger.add_start_step(method="delete_4_product_from_checkbox_grid")
             count_of_items_before = self.get_text(self.count_items_in_footer_grid)
             print(f"Количество продуктов на вкладке All до удаления: {count_of_items_before}")
-            self.click_button(self.checkbox)
+            self.element_is_visible(self.unselected_checkbox)
+            self.click_button(self.unselected_checkbox)
             while self.get_text(self.counter_upper_panel) != "4":
-                self.click_button(self.checkbox)
+                self.element_is_visible(self.unselected_checkbox)
+                self.click_button(self.unselected_checkbox)
             print(f"Выбрано '{self.get_text(self.counter_upper_panel)}' чекбокса")
             self.click_button(self.delete_button_upper_panel)
             try:
@@ -354,17 +351,20 @@ class ProductPage(Base):
             Logger.add_start_step(method="select_all_delete_product")
             count_of_items_before = self.get_text(self.count_items_in_footer_grid)
             print(f"Количество продуктов на вкладке All до удаления: {count_of_items_before}")
+            self.element_is_visible(self.select_all_checkbox)
             self.click_button(self.select_all_checkbox)
             count_deleted_items = self.get_text(self.counter_upper_panel)
             print(f"Количество выбранных элементов: {count_deleted_items}")
             self.click_button(self.delete_button_upper_panel)
             try:
+                self.element_is_visible(self.button_delete_item)
                 self.click_button(self.button_delete_item)
             except self.ignored_exceptions:
                 print("Баг: Окно подтверждения не отобразилось")
 
             """Проверка, что продукты переместился во вкладку Deleted"""
             self.browser_refresh()
+            self.element_is_visible(self.count_items_in_footer_grid)
             count_of_items_after = self.get_text(self.count_items_in_footer_grid)
             print(f"Количество продуктов на вкладке All после удаления: {count_of_items_after}")
             assert int(count_of_items_after) == int(count_of_items_before) - int(count_deleted_items), \
@@ -449,16 +449,17 @@ class ProductPage(Base):
 
     def update_product(self):
         with allure.step("Update Product"):
+            Logger.add_start_step(method="update_product")
             """Информация о последнем созданном в гриде продукте до апдейта"""
-            eanc_before = self.get_text(self.last_eanc_in_grid)
+            eanc_before = self.is_visible(self.last_eanc_in_grid).get_attribute("title")
+            eanp_before = self.is_visible(self.last_eanp_in_grid).get_attribute("title")
             name_before = self.get_text(self.last_prod_name_in_grid)
-            technology_before = self.get_text(self.last_technology_in_grid)
-            category_before = self.get_text(self.last_category_in_grid)
-            brand_before = self.get_text(self.last_brand_in_grid)
-            unit_before = self.get_text(self.last_unit_in_grid)
+            technology_before = self.element_is_present(self.last_technology_in_grid).get_attribute("title")
+            category_before = self.is_visible(self.last_category_in_grid).get_attribute("title")
+            brand_before = self.is_visible(self.last_brand_in_grid).get_attribute("title")
+            unit_before = self.is_visible(self.last_unit_in_grid).get_attribute("title")
 
             """Открытие правой панели и редактирование информации"""
-            Logger.add_start_step(method="update_product")
             self.open_last_product()
             self.click_button(self.mode_switcher)
             self.get_input_name_card().clear()
@@ -480,21 +481,26 @@ class ProductPage(Base):
             self.is_not_visible(self.x_icon)
             self.browser_refresh()
 
-            """Проверка, что информация о продукте успешно отредактирована"""
-            eanc_after = self.get_text(self.last_eanc_in_grid)
+            """Информация о последнем созданном в гриде продукте после апдейта"""
+            eanc_after = self.is_visible(self.last_eanc_in_grid).get_attribute("title")
+            eanp_after = self.is_visible(self.last_eanp_in_grid).get_attribute("title")
             name_after = self.get_text(self.last_prod_name_in_grid)
-            technology_after = self.get_text(self.last_technology_in_grid)
-            category_after = self.get_text(self.last_category_in_grid)
-            brand_after = self.get_text(self.last_brand_in_grid)
-            unit_after = self.get_text(self.last_unit_in_grid)
+            technology_after = self.element_is_present(self.last_technology_in_grid).get_attribute("title")
+            category_after = self.is_visible(self.last_category_in_grid).get_attribute("title")
+            brand_after = self.is_visible(self.last_brand_in_grid).get_attribute("title")
+            unit_after = self.is_visible(self.last_unit_in_grid).get_attribute("title")
+
+            """Проверка, что информация о продукте успешно отредактирована"""
             print(f"Имя продукта до: {name_before}, после: {name_after}")
             print(f"EAN Case продукта до: {eanc_before}, после: {eanc_after}")
+            print(f"EAN Pc продукта до: {eanp_before}, после: {eanp_after} - не изменялся")
             print(f"Category продукта до: {category_before}, после: {category_after}")
             print(f"Technology продукта дом: {technology_before}, после: {technology_after}")
-            print(f"Brand продукта до: {technology_before}, после: {technology_after}")
+            print(f"Brand продукта до: {brand_before}, после: {brand_after}")
             print(f"Unit продукта до: {unit_before}, после: {unit_after}")
             assert name_before != name_after, "Имя продукта не обновилось"
             assert str(eanc_before) != str(eanc_after), "EAN Case продукта не обновился"
+            assert str(eanp_before) == str(eanp_after), "EAN Pc продукта изменился"
             assert category_before != category_after, "Категория продукта не обновилась"
             assert technology_before != technology_after, "Технология продукта не обновилась"
             assert brand_before != brand_after, "Бренд продукта не обновился"
@@ -671,12 +677,12 @@ class ProductPage(Base):
             grid_unit = self.get_text(self.last_unit_in_grid)
 
             """Проверка, что информация в правой панели соответствует информации в гриде"""
-            card_name = self.driver.find_element(By.XPATH, self.input_name_card).get_attribute("value")
-            card_eanc = self.driver.find_element(By.XPATH, self.input_EANC_card).get_attribute("value")
-            card_eanp = self.driver.find_element(By.XPATH, self.input_EANP_card).get_attribute("value")
-            card_category = self.driver.find_element(By.XPATH, self.input_category_card).get_attribute("value")
-            card_brand = self.driver.find_element(By.XPATH, self.input_brand_card).get_attribute("value")
-            card_unit = self.driver.find_element(By.XPATH, self.input_unit_card).get_attribute("value")
+            card_name = self.is_visible(self.input_name_card).get_attribute("value")
+            card_eanc = self.is_visible(self.input_EANC_card).get_attribute("value")
+            card_eanp = self.is_visible(self.input_EANP_card).get_attribute("value")
+            card_category = self.is_visible(self.input_category_card).get_attribute("value")
+            card_brand = self.is_visible(self.input_brand_card).get_attribute("value")
+            card_unit = self.is_visible(self.input_unit_card).get_attribute("value")
             card_unit_of_measure = self.get_text(self.value_of_unit_of_measure_card)
             print(f"Имя продукта в гриде: {grid_name}, в карточке: {card_name}")
             print(f"EAN Case продукта в гриде: {grid_eanc}, в карточке: {card_eanc}")
