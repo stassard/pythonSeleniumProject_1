@@ -49,11 +49,11 @@ class ClientPage(Base):
     input_dispatch_start_before_day = "(//input[contains(@data-pc-name,'pcinput')])[1]"  # Поле Dispatch Start Before Day
     input_dispatch_end_before_day = "(//input[contains(@data-pc-name,'pcinput')])[2]"  # Поле Dispatch End Before Day
     list_of_invoice_types_card = f"//li[@aria-posinset='{random.randint(1, 2)}']"  # Список Invoice Types
-    on_invoice_type_card = "//li[@aria-posinset='1']"  # Тип Invoice Types - On invoice
-    off_invoice_type_card = "//li[@aria-posinset='2']"  # Тип Invoice Types - Off invoice
+    on_invoice_type_selector = "//li[@aria-posinset='1']"  # Тип Invoice Types - On invoice
+    off_invoice_type_selector = "//li[@aria-posinset='2']"  # Тип Invoice Types - Off invoice
     list_of_affiliations_card = f"//li[@aria-posinset='{random.randint(1, 2)}']"  # Список Affiliations
-    international_affiliation_card = "//li[@aria-posinset='1']"  # Тип Affiliation - International
-    local_affiliation_card = "//li[@aria-posinset='2']"  # Тип Affiliation - Local
+    international_affiliation_selector = "//li[@aria-posinset='1']"  # Тип Affiliation - International
+    local_affiliation_selector = "//li[@aria-posinset='2']"  # Тип Affiliation - Local
     button_upload_file = "//input[@type='file']"  # Кнопка Upload File
     button_create_card = "//button[contains(@items,'[object Object]')]"  # Кнопка Create
     _3_dots_card = "(//div/div/button[@class='prospace-icon-button'])[3]"  # Троеточие в карточке продукта
@@ -62,7 +62,7 @@ class ClientPage(Base):
     name_of_added_file = "//span[contains(@class,'text-purple-800')]"     # Имя прикрепленного файла
 
     ## Грид клиентов
-    _3_dots_grid = "//div[@class='flex justify-center']/button[@class='prospace-icon-button']"  # Троеточия в гриде
+    _3_dots_grid = f"(//div[@class='flex justify-center']/button[@class='prospace-icon-button'])[{random.randint(1, 20)}]"  # Троеточия в гриде
     link_delete_restore_in_3_dots_grid = "(//div[contains(@class, 'prospace-dots-item')])[2]"  # Кнопка Delete в троеточии в гриде
     client_name = f"(//div[contains(@class, 'border-dotted')])[{random.randint(1, 20)}]"  # Имя клиента в гриде
     input_search_grid = "//input[contains(@data-pc-name,'inputtext')]"  # Поле Search в гриде
@@ -89,6 +89,7 @@ class ClientPage(Base):
     any_parent_in_grid = f"(//span[text()='Parent']/following-sibling::div[@class='text-ellipsis'])[{random.randint(1, 20)}]"  # Parent измерения в гриде
     any_type_in_grid = f"(//span[text()='Type']/following-sibling::div[@class='text-ellipsis'])[{random.randint(1, 20)}]"  # Type в гриде
     any_affiliation_in_grid = f"(//span[text()='Affiliation']/following-sibling::div[@class='text-ellipsis'])[{random.randint(1, 20)}]"  # Affiliation в гриде
+    any_invoice_type_in_grid = f"(//span[text()='Invoice Type']/following-sibling::div[@class='text-ellipsis'])[{random.randint(1, 20)}]"  # Invoice Type в гриде
     counter_all_filters = "//div[contains(@class,'all-filters')]/span[@class='prospace-counter-box']"  # Каунтер на кнопке All Filters
 
     ##  Форма созданного клиента
@@ -224,8 +225,8 @@ class ClientPage(Base):
             Logger.add_end_step(url=self.driver.current_url, method="open_clients_dict")
 
     def create_client(self):
-        """Создание клиента"""
         with allure.step("Create Client"):
+            """Создание клиента"""
             Logger.add_start_step(method="create_client")
             self.click_button(self.button_create_new_card)
             self.enter_in_name_input(self.create_name)
@@ -234,8 +235,10 @@ class ClientPage(Base):
             self.enter_in_type_input(self.create_type)
             self.click_button(self.selector_invoice_type_card)
             self.click_button(self.list_of_invoice_types_card)
+            selected_invoice_type = self.get_text(self.value_of_invoice_type_card)
             self.click_button(self.selector_affiliation_card)
             self.click_button(self.list_of_affiliations_card)
+            selected_affiliation = self.get_text(self.value_of_affiliation_card)
             self.get_input_dispatch_start_before_day().clear()
             self.get_input_dispatch_start_before_day().send_keys(random.randint(1, 10))
             self.get_input_dispatch_end_before_day().clear()
@@ -252,23 +255,29 @@ class ClientPage(Base):
             fact_external_id = self.get_text(self.last_external_id_in_grid)
             fact_parent = self.get_text(self.last_parent_in_grid)
             fact_type = self.get_text(self.last_type_in_grid)
-            print(f"Ожидаемое имя клиента: {self.create_name}, фактическое: {fact_name}")
-            print(f"Ожидаемый External ID клиента: {self.create_external_id}, фактический: {fact_external_id}")
-            print(f"Ожидаемый Parent клиента: {self.create_parent}, фактический: {fact_parent}")
-            print(f"Ожидаемый Type клиента: {self.create_type}, фактический: {fact_type}")
-            print(f"Ожидаемое имя загруженного логотипа клиента: магнит.jpg, фактическое: {name_of_added_file}")
+            fact_affiliation = self.is_visible(self.last_affiliation_in_grid).get_attribute("title")
+            fact_invoice_type = self.is_visible(self.last_invoice_type_in_grid).get_attribute("title")
+            print(f"Веденное имя клиента при создании: {self.create_name}, значение последнего созданного продукта: {fact_name}")
+            print(f"Веденный External ID клиента при создании: {self.create_external_id}, значение последнего созданного продукта: {fact_external_id}")
+            print(f"Веденный Parent клиента при создании: {self.create_parent}, значение последнего созданного продукта: {fact_parent}")
+            print(f"Веденный Type клиента при создании: {self.create_type}, значение последнего созданного продукта: {fact_type}")
+            print(f"Выбранный Invoice Type клиента при создании: {selected_invoice_type}, значение последнего созданного продукта: {fact_invoice_type}")
+            print(f"Выбранный Affiliation клиента при создании: {selected_affiliation}, значение последнего созданного продукта: {fact_affiliation}")
+            print(f"Имя загруженного логотипа клиента при создании: магнит.jpg, фактическое: {name_of_added_file}")
             assert self.create_name == fact_name, "Имя клиента не соответствует созданному"
             assert str(self.create_external_id) == str(fact_external_id), "External ID клиента не соответствует созданному"
             assert str(self.create_parent) == str(fact_parent), "Parent клиента не соответствует созданному"
-            assert self.create_type == fact_type, "Type клиента не соответствует созданной"
+            assert self.create_type == fact_type, "Type клиента не соответствует созданному"
+            assert selected_invoice_type == fact_invoice_type, "Invoice Type клиента не соответствует созданному"
+            assert selected_affiliation == fact_affiliation, "Affiliation клиента не соответствует созданному"
             assert "магнит.jpg" == name_of_added_file, "Имя добавленного файла отображается некорректно"
             print("Создан корректный клиент")
             Logger.add_end_step(url=self.driver.current_url, method="create_client")
 
 
     def delete_client_from_three_dots_grid(self):
-        """Удаление клиента через троеточие в гриде"""
         with allure.step("Delete Client using Dots In Grid"):
+            """Удаление клиента через троеточие в гриде"""
             Logger.add_start_step(method="delete_client_from_three_dots_grid")
             count_of_items_before = self.get_text(self.count_items_in_footer_grid)
             print(f"Количество клиентов на вкладке All до удаления: {count_of_items_before}")
@@ -277,7 +286,7 @@ class ClientPage(Base):
             try:
                 self.click_button(self.button_delete_item)
             except self.ignored_exceptions:
-                print("Баг: Окно подтверждения не отобразилось")
+                print("------------------Баг: Окно подтверждения не отобразилось--------------------------")
 
             """Проверка, что клиент переместился во вкладку Deleted"""
             self.browser_refresh()
@@ -291,8 +300,8 @@ class ClientPage(Base):
 
 
     def delete_client_from_checkbox_grid(self):
-        """Удаление клиента через чекбокс в гриде"""
         with allure.step("Delete Client using Checkbox in Grid"):
+            """Удаление клиента через чекбокс в гриде"""
             Logger.add_start_step(method="delete_client_from_checkbox_grid")
             count_of_items_before = self.get_text(self.count_items_in_footer_grid)
             print(f"Количество клиентов на вкладке All до удаления: {count_of_items_before}")
@@ -302,7 +311,7 @@ class ClientPage(Base):
             try:
                 self.click_button(self.button_delete_item)
             except self.ignored_exceptions:
-                print("Баг: Окно подтверждения не отобразилось")
+                print("------------------Баг: Окно подтверждения не отобразилось--------------------------")
 
 
             """Проверка, что клиент переместился во вкладку Deleted"""
@@ -317,8 +326,8 @@ class ClientPage(Base):
 
 
     def delete_4_clients_from_checkbox_grid(self):
-        """Удаление четырех клиентов через чекбоксы в гриде"""
         with allure.step("Multiselection Deleted Clients using Checkboxes in Grid"):
+            """Удаление четырех клиентов через чекбоксы в гриде"""
             Logger.add_start_step(method="delete_4_clients_from_checkbox_grid")
             count_of_items_before = self.get_text(self.count_items_in_footer_grid)
             print(f"Количество клиентов на вкладке All до удаления: {count_of_items_before}")
@@ -333,7 +342,7 @@ class ClientPage(Base):
                 self.element_is_visible(self.button_delete_item)
                 self.click_button(self.button_delete_item)
             except self.ignored_exceptions:
-                print("Баг: Окно подтверждения не отобразилось")
+                print("------------------Баг: Окно подтверждения не отобразилось--------------------------")
 
 
             """Проверка, что клиенты переместились во вкладку Deleted"""
@@ -347,8 +356,8 @@ class ClientPage(Base):
 
 
     def select_all_delete_client(self):
-        """Массовое удаление клиентов через Select All в гриде"""
         with allure.step("Delete Client using Select All"):
+            """Массовое удаление клиентов через Select All в гриде"""
             Logger.add_start_step(method="select_all_delete_client")
             count_of_items_before = self.get_text(self.count_items_in_footer_grid)
             print(f"Количество клиентов на вкладке All до удаления: {count_of_items_before}")
@@ -359,7 +368,7 @@ class ClientPage(Base):
             try:
                 self.click_button(self.button_delete_item)
             except self.ignored_exceptions:
-                print("Баг: Окно подтверждения не отобразилось")
+                print("------------------Баг: Окно подтверждения не отобразилось--------------------------")
 
             """Проверка, что клиенты переместились во вкладку Deleted"""
             self.browser_refresh()
@@ -372,8 +381,8 @@ class ClientPage(Base):
             Logger.add_end_step(url=self.driver.current_url, method="select_all_delete_client")
 
     def delete_client_from_card(self):
-        """Удаление клиента через карточку продукта"""
         with allure.step("Delete Client from Card"):
+            """Удаление клиента через карточку продукта"""
             Logger.add_start_step(method="delete_client_from_card")
             count_of_items_before = self.get_text(self.count_items_in_footer_grid)
             print(f"Количество клиентов на вкладке All до удаления: {count_of_items_before}")
@@ -386,7 +395,7 @@ class ClientPage(Base):
             try:
                 self.click_button(self.button_delete_item)
             except self.ignored_exceptions:
-                print("Баг: Окно подтверждения не отобразилось")
+                print("------------------Баг: Окно подтверждения не отобразилось--------------------------")
 
             """Проверка, что клиент переместился во вкладку Deleted"""
             self.browser_refresh()
@@ -399,8 +408,8 @@ class ClientPage(Base):
 
 
     def find_client_by_name(self):
-        """Поиск клиента по имени продукта"""
         with allure.step("Find Client by Name"):
+            """Поиск клиента по имени продукта"""
             Logger.add_start_step(method="find_client_by_name")
             any_name_in_grid = self.get_text(self.client_name)
             print(f"Выбранное для поиска имя клиента: {any_name_in_grid}")
@@ -419,8 +428,8 @@ class ClientPage(Base):
 
 
     def find_client_by_id(self):
-        """Поиск созданного клиента по ID"""
         with allure.step("Find Client by ID"):
+            """Поиск созданного клиента по ID"""
             Logger.add_start_step(method="find_client_by_id")
             any_id = self.get_text(self.any_id_in_grid)
             print(f"Выбранное для поиска ID клиента: {any_id}")
@@ -437,7 +446,6 @@ class ClientPage(Base):
             Logger.add_end_step(url=self.driver.current_url, method="find_client_by_id")
 
 
-    """TODO: Продумать изменения в селекторах Affiliation и Invoice Type"""
     def update_client(self):
         with allure.step("Update Client"):
             Logger.add_start_step(method="update_client")
@@ -461,17 +469,17 @@ class ClientPage(Base):
             self.enter_in_type_input(self.update_type)
             if self.get_text(self.value_of_invoice_type_card) == "On Invoice":
                 self.click_button(self.selector_invoice_type_card)
-                self.click_button(self.off_invoice_type_card)
+                self.click_button(self.off_invoice_type_selector)
             else:
                 self.click_button(self.selector_invoice_type_card)
-                self.click_button(self.on_invoice_type_card)
+                self.click_button(self.on_invoice_type_selector)
 
             if self.get_text(self.value_of_affiliation_card) == "Local":
                 self.click_button(self.selector_affiliation_card)
-                self.click_button(self.international_affiliation_card)
+                self.click_button(self.international_affiliation_selector)
             else:
                 self.click_button(self.selector_affiliation_card)
-                self.click_button(self.local_affiliation_card)
+                self.click_button(self.local_affiliation_selector)
             self.get_input_dispatch_start_before_day().clear()
             self.enter_in_dispatch_start_before_day(self.update_dispatch_start)
             self.get_input_dispatch_end_before_day().clear()
@@ -507,3 +515,155 @@ class ClientPage(Base):
             assert invoice_type_before != invoice_type_after, "Invoice Type клиента нне обновился"
             print("Продукт успешно отредактирован")
             Logger.add_end_step(url=self.driver.current_url, method="update_client")
+
+
+    def restore_client_from_three_dots_grid(self):
+        with allure.step("Restore Client using Dots in Grid"):
+            """Восстановление клиента из помеченных на удаление через троеточие в гриде"""
+            Logger.add_start_step(method="restore_client_from_three_dots_grid")
+            self.open_deleted_tab()
+            self.is_visible(self.deleted_tab_grid_is_active)
+            if self.get_text(self.count_items_in_footer_grid) == "0":
+                time.sleep(1)
+            count_of_items_before = self.get_text(self.count_items_in_footer_grid)
+            print(f"Количество клиентов на вкладке Deleted до рестора: {count_of_items_before}")
+            self.click_button(self._3_dots_grid)
+            self.click_button(self.link_delete_restore_in_3_dots_grid)
+            try:
+                self.click_button(self.button_delete_item)
+            except self.ignored_exceptions:
+                print("------------------Баг: Окно подтверждения не отобразилось--------------------------")
+
+            """Проверка, что клиент переместился во вкладку All"""
+            self.browser_refresh()
+            self.open_deleted_tab()
+            self.is_visible(self.deleted_tab_grid_is_active)
+            if self.get_text(self.count_items_in_footer_grid) == "0":
+                time.sleep(1)
+            count_of_items_after = self.get_text(self.count_items_in_footer_grid)
+            print(f"Количество клиентов на вкладке Deleted после рестора: {count_of_items_after}")
+            assert int(count_of_items_after) == int(count_of_items_before) - 1, \
+                "Ошибка при восстановлении клиента через троеточие в гриде"
+            print("Клиент успешно восстановлен")
+            Logger.add_end_step(url=self.driver.current_url, method="restore_client_from_three_dots_grid")
+
+
+    def filters_client_by_name(self):
+        with allure.step("Filter Clients by Name using All Filters"):
+            """Фильтрация клиентов по имени"""
+            Logger.add_start_step(method="filters_client_by_name")
+            count_of_items_before = self.get_text(self.count_items_in_footer_grid)
+            print(f"Количество клиентов на вкладке All до фильтрации: {count_of_items_before}")
+            any_name_in_grid = self.get_text(self.client_name)
+            print(f"Выбранное для фильтрации имя клиента: {any_name_in_grid}")
+            self.click_button(self.button_all_fiters)
+            self.enter_in_name_input_filters(any_name_in_grid)
+            print("Имя клиента введено в поле Name")
+            if self.get_text(self.counter_filters) == "1":
+                self.click_button(self.button_apply_filters)
+            print("Клик Apply")
+
+            """Проверка, что клиенты отфильтровались по имени"""
+            self.is_not_visible(self.button_apply_filters)
+            count_of_items_after = self.get_text(self.count_items_in_footer_grid)
+            print(f"Количество клиентов на вкладке All после фильтрации: {count_of_items_after}")
+            if count_of_items_after < count_of_items_before:
+                first_name_in_grid = self.get_text(self.last_client_name_in_grid)
+                print(f"Имя первого отображаемого клиента в гриде: {first_name_in_grid}")
+                assert self.is_visible(self.counter_all_filters), "Не отображается каунтер на All Filters"
+                assert str(any_name_in_grid) == str(first_name_in_grid), "Ошибка при фильтрации по имени или имена клиентов не совпадают"
+            print("Фильтрация корректна")
+            Logger.add_end_step(url=self.driver.current_url, method="filters_client_by_name")
+
+
+
+    def filters_client_by_type(self):
+        with allure.step("Filter Clients by Type using All Filters"):
+            """Фильтрация клиентов по типу"""
+            Logger.add_start_step(method="filters_client_by_type")
+            count_of_items_before = self.get_text(self.count_items_in_footer_grid)
+            print(f"Количество клиентов на вкладке All до фильтрации: {count_of_items_before}")
+            any_type_in_grid_before = self.get_text(self.any_type_in_grid)
+            print(f"Выбранный для фильтрации Type продукта: {any_type_in_grid_before}")
+            self.click_button(self.button_all_fiters)
+            self.enter_in_type_input_filters(any_type_in_grid_before)
+            print(f"Type клиента '{any_type_in_grid_before}' введен в поле Type")
+            if self.get_text(self.counter_filters) == "1":
+                self.click_button(self.button_apply_filters)
+            print("Клик Apply")
+
+            """Проверка, что клиенты отфильтровались по типу"""
+            self.is_not_visible(self.button_apply_filters)
+            count_of_items_after = self.get_text(self.count_items_in_footer_grid)
+            print(f"Количество клиентов на вкладке All после фильтрации: {count_of_items_after}")
+            first_type_in_grid_after = self.get_text(self.last_type_in_grid)
+            print(f"Type отфильтрованных клиентов в гриде: {first_type_in_grid_after}")
+            assert self.is_visible(self.counter_all_filters), "Не отображается каунтер на All Filters"
+            assert str(any_type_in_grid_before) == str(first_type_in_grid_after), "Ошибка при фильтрации по типу или тип клиентов не совпадает"
+            print("Фильтрация корректна")
+            Logger.add_end_step(url=self.driver.current_url, method="filters_client_by_type")
+            
+        
+        
+    def filters_client_by_invoice_type(self):
+        with allure.step("Filter Client by Invoice Type using All Filters"):
+            """Фильтрация клиентов по Invoice Type"""
+            Logger.add_start_step(method="filters_client_by_invoice_type")
+            count_of_items_before = self.get_text(self.count_items_in_footer_grid)
+            print(f"Количество клиентов на вкладке All до фильтрации: {count_of_items_before}")
+            any_invoice_type_in_grid_before = self.get_text(self.any_invoice_type_in_grid)
+            print(f"Выбранный для фильтрации Invoice Type клиента: {any_invoice_type_in_grid_before}")
+            self.click_button(self.button_all_fiters)
+            if "On" in any_invoice_type_in_grid_before:
+                self.click_button(self.selector_invoice_type_filters)
+                self.click_button(self.on_invoice_type_selector)
+            else:
+                self.click_button(self.selector_invoice_type_filters)
+                self.click_button(self.off_invoice_type_selector)
+            print(f"Invoice Type клиента '{any_invoice_type_in_grid_before}' выбран в поле Invoice Type")
+            if self.get_text(self.counter_filters) == "1":
+                self.click_button(self.button_apply_filters)
+            print("Клик Apply")
+
+            """Проверка, что клиенты отфильтровались по Invoice Type"""
+            self.is_not_visible(self.button_apply_filters)
+            count_of_items_after = self.get_text(self.count_items_in_footer_grid)
+            print(f"Количество клиентов на вкладке All после фильтрации: {count_of_items_after}")
+            last_invoice_type_in_grid_after = self.get_text(self.last_invoice_type_in_grid)
+            print(f"Invoice type отфильтрованных клиентов в гриде: {last_invoice_type_in_grid_after}")
+            assert self.is_visible(self.counter_all_filters), "Не отображается каунтер на All Filters"
+            assert str(any_invoice_type_in_grid_before) == str(last_invoice_type_in_grid_after), "Ошибка при фильтрации по Invoice Type или Invoice Type клиентов не совпадают"
+            print("Фильтрация корректна")
+            Logger.add_end_step(url=self.driver.current_url, method="filters_client_by_invoice_type")
+
+
+    def filters_client_by_affiliation(self):
+        with allure.step("Filter Client by Affiliation using All Filters"):
+            """Фильтрация клиентов по Affiliation"""
+            Logger.add_start_step(method="filters_client_by_affiliation")
+            count_of_items_before = self.get_text(self.count_items_in_footer_grid)
+            print(f"Количество клиентов на вкладке All до фильтрации: {count_of_items_before}")
+            any_affiliation_in_grid_before = self.get_text(self.any_affiliation_in_grid)
+            print(f"Выбранный для фильтрации Affiliation клиента: {any_affiliation_in_grid_before}")
+            self.click_button(self.button_all_fiters)
+            if any_affiliation_in_grid_before == "Local":
+                self.click_button(self.selector_affiliation_filters)
+                self.click_button(self.local_affiliation_selector)
+            else:
+                self.click_button(self.selector_affiliation_filters)
+                self.click_button(self.local_affiliation_selector)
+            print(f"Affiliation клиента '{any_affiliation_in_grid_before}' выбран в поле Affiliation")
+            if self.get_text(self.counter_filters) == "1":
+                self.click_button(self.button_apply_filters)
+            print("Клик Apply")
+
+            """Проверка, что клиенты отфильтровались по Affiliation"""
+            self.is_not_visible(self.button_apply_filters)
+            count_of_items_after = self.get_text(self.count_items_in_footer_grid)
+            print(f"Количество клиентов на вкладке All после фильтрации: {count_of_items_after}")
+            last_affiliation_in_grid_after = self.get_text(self.last_affiliation_in_grid)
+            print(f"Affiliation отфильтрованных клиентов в гриде: {last_affiliation_in_grid_after}")
+            assert self.is_visible(self.counter_all_filters), "Не отображается каунтер на All Filters"
+            assert str(any_affiliation_in_grid_before) == str(last_affiliation_in_grid_after), "Ошибка при фильтрации по Affiliation или Affiliation клиентов не совпадают"
+            print("Фильтрация корректна")
+            Logger.add_end_step(url=self.driver.current_url, method="filters_client_by_affiliation")
