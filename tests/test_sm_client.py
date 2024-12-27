@@ -116,3 +116,61 @@ class TestSmokeClientPage:
         cp = ClientPage(driver)
         cp.open_clients_dict()
         cp.update_client()
+
+    """Рестор клиента через троеточие в гриде"""
+    @allure.title("Restore Client using Dots in Grid")
+    @allure.severity("Critical")
+    @pytest.mark.smoke
+    def test_restore_client_from_three_dots_grid(self, driver):
+        lp = LoginPage(driver)
+        lp.authorization()
+        cp = ClientPage(driver)
+        cp.open_clients_dict()
+        cp.restore_client_from_three_dots_grid()
+
+
+    """Отфильтровать клиента по имени через расширенные фильтры"""
+    @allure.title("Filter Client by Name using All Filters")
+    @allure.severity("High")
+    @pytest.mark.smoke
+    def test_filters_client_by_name(self, driver):
+        lp = LoginPage(driver)
+        lp.authorization()
+        cp = ClientPage(driver)
+        cp.open_clients_dict()
+        cp.filters_client_by_name()
+
+    """Отфильтровать клиентов по типу через расширенные фильтры"""
+    @allure.title("Filter Client by Type using All Filters")
+    @allure.severity("High")
+    @pytest.mark.smoke
+    def test_filters_client_by_type(self, driver):
+        lp = LoginPage(driver)
+        lp.authorization()
+        cp = ClientPage(driver)
+        cp.open_clients_dict()
+        cp.filters_client_by_type()
+
+
+    """Отфильтровать клиентов по Invoice Type через расширенные фильтры"""
+    @allure.title("Filter Client by Invoice Type using All Filters")
+    @allure.severity("High")
+    @pytest.mark.smoke
+    def test_filters_client_by_invoice_type(self, driver):
+        lp = LoginPage(driver)
+        lp.authorization()
+        cp = ClientPage(driver)
+        cp.open_clients_dict()
+        cp.filters_client_by_invoice_type()
+
+
+    """Отфильтровать клиентов по Affiliation через расширенные фильтры"""
+    @allure.title("Filter Client by Affiliation using All Filters")
+    @allure.severity("High")
+    @pytest.mark.smoke
+    def test_filters_client_by_affiliation(self, driver):
+        lp = LoginPage(driver)
+        lp.authorization()
+        cp = ClientPage(driver)
+        cp.open_clients_dict()
+        cp.filters_client_by_affiliation()

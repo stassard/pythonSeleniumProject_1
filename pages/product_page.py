@@ -32,8 +32,8 @@ class ProductPage(Base):
     update_technology = f"UPD Technology {random.randint(11234, 98765)}"
     create_brand = f"Brand {random.randint(11234, 98765)}"
     update_brand = f"UPD Brand {random.randint(11234, 98765)}"
-    create_unit = random.randint(1, 9) / 10
-    update_unit = random.randint(1, 9) / 10
+    create_unit = random.randint(1, 100) / 10
+    update_unit = random.randint(1, 100) / 10
 
     # Locators
     head_of_product_page = "//div[@class='ps-font-TopHeader text-indigo-950']"                # Заголовок страницы Продукты
@@ -55,7 +55,7 @@ class ProductPage(Base):
     x_icon_card = "(//div/div/button[@class='prospace-icon-button'])[5]"                      # Иконка X в карточке создания продукта
 
     ## Грид продуктов
-    _3_dots_grid = "//div[@class='flex justify-center']/button[@class='prospace-icon-button']"  # Троеточие в гриде
+    _3_dots_grid = f"(//div[@class='flex justify-center']/button[@class='prospace-icon-button'])[{random.randint(1, 20)}]"  # Троеточие в гриде
     link_delete_restore_in_3_dots_grid = "(//div[contains(@class, 'prospace-dots-item')])[2]"   # Кнопка Delete в троеточии в гриде
     product_name = f"(//div[contains(@class, 'border-dotted')])[{random.randint(1, 20)}]"                                   # Имя продукта в гриде
     input_search_grid = "//input[contains(@data-pc-name,'inputtext')]"                          # Поле Search в гриде
@@ -244,13 +244,13 @@ class ProductPage(Base):
             fact_category = self.get_text(self.last_category_in_grid)
             fact_brand = self.get_text(self.last_brand_in_grid)
             fact_unit = self.get_text(self.last_unit_in_grid)
-            print(f"Ожидаемое имя продукта: {self.create_name}, фактическое: {fact_name}")
-            print(f"Ожидаемый EAN Case продукта: {self.create_eanc}, фактический: {fact_eanc}")
-            print(f"Ожидаемый EAN Pc продукта: {self.create_eanp}, фактический: {fact_eanp}")
-            print(f"Ожидаемый Category продукта: {self.create_category}, фактический: {fact_category}")
-            print(f"Ожидаемый Technology продукта: {self.create_technology}, фактический: {fact_technology}")
-            print(f"Ожидаемый Brand продукта: {self.create_brand}, фактический: {fact_brand}")
-            print(f"Ожидаемый Unit продукта: {self.create_unit}, фактический: {fact_unit}")
+            print(f"Веденное имя продукта при создании: {self.create_name}, значение последнего созданного продукта: {fact_name}")
+            print(f"Веденный EAN Case продукта при создании: {self.create_eanc}, значение последнего созданного продукта: {fact_eanc}")
+            print(f"Веденный EAN Pc продукта при создании: {self.create_eanp}, значение последнего созданного продукта: {fact_eanp}")
+            print(f"Веденный Category продукта при создании: {self.create_category}, значение последнего созданного продукта: {fact_category}")
+            print(f"Веденный Technology продукта при создании: {self.create_technology}, значение последнего созданного продукта: {fact_technology}")
+            print(f"Веденный Brand продукта при создании: {self.create_brand}, значение последнего созданного продукта: {fact_brand}")
+            print(f"Веденный Unit продукта при создании: {self.create_unit}, значение последнего созданного продукта: {fact_unit}")
             assert self.create_name == fact_name, "Имя продукта не соответствует созданному"
             assert str(self.create_eanc) == str(fact_eanc), "EAN Case продукта не соответствует созданному"
             assert str(self.create_eanp) == str(fact_eanp), "EAN Pc продукта не соответствует созданному"
@@ -275,7 +275,7 @@ class ProductPage(Base):
                 self.element_is_visible(self.button_delete_item)
                 self.click_button(self.button_delete_item)
             except self.ignored_exceptions:
-                print("Баг: Окно подтверждения не отобразилось")
+                print("------------------Баг: Окно подтверждения не отобразилось--------------------------")
 
             """Проверка, что продукт переместился во вкладку Deleted"""
             self.browser_refresh()
@@ -302,7 +302,7 @@ class ProductPage(Base):
                 self.element_is_visible(self.button_delete_item)
                 self.click_button(self.button_delete_item)
             except self.ignored_exceptions:
-                print("Баг: Окно подтверждения не отобразилось")
+                print("------------------Баг: Окно подтверждения не отобразилось--------------------------")
 
             """Проверка, что продукт переместился во вкладку Deleted"""
             self.browser_refresh()
@@ -327,11 +327,12 @@ class ProductPage(Base):
                 self.element_is_visible(self.unselected_checkbox)
                 self.click_button(self.unselected_checkbox)
             print(f"Выбрано '{self.get_text(self.counter_upper_panel)}' чекбокса")
+            self.element_is_visible(self.delete_button_upper_panel)
             self.click_button(self.delete_button_upper_panel)
             try:
                 self.click_button(self.button_delete_item)
             except self.ignored_exceptions:
-                print("Баг: Окно подтверждения не отобразилось")
+                print("------------------Баг: Окно подтверждения не отобразилось--------------------------")
 
             """Проверка, что продукты переместились во вкладку Deleted"""
             self.browser_refresh()
@@ -360,7 +361,7 @@ class ProductPage(Base):
                 self.element_is_visible(self.button_delete_item)
                 self.click_button(self.button_delete_item)
             except self.ignored_exceptions:
-                print("Баг: Окно подтверждения не отобразилось")
+                print("------------------Баг: Окно подтверждения не отобразилось--------------------------")
 
             """Проверка, что продукты переместился во вкладку Deleted"""
             self.browser_refresh()
@@ -389,7 +390,7 @@ class ProductPage(Base):
             try:
                 self.click_button(self.button_delete_item)
             except self.ignored_exceptions:
-                print("Баг: Окно подтверждения не отобразилось")
+                print("------------------Баг: Окно подтверждения не отобразилось--------------------------")
 
 
             """Проверка, что продукт переместился во вкладку Deleted"""
@@ -515,18 +516,23 @@ class ProductPage(Base):
             Logger.add_start_step(method="restore_product_from_three_dots_grid")
             self.open_deleted_tab()
             self.is_visible(self.deleted_tab_grid_is_active)
-            time.sleep(1)
+            if self.get_text(self.count_items_in_footer_grid) == "0":
+                time.sleep(1)
             count_of_items_before = self.get_text(self.count_items_in_footer_grid)
             print(f"Количество продуктов на вкладке Deleted до рестора: {count_of_items_before}")
             self.click_button(self._3_dots_grid)
             self.click_button(self.link_delete_restore_in_3_dots_grid)
-            # self.click_button_delete_item()      # Пока что модального окна нет - баг
+            try:
+                self.click_button(self.button_delete_item)
+            except self.ignored_exceptions:
+                print("------------------Баг: Окно подтверждения не отобразилось--------------------------")
 
             """Проверка, что продукт переместился во вкладку All"""
             self.browser_refresh()
             self.open_deleted_tab()
             self.is_visible(self.deleted_tab_grid_is_active)
-            time.sleep(1)
+            if self.get_text(self.count_items_in_footer_grid) == "0":
+                time.sleep(1)
             count_of_items_after = self.get_text(self.count_items_in_footer_grid)
             print(f"Количество продуктов на вкладке Deleted после рестора: {count_of_items_after}")
             assert int(count_of_items_after) == int(count_of_items_before) - 1, \
@@ -569,6 +575,8 @@ class ProductPage(Base):
         """Фильтрация продуктов по категории"""
         with allure.step("Filter Products by Category using All Filters"):
             Logger.add_start_step(method="filters_product_by_category")
+            count_of_items_before = self.get_text(self.count_items_in_footer_grid)
+            print(f"Количество продуктов на вкладке All до фильтрации: {count_of_items_before}")
             any_category_in_grid_before = self.get_text(self.any_category_in_grid)
             print(f"Выбранная для фильтрации категория продукта: {any_category_in_grid_before}")
             self.click_button(self.button_all_fiters)
@@ -580,10 +588,12 @@ class ProductPage(Base):
 
             """Проверка, что продукты отфильтровались по категории"""
             self.is_not_visible(self.button_apply_filters)
-            any_category_in_grid_after = self.get_text(self.any_category_in_grid)
-            print(f"Категории отфильтрованных продуктов в гриде: {any_category_in_grid_after}")
+            count_of_items_after = self.get_text(self.count_items_in_footer_grid)
+            print(f"Количество продуктов на вкладке All после фильтрации: {count_of_items_after}")
+            first_category_in_grid_after = self.get_text(self.last_category_in_grid)
+            print(f"Категории отфильтрованных продуктов в гриде: {first_category_in_grid_after}")
             assert self.is_visible(self.counter_all_filters), "Не отображается каунтер на All Filters"
-            assert str(any_category_in_grid_before) == str(any_category_in_grid_after), "Ошибка при фильтрации по категории или категории продуктов не совпадают"
+            assert str(any_category_in_grid_before) == str(first_category_in_grid_after), "Ошибка при фильтрации по категории или категории продуктов не совпадают"
             print("Фильтрация корректна")
             Logger.add_end_step(url=self.driver.current_url, method="filters_product_by_category")
 
@@ -593,6 +603,8 @@ class ProductPage(Base):
         """Фильтрация продуктов по бренду"""
         with allure.step("Filter Products by Brand using All Filters"):
             Logger.add_start_step(method="filters_product_by_brand")
+            count_of_items_before = self.get_text(self.count_items_in_footer_grid)
+            print(f"Количество продуктов на вкладке All до фильтрации: {count_of_items_before}")
             any_brand_in_grid_before = self.get_text(self.any_brand_in_grid)
             print(f"Выбранный для фильтрации бренд продукта: {any_brand_in_grid_before}")
             self.click_button(self.button_all_fiters)
@@ -604,9 +616,10 @@ class ProductPage(Base):
 
             """Проверка, что продукты отфильтровались по бренду"""
             self.is_not_visible(self.button_apply_filters)
+            count_of_items_after = self.get_text(self.count_items_in_footer_grid)
+            print(f"Количество продуктов на вкладке All после фильтрации: {count_of_items_after}")
             any_brand_in_grid_after = self.get_text(self.any_brand_in_grid)
             print(f"Бренды отфильтрованных продуктов в гриде: {any_brand_in_grid_after}")
-            print(any_brand_in_grid_after)
             assert self.is_visible(self.counter_all_filters), "Не отображается каунтер на All Filters"
             assert str(any_brand_in_grid_before) == str(any_brand_in_grid_after), "Ошибка при фильтрации по бренду или бренды продуктов не совпадают"
             print("Фильтрация корректна")
@@ -618,6 +631,8 @@ class ProductPage(Base):
         """Фильтрация продуктов по единице измерения"""
         with allure.step("Filter Products by Unit of Measure using All Filters"):
             Logger.add_start_step(method="filters_product_by_unit_of_measure")
+            count_of_items_before = self.get_text(self.count_items_in_footer_grid)
+            print(f"Количество продуктов на вкладке All до фильтрации: {count_of_items_before}")
             any_unit_of_measure_in_grid_before = self.get_text(self.any_unit_of_measure_in_grid)
             print(f"Выбранная для фильтрации единица измерения продукта: {any_unit_of_measure_in_grid_before}")
             self.click_button(self.button_all_fiters)
@@ -629,6 +644,8 @@ class ProductPage(Base):
 
             """Проверка, что продукты отфильтровались по единице измерения"""
             self.is_not_visible(self.button_apply_filters)
+            count_of_items_after = self.get_text(self.count_items_in_footer_grid)
+            print(f"Количество продуктов на вкладке All после фильтрации: {count_of_items_after}")
             any_unit_of_measure_in_grid_after = self.get_text(self.last_unit_of_measure_in_grid)
             print(f"Единицы измерения отфильтрованных продуктов в гриде: {any_unit_of_measure_in_grid_after}")
             assert self.is_visible(self.counter_all_filters), "Не отображается каунтер на All Filters"
@@ -642,6 +659,8 @@ class ProductPage(Base):
         """Фильтрация продуктов по юниту"""
         with allure.step("Filter Products by Unit using All Filters"):
             Logger.add_start_step(method="filters_product_by_unit")
+            count_of_items_before = self.get_text(self.count_items_in_footer_grid)
+            print(f"Количество продуктов на вкладке All до фильтрации: {count_of_items_before}")
             any_unit_in_grid_before = self.get_text(self.any_unit_in_grid)
             print(f"Выбранный для фильтрации юнит продукта: {any_unit_in_grid_before}")
             self.click_button(self.button_all_fiters)
@@ -654,6 +673,8 @@ class ProductPage(Base):
 
             """Проверка, что продукты отфильтровались по юниту"""
             self.is_not_visible(self.button_apply_filters)
+            count_of_items_after = self.get_text(self.count_items_in_footer_grid)
+            print(f"Количество продуктов на вкладке All после фильтрации: {count_of_items_after}")
             any_unit_in_grid_after = self.get_text(self.any_unit_in_grid)
             print(f"Юниты отфильтрованных продуктов в гриде: {any_unit_in_grid_after}")
             assert self.is_visible(self.counter_all_filters), "Не отображается каунтер на All Filters"
