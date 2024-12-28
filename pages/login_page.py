@@ -10,10 +10,6 @@ class LoginPage(Base):
 
     load_dotenv(find_dotenv())
 
-    def __init__(self, driver):
-        super().__init__(driver)
-        self.driver = driver
-
     # Locators
     button_login = "(//button[contains(@class,'prospace-button')])[1]"        # Кнопка ProSpace
     input_login_field = "//input[@type='text']"                               # Поле Логин

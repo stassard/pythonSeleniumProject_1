@@ -1,3 +1,4 @@
+from pathlib import Path
 import random
 import time
 import allure
@@ -12,11 +13,6 @@ from utilities.logger import Logger
 
 class ClientPage(Base):
     """ Класс содержащий локаторы и методы для справочника Клиенты"""
-
-    def __init__(self, driver):
-        super().__init__(driver)
-        self.driver = driver
-
 
     # Data
     ignored_exceptions = (
@@ -64,7 +60,7 @@ class ClientPage(Base):
     ## Грид клиентов
     _3_dots_grid = f"(//div[@class='flex justify-center']/button[@class='prospace-icon-button'])[{random.randint(1, 20)}]"  # Троеточия в гриде
     link_delete_restore_in_3_dots_grid = "(//div[contains(@class, 'prospace-dots-item')])[2]"  # Кнопка Delete в троеточии в гриде
-    client_name = f"(//div[contains(@class, 'border-dotted')])[{random.randint(1, 20)}]"  # Имя клиента в гриде
+    client_name = f"(//div[contains(@class, 'border-dotted')])[{random.randint(2, 20)}]"  # Имя клиента в гриде
     input_search_grid = "//input[contains(@data-pc-name,'inputtext')]"  # Поле Search в гриде
     last_client_name_in_grid = "(//div[contains(@class,'border-b-purple-400')])[1]"  # Имя последнего созданного клиента в гриде
     last_id_in_grid = "(//div[@class='text-ellipsis'])[1]"  # ID последнего созданного клиента в гриде
@@ -570,7 +566,12 @@ class ClientPage(Base):
             if count_of_items_after < count_of_items_before:
                 first_name_in_grid = self.get_text(self.last_client_name_in_grid)
                 print(f"Имя первого отображаемого клиента в гриде: {first_name_in_grid}")
-                assert self.is_visible(self.counter_all_filters), "Не отображается каунтер на All Filters"
+                counter_all_filters_is_visible = False
+                try:
+                    counter_all_filters_is_visible = self.is_visible(self.counter_all_filters)
+                except self.ignored_exceptions:
+                    pass
+                assert counter_all_filters_is_visible, "Не отображается каунтер на All Filters"
                 assert str(any_name_in_grid) == str(first_name_in_grid), "Ошибка при фильтрации по имени или имена клиентов не совпадают"
             print("Фильтрация корректна")
             Logger.add_end_step(url=self.driver.current_url, method="filters_client_by_name")
@@ -596,10 +597,15 @@ class ClientPage(Base):
             self.is_not_visible(self.button_apply_filters)
             count_of_items_after = self.get_text(self.count_items_in_footer_grid)
             print(f"Количество клиентов на вкладке All после фильтрации: {count_of_items_after}")
-            first_type_in_grid_after = self.get_text(self.last_type_in_grid)
-            print(f"Type отфильтрованных клиентов в гриде: {first_type_in_grid_after}")
-            assert self.is_visible(self.counter_all_filters), "Не отображается каунтер на All Filters"
-            assert str(any_type_in_grid_before) == str(first_type_in_grid_after), "Ошибка при фильтрации по типу или тип клиентов не совпадает"
+            last_type_in_grid_after = self.get_text(self.last_type_in_grid)
+            print(f"Type отфильтрованных клиентов в гриде: {last_type_in_grid_after}")
+            counter_all_filters_is_visible = False
+            try:
+                counter_all_filters_is_visible = self.is_visible(self.counter_all_filters)
+            except self.ignored_exceptions:
+                pass
+            assert counter_all_filters_is_visible, "Не отображается каунтер на All Filters"
+            assert str(any_type_in_grid_before) == str(last_type_in_grid_after), "Ошибка при фильтрации по типу или тип клиентов не совпадает"
             print("Фильтрация корректна")
             Logger.add_end_step(url=self.driver.current_url, method="filters_client_by_type")
             
@@ -631,7 +637,12 @@ class ClientPage(Base):
             print(f"Количество клиентов на вкладке All после фильтрации: {count_of_items_after}")
             last_invoice_type_in_grid_after = self.get_text(self.last_invoice_type_in_grid)
             print(f"Invoice type отфильтрованных клиентов в гриде: {last_invoice_type_in_grid_after}")
-            assert self.is_visible(self.counter_all_filters), "Не отображается каунтер на All Filters"
+            counter_all_filters_is_visible = False
+            try:
+                counter_all_filters_is_visible = self.is_visible(self.counter_all_filters)
+            except self.ignored_exceptions:
+                pass
+            assert counter_all_filters_is_visible, "Не отображается каунтер на All Filters"
             assert str(any_invoice_type_in_grid_before) == str(last_invoice_type_in_grid_after), "Ошибка при фильтрации по Invoice Type или Invoice Type клиентов не совпадают"
             print("Фильтрация корректна")
             Logger.add_end_step(url=self.driver.current_url, method="filters_client_by_invoice_type")
@@ -663,7 +674,88 @@ class ClientPage(Base):
             print(f"Количество клиентов на вкладке All после фильтрации: {count_of_items_after}")
             last_affiliation_in_grid_after = self.get_text(self.last_affiliation_in_grid)
             print(f"Affiliation отфильтрованных клиентов в гриде: {last_affiliation_in_grid_after}")
-            assert self.is_visible(self.counter_all_filters), "Не отображается каунтер на All Filters"
+            counter_all_filters_is_visible = False
+            try:
+                counter_all_filters_is_visible = self.is_visible(self.counter_all_filters)
+            except self.ignored_exceptions:
+                pass
+            assert counter_all_filters_is_visible, "Не отображается каунтер на All Filters"
             assert str(any_affiliation_in_grid_before) == str(last_affiliation_in_grid_after), "Ошибка при фильтрации по Affiliation или Affiliation клиентов не совпадают"
             print("Фильтрация корректна")
             Logger.add_end_step(url=self.driver.current_url, method="filters_client_by_affiliation")
+            
+            
+    def filters_client_by_dispatch_start_before_day(self):
+        """Фильтрация продуктов по Dispatch Start Before Day"""
+        with allure.step("Filter Clients by Dispatch Start Before Day using All Filters"):
+            Logger.add_start_step(method="filters_client_by_dispatch_start_before_day")
+            count_of_items_before = self.get_text(self.count_items_in_footer_grid)
+            print(f"Количество клиентов на вкладке All до фильтрации: {count_of_items_before}")
+            self.open_any_client()
+            any_dispatch_start_before_day_before = self.is_visible(self.input_dispatch_start_before_day).get_attribute("aria-valuenow")
+            print(f"Выбранное для фильтрации количество дней: {any_dispatch_start_before_day_before}")
+            self.click_button(self.x_icon_card)
+            self.click_button(self.button_all_fiters)
+            self.enter_in_dispatch_start_before_day_from_input_filters(any_dispatch_start_before_day_before)
+            self.enter_in_dispatch_start_before_day_to_input_filters(any_dispatch_start_before_day_before)
+            print(f"Количество дней '{any_dispatch_start_before_day_before}' введено в поля Dispatch Start Before Day from и Dispatch Start Before Day to")
+            if self.get_text(self.counter_filters) == "2":
+                self.click_button(self.button_apply_filters)
+            print("Клик Apply")
+
+            """Проверка, что клиенты отфильтровались по Dispatch Start Before Day"""
+            self.is_not_visible(self.button_apply_filters)
+            count_of_items_after = self.get_text(self.count_items_in_footer_grid)
+            print(f"Количество клиентов на вкладке All после фильтрации: {count_of_items_after}")
+            self.open_last_client()
+            last_dispatch_start_before_day_after = self.is_visible(self.input_dispatch_start_before_day).get_attribute("aria-valuenow")
+            print(f"Значения отфильтрованных клиентов: {last_dispatch_start_before_day_after}")
+            counter_all_filters_is_visible = False
+            try:
+                counter_all_filters_is_visible = self.is_visible(self.counter_all_filters)
+            except self.ignored_exceptions:
+                pass
+            assert counter_all_filters_is_visible, "Не отображается каунтер на All Filters"
+            assert str(any_dispatch_start_before_day_before) == str(last_dispatch_start_before_day_after), "Ошибка при фильтрации по Dispatch Start Before Day или Dispatch Start Before Day продуктов не совпадают"
+            print("Фильтрация корректна")
+            Logger.add_end_step(url=self.driver.current_url, method="filters_client_by_dispatch_start_before_day")
+
+
+
+    def filters_client_by_dispatch_end_before_day(self):
+        """Фильтрация продуктов по Dispatch End Before Day"""
+        with allure.step("Filter Clients by Dispatch End Before Day using All Filters"):
+            Logger.add_start_step(method="filters_client_by_dispatch_end_before_day")
+            count_of_items_before = self.get_text(self.count_items_in_footer_grid)
+            print(f"Количество клиентов на вкладке All до фильтрации: {count_of_items_before}")
+            self.open_any_client()
+            any_dispatch_end_before_day_before = self.is_visible(self.input_dispatch_end_before_day).get_attribute("aria-valuenow")
+            print(f"Выбранное для фильтрации количество дней: {any_dispatch_end_before_day_before}")
+            self.click_button(self.x_icon_card)
+            self.click_button(self.button_all_fiters)
+            self.enter_in_dispatch_end_before_day_from_input_filters(any_dispatch_end_before_day_before)
+            self.enter_in_dispatch_end_before_day_to_input_filters(any_dispatch_end_before_day_before)
+            print(f"Количество дней '{any_dispatch_end_before_day_before}' введено в поля Dispatch End Before Day from и Dispatch End Before Day to")
+            if self.get_text(self.counter_filters) == "2":
+                self.click_button(self.button_apply_filters)
+            print("Клик Apply")
+
+            """Проверка, что клиенты отфильтровались по Dispatch End Before Day"""
+            self.is_not_visible(self.button_apply_filters)
+            count_of_items_after = self.get_text(self.count_items_in_footer_grid)
+            print(f"Количество клиентов на вкладке All после фильтрации: {count_of_items_after}")
+            try:
+                self.open_last_client()
+            except self.ignored_exceptions:
+                self.open_last_client()
+            last_dispatch_end_before_day_after = self.is_visible(self.input_dispatch_end_before_day).get_attribute("aria-valuenow")
+            print(f"Значения отфильтрованных клиентов: {last_dispatch_end_before_day_after}")
+            counter_all_filters_is_visible = False
+            try:
+                counter_all_filters_is_visible = self.is_visible(self.counter_all_filters)
+            except self.ignored_exceptions:
+                pass
+            assert counter_all_filters_is_visible, "Не отображается каунтер на All Filters"
+            assert str(any_dispatch_end_before_day_before) == str(last_dispatch_end_before_day_after), "Ошибка при фильтрации по Dispatch End Before Day или Dispatch End Before Day продуктов не совпадают"
+            print("Фильтрация корректна")
+            Logger.add_end_step(url=self.driver.current_url, method="filters_client_by_dispatch_end_before_day")

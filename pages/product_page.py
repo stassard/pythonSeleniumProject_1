@@ -6,16 +6,14 @@ from selenium.common.exceptions import TimeoutException
 from selenium.common.exceptions import ElementClickInterceptedException
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver import Keys
+from selenium.webdriver.common.by import By
+
 from base.base_class import Base
 from utilities.logger import Logger
 
 
 class ProductPage(Base):
     """ Класс содержащий локаторы и методы для справочника Продукты"""
-
-    def __init__(self, driver):
-        super().__init__(driver)
-        self.driver = driver
 
     # Data
     ignored_exceptions = (
@@ -57,7 +55,7 @@ class ProductPage(Base):
     ## Грид продуктов
     _3_dots_grid = f"(//div[@class='flex justify-center']/button[@class='prospace-icon-button'])[{random.randint(1, 20)}]"  # Троеточие в гриде
     link_delete_restore_in_3_dots_grid = "(//div[contains(@class, 'prospace-dots-item')])[2]"   # Кнопка Delete в троеточии в гриде
-    product_name = f"(//div[contains(@class, 'border-dotted')])[{random.randint(1, 20)}]"                                   # Имя продукта в гриде
+    product_name = f"(//div[contains(@class, 'border-dotted')])[{random.randint(2, 20)}]"                                   # Имя продукта в гриде
     input_search_grid = "//input[contains(@data-pc-name,'inputtext')]"                          # Поле Search в гриде
     last_prod_name_in_grid = "(//div[contains(@class,'border-b-purple-400')])[1]"               # Имя последнего созданного продукта в гриде
     last_eanc_in_grid = "(//div[@class='text-ellipsis'])[1]"                                    # EAN Case последнего созданного продукта в гриде
@@ -104,7 +102,7 @@ class ProductPage(Base):
     input_unit_from_filters = "(//input[@data-pc-name='pcinput'])[1]"                            # Поле Unit(From)
     input_unit_to_filters = "(//input[@data-pc-name='pcinput'])[2]"                              # Поле Unit(To)
     button_apply_filters = "(//button[contains(@class,'prospace-button--primary')])[2]"                  # Кнопка Apply
-    counter_filters = "//div[@class='header']/span[@class='prospace-counter-box']"                # Каунтеры в фильтрах
+    counter_filters = "(//div[@class='header']/span[@class='prospace-counter-box'])[1]"                # Каунтеры в фильтрах
     button_clear_filters = "//button[contains(@class, 'prospace-button--secondary')]"                    # Кнопка Clear
     x_icon_filters = "(//div[contains(@class, 'prospace-boxed-icon-button')]/button[@class='prospace-icon-button'])[3]"       # Иконка X в расширенных фильтрах
     x_icons_input_filters = "//div[@class='header']/div[contains(@class,'items-center')]"                                     # Иконки X в расширенных фильтрах индивидуально для каждого поля
@@ -459,6 +457,7 @@ class ProductPage(Base):
             category_before = self.is_visible(self.last_category_in_grid).get_attribute("title")
             brand_before = self.is_visible(self.last_brand_in_grid).get_attribute("title")
             unit_before = self.is_visible(self.last_unit_in_grid).get_attribute("title")
+            unit_of_measure_before = self.is_visible(self.last_unit_of_measure_in_grid).get_attribute("title")
 
             """Открытие правой панели и редактирование информации"""
             self.open_last_product()
@@ -490,6 +489,7 @@ class ProductPage(Base):
             category_after = self.is_visible(self.last_category_in_grid).get_attribute("title")
             brand_after = self.is_visible(self.last_brand_in_grid).get_attribute("title")
             unit_after = self.is_visible(self.last_unit_in_grid).get_attribute("title")
+            unit_of_measure_after = self.is_visible(self.last_unit_of_measure_in_grid).get_attribute("title")
 
             """Проверка, что информация о продукте успешно отредактирована"""
             print(f"Имя продукта до: {name_before}, после: {name_after}")
@@ -499,6 +499,7 @@ class ProductPage(Base):
             print(f"Technology продукта дом: {technology_before}, после: {technology_after}")
             print(f"Brand продукта до: {brand_before}, после: {brand_after}")
             print(f"Unit продукта до: {unit_before}, после: {unit_after}")
+            print(f"Unit of Measure продукта до: {unit_of_measure_before}, после: {unit_of_measure_after}")
             assert name_before != name_after, "Имя продукта не обновилось"
             assert str(eanc_before) != str(eanc_after), "EAN Case продукта не обновился"
             assert str(eanp_before) == str(eanp_after), "EAN Pc продукта изменился"
@@ -506,6 +507,7 @@ class ProductPage(Base):
             assert technology_before != technology_after, "Технология продукта не обновилась"
             assert brand_before != brand_after, "Бренд продукта не обновился"
             assert str(unit_before) != str(unit_after), "Юнит продукта не обновился"
+            assert str(unit_of_measure_before) != str(unit_of_measure_after), "Unit of Measure продукта не обновился"
             print("Продукт успешно отредактирован")
             Logger.add_end_step(url=self.driver.current_url, method="update_product")
 
@@ -562,10 +564,15 @@ class ProductPage(Base):
             count_of_items_after = self.get_text(self.count_items_in_footer_grid)
             print(f"Количество продуктов на вкладке All после фильтрации: {count_of_items_after}")
             if count_of_items_after < count_of_items_before:
-                first_sku_name_in_grid = self.get_text(self.last_prod_name_in_grid)
-                print(f"Имя первого отображаемого продукта в гриде: {first_sku_name_in_grid}")
-                assert self.is_visible(self.counter_all_filters), "Не отображается каунтер на All Filters"
-                assert str(any_name_in_grid) == str(first_sku_name_in_grid), "Ошибка при фильтрации по имени или имена продуктов не совпадают"
+                last_sku_name_in_grid = self.get_text(self.last_prod_name_in_grid)
+                print(f"Имя первого отображаемого продукта в гриде: {last_sku_name_in_grid}")
+                counter_all_filters_is_visible = False
+                try:
+                    counter_all_filters_is_visible = self.is_visible(self.counter_all_filters)
+                except self.ignored_exceptions:
+                    pass
+                assert counter_all_filters_is_visible, "Не отображается каунтер на All Filters"
+                assert str(any_name_in_grid) == str(last_sku_name_in_grid), "Ошибка при фильтрации по имени или имена продуктов не совпадают"
             print("Фильтрация корректна")
             Logger.add_end_step(url=self.driver.current_url, method="filters_product_by_sku_name")
 
@@ -590,10 +597,15 @@ class ProductPage(Base):
             self.is_not_visible(self.button_apply_filters)
             count_of_items_after = self.get_text(self.count_items_in_footer_grid)
             print(f"Количество продуктов на вкладке All после фильтрации: {count_of_items_after}")
-            first_category_in_grid_after = self.get_text(self.last_category_in_grid)
-            print(f"Категории отфильтрованных продуктов в гриде: {first_category_in_grid_after}")
-            assert self.is_visible(self.counter_all_filters), "Не отображается каунтер на All Filters"
-            assert str(any_category_in_grid_before) == str(first_category_in_grid_after), "Ошибка при фильтрации по категории или категории продуктов не совпадают"
+            last_category_in_grid_after = self.get_text(self.last_category_in_grid)
+            print(f"Категории отфильтрованных продуктов в гриде: {last_category_in_grid_after}")
+            counter_all_filters_is_visible = False
+            try:
+                counter_all_filters_is_visible = self.is_visible(self.counter_all_filters)
+            except self.ignored_exceptions:
+                pass
+            assert counter_all_filters_is_visible, "Не отображается каунтер на All Filters"
+            assert str(any_category_in_grid_before) == str(last_category_in_grid_after), "Ошибка при фильтрации по категории или категории продуктов не совпадают"
             print("Фильтрация корректна")
             Logger.add_end_step(url=self.driver.current_url, method="filters_product_by_category")
 
@@ -618,10 +630,15 @@ class ProductPage(Base):
             self.is_not_visible(self.button_apply_filters)
             count_of_items_after = self.get_text(self.count_items_in_footer_grid)
             print(f"Количество продуктов на вкладке All после фильтрации: {count_of_items_after}")
-            any_brand_in_grid_after = self.get_text(self.any_brand_in_grid)
-            print(f"Бренды отфильтрованных продуктов в гриде: {any_brand_in_grid_after}")
-            assert self.is_visible(self.counter_all_filters), "Не отображается каунтер на All Filters"
-            assert str(any_brand_in_grid_before) == str(any_brand_in_grid_after), "Ошибка при фильтрации по бренду или бренды продуктов не совпадают"
+            last_brand_in_grid_after = self.get_text(self.last_brand_in_grid)
+            print(f"Бренды отфильтрованных продуктов в гриде: {last_brand_in_grid_after}")
+            counter_all_filters_is_visible = False
+            try:
+                counter_all_filters_is_visible = self.is_visible(self.counter_all_filters)
+            except self.ignored_exceptions:
+                pass
+            assert counter_all_filters_is_visible, "Не отображается каунтер на All Filters"
+            assert str(any_brand_in_grid_before) == str(last_brand_in_grid_after), "Ошибка при фильтрации по бренду или бренды продуктов не совпадают"
             print("Фильтрация корректна")
             Logger.add_end_step(url=self.driver.current_url, method="filters_product_by_brand")
 
@@ -646,10 +663,15 @@ class ProductPage(Base):
             self.is_not_visible(self.button_apply_filters)
             count_of_items_after = self.get_text(self.count_items_in_footer_grid)
             print(f"Количество продуктов на вкладке All после фильтрации: {count_of_items_after}")
-            any_unit_of_measure_in_grid_after = self.get_text(self.last_unit_of_measure_in_grid)
-            print(f"Единицы измерения отфильтрованных продуктов в гриде: {any_unit_of_measure_in_grid_after}")
-            assert self.is_visible(self.counter_all_filters), "Не отображается каунтер на All Filters"
-            assert str(any_unit_of_measure_in_grid_before) in str(any_unit_of_measure_in_grid_after), "Ошибка при фильтрации по единице измерения или единицы измерения продуктов не совпадают"
+            last_unit_of_measure_in_grid_after = self.get_text(self.last_unit_of_measure_in_grid)
+            print(f"Единицы измерения отфильтрованных продуктов в гриде: {last_unit_of_measure_in_grid_after}")
+            counter_all_filters_is_visible = False
+            try:
+                counter_all_filters_is_visible = self.is_visible(self.counter_all_filters)
+            except self.ignored_exceptions:
+                pass
+            assert counter_all_filters_is_visible, "Не отображается каунтер на All Filters"
+            assert str(any_unit_of_measure_in_grid_before) in str(last_unit_of_measure_in_grid_after), "Ошибка при фильтрации по единице измерения или единицы измерения продуктов не совпадают"
             print("Фильтрация корректна")
             Logger.add_end_step(url=self.driver.current_url, method="filters_product_by_unit_of_measure")
 
@@ -675,10 +697,15 @@ class ProductPage(Base):
             self.is_not_visible(self.button_apply_filters)
             count_of_items_after = self.get_text(self.count_items_in_footer_grid)
             print(f"Количество продуктов на вкладке All после фильтрации: {count_of_items_after}")
-            any_unit_in_grid_after = self.get_text(self.any_unit_in_grid)
-            print(f"Юниты отфильтрованных продуктов в гриде: {any_unit_in_grid_after}")
-            assert self.is_visible(self.counter_all_filters), "Не отображается каунтер на All Filters"
-            assert str(any_unit_in_grid_before) == str(any_unit_in_grid_after), "Ошибка при фильтрации по юниту или юниты продуктов не совпадают"
+            last_unit_in_grid_after = self.get_text(self.last_unit_in_grid)
+            print(f"Юниты отфильтрованных продуктов в гриде: {last_unit_in_grid_after}")
+            counter_all_filters_is_visible = False
+            try:
+                counter_all_filters_is_visible = self.is_visible(self.counter_all_filters)
+            except self.ignored_exceptions:
+                pass
+            assert counter_all_filters_is_visible, "Не отображается каунтер на All Filters"
+            assert str(any_unit_in_grid_before) == str(last_unit_in_grid_after), "Ошибка при фильтрации по юниту или юниты продуктов не совпадают"
             print("Фильтрация корректна")
             Logger.add_end_step(url=self.driver.current_url, method="filters_product_by_unit")
 
@@ -736,10 +763,13 @@ class ProductPage(Base):
             self.enter_in_unit_from_input_filters(random.randint(1, 10))
             self.enter_in_unit_to_input_filters(random.randint(1, 10))
             self.click_button(self.button_clear_filters)
-            if self.is_not_visible(self.counter_filters):
-                print("Кнопка Clear работает")
-            else:
-                print("Кнопка Clear не работает")
+            counters_is_not_visible = False
+            try:
+                counters_is_not_visible = self.is_not_visible(self.counter_filters)
+            except self.ignored_exceptions:
+                pass
+            assert counters_is_not_visible, "Кнопка Clear расширенных фильтров не работает"
+            print("Кнопка Clear расширенных фильтров работает")
             Logger.add_end_step(url=self.driver.current_url, method="check_button_clear_filters")
 
 
@@ -757,7 +787,12 @@ class ProductPage(Base):
             self.enter_in_unit_from_input_filters(random.randint(1, 10))
             self.enter_in_unit_to_input_filters(random.randint(1, 10))
             self.click_button(self.x_icon_filters)
-            assert self.is_not_visible(self.button_apply_filters), "Кнопка закрытия расширенных фильтров не работает"
+            btn_apply_is_not_visible = False
+            try:
+                btn_apply_is_not_visible = self.is_not_visible(self.button_apply_filters)
+            except self.ignored_exceptions:
+                pass
+            assert btn_apply_is_not_visible, "Кнопка закрытия расширенных фильтров не работает"
             print("Кнопка закрытия расширенных фильтров работает")
             Logger.add_end_step(url=self.driver.current_url, method="check_x_icon_filters")
 
@@ -781,7 +816,12 @@ class ProductPage(Base):
             self.enter_in_unit_from_input_filters(random.randint(1, 10))
             self.enter_in_unit_to_input_filters(random.randint(1, 10))
             self.click_button(self.x_icons_input_filters)
-            assert self.is_not_visible(self.counter_filters), "Индивидуальные кнопки очистки расширенных фильтров не работают"
+            x_icons_is_not_visible = False
+            try:
+                x_icons_is_not_visible = self.is_not_visible(self.x_icons_input_filters)
+            except self.ignored_exceptions:
+                pass
+            assert x_icons_is_not_visible, "Индивидуальные кнопки очистки расширенных фильтров не работают"
             print("Индивидуальные кнопки очистки расширенных фильтров работают")
             Logger.add_end_step(url=self.driver.current_url, method="check_x_icon_inside_filters")
 
