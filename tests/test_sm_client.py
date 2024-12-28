@@ -174,3 +174,27 @@ class TestSmokeClientPage:
         cp = ClientPage(driver)
         cp.open_clients_dict()
         cp.filters_client_by_affiliation()
+
+
+    """Отфильтровать клиентов по Dispatch Start Before Day через расширенные фильтры"""
+    @allure.title("Filter Clients by Dispatch Start Before Day using All Filters")
+    @allure.severity("High")
+    @pytest.mark.smoke
+    def test_filters_client_by_dispatch_start_before_day(self, driver):
+        lp = LoginPage(driver)
+        lp.authorization()
+        cp = ClientPage(driver)
+        cp.open_clients_dict()
+        cp.filters_client_by_dispatch_start_before_day()
+
+
+    """Отфильтровать клиентов по Dispatch End Before Day через расширенные фильтры"""
+    @allure.title("Filter Clients by Dispatch End Before Day using All Filters")
+    @allure.severity("High")
+    @pytest.mark.smoke
+    def test_filters_client_by_dispatch_end_before_day(self, driver):
+        lp = LoginPage(driver)
+        lp.authorization()
+        cp = ClientPage(driver)
+        cp.open_clients_dict()
+        cp.filters_client_by_dispatch_end_before_day()

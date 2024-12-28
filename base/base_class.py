@@ -1,3 +1,4 @@
+import datetime
 from allure_commons.types import AttachmentType
 from selenium import webdriver
 import allure
@@ -57,12 +58,12 @@ class Base:
     def element_is_selected(self, locator):
         return self.wait.until(EC.element_located_selection_state_to_be((By.XPATH, locator), True))
 
-    def make_screenshot(self, screenshot_name):
-        allure.attach(
-            body=self.driver.get_screenshot_as_png(),
-            name=screenshot_name,
-            attachment_type=AttachmentType.PNG
-        )
+    def get_screenshot(self):
+        """Создание скриншота"""
+        now_date = datetime.datetime.now().strftime("%Y.%m.%d-%H.%M.%S")
+        name_screenshot = "screenshot " + now_date + ".png"
+        self.driver.save_screenshot(f"screen/{name_screenshot}")
+        print("Скриншот выполнен")
 
 
     def assert_word(self, word, result):
