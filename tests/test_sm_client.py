@@ -1,10 +1,6 @@
-from base.base_class import Base
-from selenium import webdriver
 import allure
-
 from pages.client_page import ClientPage
 from pages.login_page import LoginPage
-from pages.product_page import ProductPage
 import pytest
 
 @allure.feature("Smoke Suite for Client Page")
@@ -20,6 +16,30 @@ class TestSmokeClientPage:
         cp.open_clients_dict()
 
         cp.create_client()
+
+    """Прочитать информацию о клиенте"""
+    @allure.title("Read Client")
+    @allure.severity("Critical")
+    @pytest.mark.smoke
+    def test_read_client(self, driver):
+
+        lp = LoginPage(driver)
+        lp.authorization()
+        cp = ClientPage(driver)
+        cp.open_clients_dict()
+        cp.read_client()
+
+
+    """Редактирование клиента"""
+    @allure.title("Update Client")
+    @allure.severity("Critical")
+    @pytest.mark.smoke
+    def test_update_client(self, driver):
+        lp = LoginPage(driver)
+        lp.authorization()
+        cp = ClientPage(driver)
+        cp.open_clients_dict()
+        cp.update_client()
 
     """Удаление клиента через троеточие в гриде"""
     @allure.title("Delete Client using Dots In Grid")
@@ -47,6 +67,7 @@ class TestSmokeClientPage:
 
         cp.delete_client_from_checkbox_grid()
 
+
     """Удаление 4х клиентов через чекбоксы в гриде"""
     @allure.title("Multiselection Deleted Clients using Checkboxes in Grid")
     @allure.severity("Critical")
@@ -71,6 +92,7 @@ class TestSmokeClientPage:
         cp.open_clients_dict()
         cp.select_all_delete_client()
 
+
     """Удаление клиента через карточку клиента"""
     @allure.title("Delete Client from Card")
     @allure.severity("Critical")
@@ -81,6 +103,18 @@ class TestSmokeClientPage:
         cp = ClientPage(driver)
         cp.open_clients_dict()
         cp.delete_client_from_card()
+
+
+    """Рестор клиента через троеточие в гриде"""
+    @allure.title("Restore Client using Dots in Grid")
+    @allure.severity("Critical")
+    @pytest.mark.smoke
+    def test_restore_client_from_three_dots_grid(self, driver):
+        lp = LoginPage(driver)
+        lp.authorization()
+        cp = ClientPage(driver)
+        cp.open_clients_dict()
+        cp.restore_client_from_three_dots_grid()
 
 
     """Найти клиента по имени через поле Search"""
@@ -106,28 +140,6 @@ class TestSmokeClientPage:
         cp.open_clients_dict()
         cp.find_client_by_id()
 
-    """Редактирование клиента"""
-    @allure.title("Update Client")
-    @allure.severity("Critical")
-    @pytest.mark.smoke
-    def test_update_client(self, driver):
-        lp = LoginPage(driver)
-        lp.authorization()
-        cp = ClientPage(driver)
-        cp.open_clients_dict()
-        cp.update_client()
-
-    """Рестор клиента через троеточие в гриде"""
-    @allure.title("Restore Client using Dots in Grid")
-    @allure.severity("Critical")
-    @pytest.mark.smoke
-    def test_restore_client_from_three_dots_grid(self, driver):
-        lp = LoginPage(driver)
-        lp.authorization()
-        cp = ClientPage(driver)
-        cp.open_clients_dict()
-        cp.restore_client_from_three_dots_grid()
-
 
     """Отфильтровать клиента по имени через расширенные фильтры"""
     @allure.title("Filter Client by Name using All Filters")
@@ -140,6 +152,7 @@ class TestSmokeClientPage:
         cp.open_clients_dict()
         cp.filters_client_by_name()
 
+
     """Отфильтровать клиентов по типу через расширенные фильтры"""
     @allure.title("Filter Client by Type using All Filters")
     @allure.severity("High")
@@ -150,7 +163,6 @@ class TestSmokeClientPage:
         cp = ClientPage(driver)
         cp.open_clients_dict()
         cp.filters_client_by_type()
-
 
     """Отфильтровать клиентов по Invoice Type через расширенные фильтры"""
     @allure.title("Filter Client by Invoice Type using All Filters")
@@ -198,3 +210,56 @@ class TestSmokeClientPage:
         cp = ClientPage(driver)
         cp.open_clients_dict()
         cp.filters_client_by_dispatch_end_before_day()
+
+
+    """Проверить работу кнопки Clear в расширенных фильтрах"""
+    @allure.title("Check button Clear in All Filters")
+    @allure.severity("Critical")
+    @pytest.mark.smoke
+    def test_check_button_clear_filters_clients(self, driver):
+
+        lp = LoginPage(driver)
+        lp.authorization()
+        cp = ClientPage(driver)
+        cp.open_clients_dict()
+        cp.check_button_clear_filters_clients()
+
+
+    """Проверить работу иконки Х в расширенных фильтрах"""
+    @allure.title("Check button X in All Filters")
+    @allure.severity("Critical")
+    @pytest.mark.smoke
+    def test_check_x_icon_filters_clients(self, driver):
+
+        lp = LoginPage(driver)
+        lp.authorization()
+        cp = ClientPage(driver)
+        cp.open_clients_dict()
+        cp.check_x_icon_filters_clients()
+
+
+
+    """Проверить работу индивидуальных кнопок очистки расширенных фильтров"""
+    @allure.title("Check individual buttons X in All Filters")
+    @allure.severity("Critical")
+    @pytest.mark.smoke
+    def test_check_x_icon_inside_filters_clients(self, driver):
+
+        lp = LoginPage(driver)
+        lp.authorization()
+        cp = ClientPage(driver)
+        cp.open_clients_dict()
+        cp.check_x_icon_inside_filters_clients()
+
+    """Проверить работу индивидуальных кнопок очистки расширенных фильтров"""
+
+    @allure.title("Update Client's logo")
+    @allure.severity("Critical")
+    @pytest.mark.smoke
+    def test_update_logo_client(self, driver):
+        lp = LoginPage(driver)
+        lp.authorization()
+        cp = ClientPage(driver)
+        cp.open_clients_dict()
+        cp.update_logo_client()
+

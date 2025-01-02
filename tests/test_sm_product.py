@@ -228,36 +228,36 @@ class TestSmokeProductPage:
     @allure.title("Check button Clear in All Filters")
     @allure.severity("Critical")
     @pytest.mark.smoke
-    def test_check_button_clear_filters(self, driver):
+    def test_check_button_clear_filters_products(self, driver):
 
         lp = LoginPage(driver)
         lp.authorization()
         pp = ProductPage(driver)
         pp.open_products_dict()
-        pp.check_button_clear_filters()
+        pp.check_button_clear_filters_products()
 
 
     """Проверить работу иконки Х в расширенных фильтрах"""
     @allure.title("Check button X in All Filters")
     @allure.severity("Critical")
     @pytest.mark.smoke
-    def test_check_x_icon_filters(self, driver):
+    def test_check_x_icon_filters_products(self, driver):
 
         lp = LoginPage(driver)
         lp.authorization()
         pp = ProductPage(driver)
         pp.open_products_dict()
-        pp.check_x_icon_filters()
+        pp.check_x_icon_filters_products()
 
 
     """Проверить работу индивидуальных кнопок очистки расширенных фильтров"""
     @allure.title("Check individual buttons X in All Filters")
     @allure.severity("Critical")
     @pytest.mark.smoke
-    def test_check_x_icon_inside_filters(self, driver):
+    def test_check_x_icon_inside_filters_products(self, driver):
 
         lp = LoginPage(driver)
         lp.authorization()
         pp = ProductPage(driver)
         pp.open_products_dict()
-        pp.check_x_icon_inside_filters()
+        pp.check_x_icon_inside_filters_products()
