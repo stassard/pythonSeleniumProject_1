@@ -450,9 +450,9 @@ class ProductPage(Base):
         with allure.step("Update Product"):
             Logger.add_start_step(method="update_product")
             """Информация о последнем созданном в гриде продукте до апдейта"""
+            name_before = self.get_text(self.last_prod_name_in_grid)
             eanc_before = self.is_visible(self.last_eanc_in_grid).get_attribute("title")
             eanp_before = self.is_visible(self.last_eanp_in_grid).get_attribute("title")
-            name_before = self.get_text(self.last_prod_name_in_grid)
             technology_before = self.element_is_present(self.last_technology_in_grid).get_attribute("title")
             category_before = self.is_visible(self.last_category_in_grid).get_attribute("title")
             brand_before = self.is_visible(self.last_brand_in_grid).get_attribute("title")
@@ -482,9 +482,9 @@ class ProductPage(Base):
             self.browser_refresh()
 
             """Информация о последнем созданном в гриде продукте после апдейта"""
+            name_after = self.get_text(self.last_prod_name_in_grid)
             eanc_after = self.is_visible(self.last_eanc_in_grid).get_attribute("title")
             eanp_after = self.is_visible(self.last_eanp_in_grid).get_attribute("title")
-            name_after = self.get_text(self.last_prod_name_in_grid)
             technology_after = self.element_is_present(self.last_technology_in_grid).get_attribute("title")
             category_after = self.is_visible(self.last_category_in_grid).get_attribute("title")
             brand_after = self.is_visible(self.last_brand_in_grid).get_attribute("title")
@@ -715,26 +715,30 @@ class ProductPage(Base):
         """Получить информацию о последнем созданном продукте из грида"""
         with allure.step("Read Product"):
             Logger.add_start_step(method="read_product")
-            self.open_last_product()
             grid_name = self.get_text(self.last_prod_name_in_grid)
             grid_eanc = self.get_text(self.last_eanc_in_grid)
             grid_eanp = self.get_text(self.last_eanp_in_grid)
+            grid_technology = self.element_is_present(self.last_technology_in_grid).get_attribute("title")
             grid_category = self.get_text(self.last_category_in_grid)
             grid_brand = self.get_text(self.last_brand_in_grid)
             grid_unit_of_measure = self.get_text(self.last_unit_of_measure_in_grid)
             grid_unit = self.get_text(self.last_unit_in_grid)
 
             """Проверка, что информация в правой панели соответствует информации в гриде"""
+            self.open_last_product()
             card_name = self.is_visible(self.input_name_card).get_attribute("value")
             card_eanc = self.is_visible(self.input_EANC_card).get_attribute("value")
             card_eanp = self.is_visible(self.input_EANP_card).get_attribute("value")
             card_category = self.is_visible(self.input_category_card).get_attribute("value")
+            card_technology = self.element_is_present(self.input_technology_card).get_attribute("value")
             card_brand = self.is_visible(self.input_brand_card).get_attribute("value")
             card_unit = self.is_visible(self.input_unit_card).get_attribute("value")
             card_unit_of_measure = self.get_text(self.value_of_unit_of_measure_card)
             print(f"Имя продукта в гриде: {grid_name}, в карточке: {card_name}")
             print(f"EAN Case продукта в гриде: {grid_eanc}, в карточке: {card_eanc}")
+            print(f"EAN Pc продукта в гриде: {grid_eanp}, в карточке: {card_eanp}")
             print(f"Category продукта в гриде: {grid_category}, в карточке: {card_category}")
+            print(f"Technology продукта в гриде: {grid_technology}, в карточке: {card_technology}")
             print(f"Brand продукта в гриде: {grid_brand}, в карточке: {card_brand}")
             print(f"Unit продукта в гриде: {grid_unit}, в карточке: {card_unit}")
             print(f"Unit of Measure продукта в гриде: {grid_unit_of_measure}, в карточке: {card_unit_of_measure}")
@@ -742,6 +746,7 @@ class ProductPage(Base):
             assert grid_eanc == card_eanc, "EAN Case продуктов не совпадают"
             assert grid_eanp == card_eanp, "EAN Pc продуктов не совпадают"
             assert grid_category == card_category, "Category продуктов не совпадают"
+            assert grid_technology == card_technology, "Technology продуктов не совпадают"
             assert grid_brand == card_brand, "Brand продуктов не совпадают"
             assert str(grid_unit) == str(card_unit), "Unit продуктов не совпадают"
             assert grid_unit_of_measure == card_unit_of_measure, "Unit of Measure продуктов не совпадают"
@@ -750,10 +755,10 @@ class ProductPage(Base):
 
 
 
-    def check_button_clear_filters(self):
+    def check_button_clear_filters_products(self):
         """Проверить работу кнопки Clear в расширенных фильтрах"""
         with allure.step("Check button Clear in All Filters"):
-            Logger.add_start_step(method="check_button_clear_filters")
+            Logger.add_start_step(method="check_button_clear_filters_products")
             self.click_button(self.button_all_fiters)
             self.enter_in_sku_name_input_filters(random.randint(1, 10))
             self.enter_in_category_input_filters(random.randint(1, 10))
@@ -770,14 +775,14 @@ class ProductPage(Base):
                 pass
             assert counters_is_not_visible, "Кнопка Clear расширенных фильтров не работает"
             print("Кнопка Clear расширенных фильтров работает")
-            Logger.add_end_step(url=self.driver.current_url, method="check_button_clear_filters")
+            Logger.add_end_step(url=self.driver.current_url, method="check_button_clear_filters_products")
 
 
 
-    def check_x_icon_filters(self):
+    def check_x_icon_filters_products(self):
         """Проверить работу кнопки закрытия расширенных фильтров"""
         with allure.step("Check button X in All Filters"):
-            Logger.add_start_step(method="check_x_icon_filters")
+            Logger.add_start_step(method="check_x_icon_filters_products")
             self.click_button(self.button_all_fiters)
             self.enter_in_sku_name_input_filters(random.randint(1, 10))
             self.enter_in_category_input_filters(random.randint(1, 10))
@@ -794,14 +799,14 @@ class ProductPage(Base):
                 pass
             assert btn_apply_is_not_visible, "Кнопка закрытия расширенных фильтров не работает"
             print("Кнопка закрытия расширенных фильтров работает")
-            Logger.add_end_step(url=self.driver.current_url, method="check_x_icon_filters")
+            Logger.add_end_step(url=self.driver.current_url, method="check_x_icon_filters_products")
 
 
 
-    def check_x_icon_inside_filters(self):
+    def check_x_icon_inside_filters_products(self):
         """Проверить работу индивидуальных кнопок очисток полей внутри расширенных фильтров"""
         with allure.step("Check individual buttons X in All Filters"):
-            Logger.add_start_step(method="check_x_icon_inside_filters")
+            Logger.add_start_step(method="check_x_icon_inside_filters_products")
             self.click_button(self.button_all_fiters)
             self.enter_in_sku_name_input_filters(random.randint(1, 10))
             self.click_button(self.x_icons_input_filters)
@@ -823,7 +828,7 @@ class ProductPage(Base):
                 pass
             assert x_icons_is_not_visible, "Индивидуальные кнопки очистки расширенных фильтров не работают"
             print("Индивидуальные кнопки очистки расширенных фильтров работают")
-            Logger.add_end_step(url=self.driver.current_url, method="check_x_icon_inside_filters")
+            Logger.add_end_step(url=self.driver.current_url, method="check_x_icon_inside_filters_products")
 
 
 

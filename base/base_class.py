@@ -1,7 +1,4 @@
 import datetime
-from allure_commons.types import AttachmentType
-from selenium import webdriver
-import allure
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -62,7 +59,7 @@ class Base:
         """Создание скриншота"""
         now_date = datetime.datetime.now().strftime("%Y.%m.%d-%H.%M.%S")
         name_screenshot = "screenshot " + now_date + ".png"
-        self.driver.save_screenshot(f"screen/{name_screenshot}")
+        self.driver.save_screenshot(f"screens/{name_screenshot}")
         print("Скриншот выполнен")
 
 

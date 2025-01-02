@@ -1,4 +1,3 @@
-from pathlib import Path
 import random
 import time
 import allure
@@ -33,6 +32,9 @@ class ClientPage(Base):
 
     # Locators
     head_of_client_page = "//div[@class='ps-font-TopHeader text-indigo-950']"  # Заголовок страницы Клиенты
+
+    ## General
+    toast_message_success = "//div[contains(@class,'p-toast-message-success')]"   # Тостовое сообщение об успехе
 
     ##  Форма создания клиента
     button_create_new_card = "//button[contains(@class,'prospace-button')]"  # Кнопка Create New
@@ -91,8 +93,9 @@ class ClientPage(Base):
     ##  Форма созданного клиента
     mode_switcher = "//span[@class='p-inputswitch-slider']"  # Свитчер режимов
     button_save = "//button[contains(@class,'prospace-button--with-icon')]"  # Кнопка Сохранить
-    product_id = "//div[contains(@class, 'item-id')]"  # ID продукта в карточке продукта
+    client_id = "//div[contains(@class, 'item-id')]"  # ID клиента в карточке клиента
     x_icon = "(//div/div/button[@class='prospace-icon-button'])[6]"  # Иконка X в карточке созданного продукта
+    x_icon_upload_file = "(//div/div/button[@class='prospace-icon-button'])[7]"  # Иконка X в окне Upload File
     value_of_invoice_type_card = "(//span[contains(@class,'p-dropdown-label')]/span)[1]"   # Значение поля Invoice Type
     value_of_affiliation_card = "(//span[contains(@class,'p-dropdown-label')]/span)[2]"   # Значение поля Affiliation
 
@@ -444,11 +447,12 @@ class ClientPage(Base):
 
     def update_client(self):
         with allure.step("Update Client"):
+            """Редактирование созданного клиента"""
             Logger.add_start_step(method="update_client")
             """Информация о последнем созданном в гриде клиенте до апдейта"""
             id_before = self.is_visible(self.last_id_in_grid).get_attribute("title")
-            external_id_before = self.is_visible(self.last_external_id_in_grid).get_attribute("title")
             name_before = self.get_text(self.last_client_name_in_grid)
+            external_id_before = self.is_visible(self.last_external_id_in_grid).get_attribute("title")
             parent_before = self.element_is_present(self.last_parent_in_grid).get_attribute("title")
             type_before = self.is_visible(self.last_type_in_grid).get_attribute("title")
             affiliation_before = self.is_visible(self.last_affiliation_in_grid).get_attribute("title")
@@ -508,9 +512,47 @@ class ClientPage(Base):
             assert parent_before != parent_after, "Parent клиента не обновился"
             assert type_before != type_after, "Type клиента не обновился"
             assert affiliation_before != affiliation_after, "Affiliation клиента не обновился"
-            assert invoice_type_before != invoice_type_after, "Invoice Type клиента нне обновился"
+            assert invoice_type_before != invoice_type_after, "Invoice Type клиента не обновился"
             print("Продукт успешно отредактирован")
             Logger.add_end_step(url=self.driver.current_url, method="update_client")
+
+
+    def update_logo_client(self):
+        """Редактирование логотипа созданного клиента"""
+        with allure.step("Update Client's logo"):
+            Logger.add_start_step(method="update_logo_client")
+            """Загрузка первого файла и проверка, что сохранение успешно"""
+            self.open_last_client()
+            self.click_button(self.mode_switcher)
+            try:
+                self.click_button(self.x_icon_upload_file)
+            except self.ignored_exceptions:
+                pass
+            self.upload_file(self.create_path_upload)
+            name_of_added_file_before = self.get_text(self.name_of_added_file)
+            self.click_button(self.button_save)
+            self.is_visible(self.toast_message_success)
+            self.click_button(self.x_icon)
+            self.is_not_visible(self.x_icon)
+            self.browser_refresh()
+            self.open_last_client()
+            self.click_button(self.mode_switcher)
+            print(f"Имя загруженного логотипа клиента: магнит.jpg, фактическое: {name_of_added_file_before}")
+            assert "магнит.jpg" == name_of_added_file_before, "Имя добавленного файла отображается некорректно"
+
+            """Загрузка второго файла и проверка, что сохранение успешно"""
+            self.click_button(self.x_icon_upload_file)
+            self.upload_file(self.update_path_upload)
+            self.click_button(self.button_save)
+            self.is_visible(self.toast_message_success)
+            self.click_button(self.x_icon)
+            self.is_not_visible(self.x_icon)
+            self.browser_refresh()
+            self.open_last_client()
+            name_of_added_file_after = self.get_text(self.name_of_added_file)
+            print(f"Имя измененного логотипа клиента: спар.png, фактическое: {name_of_added_file_after}")
+            assert "спар.png" == name_of_added_file_after, "Имя измененного файла отображается некорректно"
+            Logger.add_end_step(url=self.driver.current_url, method="update_logo_client")
 
 
     def restore_client_from_three_dots_grid(self):
@@ -759,3 +801,127 @@ class ClientPage(Base):
             assert str(any_dispatch_end_before_day_before) == str(last_dispatch_end_before_day_after), "Ошибка при фильтрации по Dispatch End Before Day или Dispatch End Before Day продуктов не совпадают"
             print("Фильтрация корректна")
             Logger.add_end_step(url=self.driver.current_url, method="filters_client_by_dispatch_end_before_day")
+
+
+    def read_client(self):
+        """Получить информацию о последнем созданном клиенте из грида"""
+        with allure.step("Read Client"):
+            Logger.add_start_step(method="read_client")
+            grid_id = self.get_text(self.last_id_in_grid)
+            grid_name = self.get_text(self.last_client_name_in_grid)
+            grid_external_id = self.get_text(self.last_external_id_in_grid)
+            grid_parent = self.element_is_present(self.last_parent_in_grid).get_attribute("title")
+            grid_type = self.get_text(self.last_type_in_grid)
+            grid_affiliation = self.get_text(self.last_affiliation_in_grid)
+            grid_invoice_type = self.get_text(self.last_invoice_type_in_grid)
+
+            """Проверка, что информация в правой панели соответствует информации в гриде"""
+            self.open_last_client()
+            card_id = self.get_text(self.client_id)
+            card_name = self.is_visible(self.input_name_card).get_attribute("value")
+            card_external_id = self.is_visible(self.input_external_id_card).get_attribute("value")
+            card_type = self.is_visible(self.input_type_card).get_attribute("value")
+            card_parent = self.element_is_present(self.input_parent_card).get_attribute("value")
+            card_affiliation = self.is_visible(self.selector_affiliation_card).get_attribute("aria-label")
+            card_invoice_type = self.is_visible(self.selector_invoice_type_card).get_attribute("aria-label")
+            print(f"ID клиента в гриде: {grid_id}, в карточке: {card_id}")
+            print(f"Имя клиента в гриде: {grid_name}, в карточке: {card_name}")
+            print(f"External ID клиента в гриде: {grid_external_id}, в карточке: {card_external_id}")
+            print(f"Type клиента в гриде: {grid_type}, в карточке: {card_type}")
+            print(f"Parent клиента в гриде: {grid_parent}, в карточке: {card_parent}")
+            print(f"Affiliation клиента в гриде: {grid_affiliation}, в карточке: {card_affiliation}")
+            print(f"Invoice Type клиента в гриде: {grid_invoice_type}, в карточке: {card_invoice_type}")
+            assert grid_id == card_id, "ID клиентов не совпадают"
+            assert grid_name == card_name, "Имена клиентов не совпадают"
+            assert grid_external_id == card_external_id, "External ID клиентов не совпадают"
+            assert grid_type == card_type, "Type клиентов не совпадают"
+            assert grid_parent == card_parent, "Parent клиентов не совпадают"
+            assert grid_affiliation == card_affiliation, "Affiliation клиентов не совпадают"
+            assert grid_invoice_type == card_invoice_type, "Invoice Type клиентов не совпадают"
+            print("Информация о клиенте в карточке соответствует информации о клиенте в гриде")
+            Logger.add_end_step(url=self.driver.current_url, method="read_client")
+
+
+    def check_button_clear_filters_clients(self):
+        """Проверить работу кнопки Clear в расширенных фильтрах"""
+        with allure.step("Check button Clear in All Filters"):
+            Logger.add_start_step(method="check_button_clear_filters_clients")
+            self.click_button(self.button_all_fiters)
+            self.enter_in_name_input_filters(random.randint(1, 10))
+            self.enter_in_type_input_filters(random.randint(1, 10))
+            self.click_button(self.selector_invoice_type_filters)
+            self.click_button(self.list_of_invoice_types_filters)
+            self.click_button(self.selector_affiliation_filters)
+            self.click_button(self.list_of_affiliations_filters)
+            self.enter_in_dispatch_start_before_day_from_input_filters(random.randint(1, 10))
+            self.enter_in_dispatch_start_before_day_to_input_filters(random.randint(1, 10))
+            self.enter_in_dispatch_end_before_day_from_input_filters(random.randint(1, 10))
+            self.enter_in_dispatch_end_before_day_to_input_filters(random.randint(1, 10))
+            self.click_button(self.button_clear_filters)
+            counters_is_not_visible = False
+            try:
+                counters_is_not_visible = self.is_not_visible(self.counter_filters)
+            except self.ignored_exceptions:
+                pass
+            assert counters_is_not_visible, "Кнопка Clear расширенных фильтров не работает"
+            print("Кнопка Clear расширенных фильтров работает")
+            Logger.add_end_step(url=self.driver.current_url, method="check_button_clear_filters_clients")
+
+
+    def check_x_icon_filters_clients(self):
+        """Проверить работу кнопки закрытия расширенных фильтров"""
+        with allure.step("Check button X in All Filters"):
+            Logger.add_start_step(method="check_x_icon_filters_clients")
+            self.click_button(self.button_all_fiters)
+            self.enter_in_name_input_filters(random.randint(1, 10))
+            self.enter_in_type_input_filters(random.randint(1, 10))
+            self.click_button(self.selector_invoice_type_filters)
+            self.click_button(self.list_of_invoice_types_filters)
+            self.click_button(self.selector_affiliation_filters)
+            self.click_button(self.list_of_affiliations_filters)
+            self.enter_in_dispatch_start_before_day_from_input_filters(random.randint(1, 10))
+            self.enter_in_dispatch_start_before_day_to_input_filters(random.randint(1, 10))
+            self.enter_in_dispatch_end_before_day_from_input_filters(random.randint(1, 10))
+            self.enter_in_dispatch_end_before_day_to_input_filters(random.randint(1, 10))
+            self.click_button(self.x_icon_filters)
+            btn_apply_is_not_visible = False
+            try:
+                btn_apply_is_not_visible = self.is_not_visible(self.button_apply_filters)
+            except self.ignored_exceptions:
+                pass
+            assert btn_apply_is_not_visible, "Кнопка закрытия расширенных фильтров не работает"
+            print("Кнопка закрытия расширенных фильтров работает")
+            Logger.add_end_step(url=self.driver.current_url, method="check_x_icon_filters_clients")
+
+
+    def check_x_icon_inside_filters_clients(self):
+        """Проверить работу индивидуальных кнопок очисток полей внутри расширенных фильтров"""
+        with allure.step("Check individual buttons X in All Filters"):
+            Logger.add_start_step(method="check_x_icon_inside_filters_clients")
+            self.click_button(self.button_all_fiters)
+            self.enter_in_name_input_filters(random.randint(1, 10))
+            self.click_button(self.x_icons_input_filters)
+            self.enter_in_type_input_filters(random.randint(1, 10))
+            self.click_button(self.x_icons_input_filters)
+            self.click_button(self.selector_invoice_type_filters)
+            self.click_button(self.list_of_invoice_types_filters)
+            self.click_button(self.x_icons_input_filters)
+            self.click_button(self.selector_affiliation_filters)
+            self.click_button(self.list_of_affiliations_filters)
+            self.click_button(self.x_icons_input_filters)
+            self.enter_in_dispatch_start_before_day_from_input_filters(random.randint(1, 10))
+            self.enter_in_dispatch_start_before_day_to_input_filters(random.randint(1, 10))
+            self.click_button(self.x_icons_input_filters)
+            self.enter_in_dispatch_end_before_day_from_input_filters(random.randint(1, 10))
+            self.enter_in_dispatch_end_before_day_to_input_filters(random.randint(1, 10))
+            self.click_button(self.x_icons_input_filters)
+            x_icons_is_not_visible = False
+            try:
+                x_icons_is_not_visible = self.is_not_visible(self.x_icons_input_filters)
+            except self.ignored_exceptions:
+                pass
+            assert x_icons_is_not_visible, "Индивидуальные кнопки очистки расширенных фильтров не работают"
+            print("Индивидуальные кнопки очистки расширенных фильтров работают")
+            Logger.add_end_step(url=self.driver.current_url, method="check_x_icon_inside_filters_clients")
+
+
