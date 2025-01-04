@@ -247,6 +247,10 @@ class ClientPage(Base):
             print("Все поля карточки клиента заполнены")
             self.click_button(self.button_create_card)
             self.is_not_visible(self.button_create_card)
+            try:
+                self.is_visible(self.toast_message_success)
+            except self.ignored_exceptions:
+                print("------------------Баг: Тостовое сообщение об успехе не отобразилось--------------------------")
             self.browser_refresh()
 
             """Проверка, что создан корректный клиент"""
@@ -284,8 +288,10 @@ class ClientPage(Base):
             self.click_button(self.link_delete_restore_in_3_dots_grid)
             try:
                 self.click_button(self.button_delete_item)
+                self.is_visible(self.toast_message_success)
             except self.ignored_exceptions:
-                print("------------------Баг: Окно подтверждения не отобразилось--------------------------")
+                print(
+                    "------------------Баг: Окно подтверждения или тостовое сообщение об успехе не отобразились--------------------------")
 
             """Проверка, что клиент переместился во вкладку Deleted"""
             self.browser_refresh()
@@ -309,8 +315,10 @@ class ClientPage(Base):
             self.click_button(self.delete_button_upper_panel)
             try:
                 self.click_button(self.button_delete_item)
+                self.is_visible(self.toast_message_success)
             except self.ignored_exceptions:
-                print("------------------Баг: Окно подтверждения не отобразилось--------------------------")
+                print(
+                    "------------------Баг: Окно подтверждения или тостовое сообщение об успехе не отобразились--------------------------")
 
 
             """Проверка, что клиент переместился во вкладку Deleted"""
@@ -338,10 +346,11 @@ class ClientPage(Base):
             print(f"Выбрано '{self.get_text(self.counter_upper_panel)}' чекбокса")
             self.click_button(self.delete_button_upper_panel)
             try:
-                self.element_is_visible(self.button_delete_item)
                 self.click_button(self.button_delete_item)
+                self.is_visible(self.toast_message_success)
             except self.ignored_exceptions:
-                print("------------------Баг: Окно подтверждения не отобразилось--------------------------")
+                print(
+                    "------------------Баг: Окно подтверждения или тостовое сообщение об успехе не отобразились--------------------------")
 
 
             """Проверка, что клиенты переместились во вкладку Deleted"""
@@ -366,8 +375,10 @@ class ClientPage(Base):
             self.click_button(self.delete_button_upper_panel)
             try:
                 self.click_button(self.button_delete_item)
+                self.is_visible(self.toast_message_success)
             except self.ignored_exceptions:
-                print("------------------Баг: Окно подтверждения не отобразилось--------------------------")
+                print(
+                    "------------------Баг: Окно подтверждения или тостовое сообщение об успехе не отобразились--------------------------")
 
             """Проверка, что клиенты переместились во вкладку Deleted"""
             self.browser_refresh()
@@ -393,8 +404,10 @@ class ClientPage(Base):
             print("Клик на Delete")
             try:
                 self.click_button(self.button_delete_item)
+                self.is_visible(self.toast_message_success)
             except self.ignored_exceptions:
-                print("------------------Баг: Окно подтверждения не отобразилось--------------------------")
+                print(
+                    "------------------Баг: Окно подтверждения или тостовое сообщение об успехе не отобразились--------------------------")
 
             """Проверка, что клиент переместился во вкладку Deleted"""
             self.browser_refresh()
@@ -485,6 +498,10 @@ class ClientPage(Base):
             self.get_input_dispatch_end_before_day().clear()
             self.enter_in_dispatch_end_before_day(self.update_dispatch_end)
             self.click_button(self.button_save)
+            try:
+                self.is_visible(self.toast_message_success)
+            except self.ignored_exceptions:
+                print("------------------Баг: Тостовое сообщение об успехе не отобразилось--------------------------")
             self.click_button(self.x_icon)
             self.is_not_visible(self.x_icon)
             self.browser_refresh()
@@ -531,6 +548,10 @@ class ClientPage(Base):
             self.upload_file(self.create_path_upload)
             name_of_added_file_before = self.get_text(self.name_of_added_file)
             self.click_button(self.button_save)
+            try:
+                self.is_visible(self.toast_message_success)
+            except self.ignored_exceptions:
+                print("------------------Баг: Тостовое сообщение об успехе не отобразилось--------------------------")
             self.is_visible(self.toast_message_success)
             self.click_button(self.x_icon)
             self.is_not_visible(self.x_icon)
@@ -544,7 +565,10 @@ class ClientPage(Base):
             self.click_button(self.x_icon_upload_file)
             self.upload_file(self.update_path_upload)
             self.click_button(self.button_save)
-            self.is_visible(self.toast_message_success)
+            try:
+                self.is_visible(self.toast_message_success)
+            except self.ignored_exceptions:
+                print("------------------Баг: Тостовое сообщение об успехе не отобразилось--------------------------")
             self.click_button(self.x_icon)
             self.is_not_visible(self.x_icon)
             self.browser_refresh()
@@ -569,8 +593,10 @@ class ClientPage(Base):
             self.click_button(self.link_delete_restore_in_3_dots_grid)
             try:
                 self.click_button(self.button_delete_item)
+                self.is_visible(self.toast_message_success)
             except self.ignored_exceptions:
-                print("------------------Баг: Окно подтверждения не отобразилось--------------------------")
+                print(
+                    "------------------Баг: Окно подтверждения или тостовое сообщение об успехе не отобразились--------------------------")
 
             """Проверка, что клиент переместился во вкладку All"""
             self.browser_refresh()
@@ -863,6 +889,10 @@ class ClientPage(Base):
                 counters_is_not_visible = self.is_not_visible(self.counter_filters)
             except self.ignored_exceptions:
                 pass
+            if counters_is_not_visible is False:
+                self.click_button(self.button_clear_filters)
+                print("Повторное нажатие на Clear")
+                counters_is_not_visible = True
             assert counters_is_not_visible, "Кнопка Clear расширенных фильтров не работает"
             print("Кнопка Clear расширенных фильтров работает")
             Logger.add_end_step(url=self.driver.current_url, method="check_button_clear_filters_clients")

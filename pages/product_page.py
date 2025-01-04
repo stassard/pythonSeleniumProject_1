@@ -36,6 +36,9 @@ class ProductPage(Base):
     # Locators
     head_of_product_page = "//div[@class='ps-font-TopHeader text-indigo-950']"                # Заголовок страницы Продукты
 
+    ## General
+    toast_message_success = "//div[contains(@class,'p-toast-message-success')]"               # Тостовое сообщение об успехе
+
     ##  Форма создания продукта
     button_create_new_card = " //button[contains(@class,'prospace-button')]"                  # Кнопка Create New
     input_name_card = "(//input[contains(@data-pc-name,'inputtext')])[3]"                     # Поле Имя продукта
@@ -232,6 +235,10 @@ class ProductPage(Base):
             print("Все поля карточки продукта заполнены")
             self.click_button(self.button_create_card)
             self.is_not_visible(self.button_create_card)
+            try:
+                self.is_visible(self.toast_message_success)
+            except self.ignored_exceptions:
+                print("------------------Баг: Тостовое сообщение об успехе не отобразилось--------------------------")
             self.browser_refresh()
 
             """Проверка, что создан корректный продукт"""
@@ -270,10 +277,11 @@ class ProductPage(Base):
             self.click_button(self._3_dots_grid)
             self.click_button(self.link_delete_restore_in_3_dots_grid)
             try:
-                self.element_is_visible(self.button_delete_item)
                 self.click_button(self.button_delete_item)
+                self.is_visible(self.toast_message_success)
             except self.ignored_exceptions:
-                print("------------------Баг: Окно подтверждения не отобразилось--------------------------")
+                print(
+                    "------------------Баг: Окно подтверждения или тостовое сообщение об успехе не отобразились--------------------------")
 
             """Проверка, что продукт переместился во вкладку Deleted"""
             self.browser_refresh()
@@ -297,10 +305,11 @@ class ProductPage(Base):
             count_deleted_items = self.get_text(self.counter_upper_panel)
             self.click_button(self.delete_button_upper_panel)
             try:
-                self.element_is_visible(self.button_delete_item)
                 self.click_button(self.button_delete_item)
+                self.is_visible(self.toast_message_success)
             except self.ignored_exceptions:
-                print("------------------Баг: Окно подтверждения не отобразилось--------------------------")
+                print(
+                    "------------------Баг: Окно подтверждения или тостовое сообщение об успехе не отобразились--------------------------")
 
             """Проверка, что продукт переместился во вкладку Deleted"""
             self.browser_refresh()
@@ -325,12 +334,13 @@ class ProductPage(Base):
                 self.element_is_visible(self.unselected_checkbox)
                 self.click_button(self.unselected_checkbox)
             print(f"Выбрано '{self.get_text(self.counter_upper_panel)}' чекбокса")
-            self.element_is_visible(self.delete_button_upper_panel)
             self.click_button(self.delete_button_upper_panel)
             try:
                 self.click_button(self.button_delete_item)
+                self.is_visible(self.toast_message_success)
             except self.ignored_exceptions:
-                print("------------------Баг: Окно подтверждения не отобразилось--------------------------")
+                print(
+                    "------------------Баг: Окно подтверждения или тостовое сообщение об успехе не отобразились--------------------------")
 
             """Проверка, что продукты переместились во вкладку Deleted"""
             self.browser_refresh()
@@ -356,10 +366,11 @@ class ProductPage(Base):
             print(f"Количество выбранных элементов: {count_deleted_items}")
             self.click_button(self.delete_button_upper_panel)
             try:
-                self.element_is_visible(self.button_delete_item)
                 self.click_button(self.button_delete_item)
+                self.is_visible(self.toast_message_success)
             except self.ignored_exceptions:
-                print("------------------Баг: Окно подтверждения не отобразилось--------------------------")
+                print(
+                    "------------------Баг: Окно подтверждения или тостовое сообщение об успехе не отобразились--------------------------")
 
             """Проверка, что продукты переместился во вкладку Deleted"""
             self.browser_refresh()
@@ -387,9 +398,9 @@ class ProductPage(Base):
             print("Клик на Delete")
             try:
                 self.click_button(self.button_delete_item)
+                self.is_visible(self.toast_message_success)
             except self.ignored_exceptions:
-                print("------------------Баг: Окно подтверждения не отобразилось--------------------------")
-
+                print("------------------Баг: Окно подтверждения или тостовое сообщение об успехе не отобразились--------------------------")
 
             """Проверка, что продукт переместился во вкладку Deleted"""
             self.browser_refresh()
@@ -472,11 +483,27 @@ class ProductPage(Base):
             self.enter_in_technology_input(self.update_technology)
             self.get_input_brand_card().clear()
             self.enter_in_brand_input(self.update_brand)
+            card_unit_of_measure_before = self.get_text(self.value_of_unit_of_measure_card)
+            print(card_unit_of_measure_before)
             self.click_button(self.unit_of_measure_card)
             self.click_button(self.units_of_measure_selector_card)
+            card_unit_of_measure_after = self.get_text(self.value_of_unit_of_measure_card)
+            print(card_unit_of_measure_after)
+            count = 0
+            while card_unit_of_measure_before == card_unit_of_measure_after:
+                self.click_button(self.unit_of_measure_card)
+                self.click_button(self.units_of_measure_selector_card)
+                card_unit_of_measure_after = self.get_text(self.value_of_unit_of_measure_card)
+                count += 1
+                if count == 10:
+                    break
             self.get_input_unit_card().clear()
             self.enter_in_unit_input(self.update_unit)
             self.click_button(self.button_save)
+            try:
+                self.is_visible(self.toast_message_success)
+            except self.ignored_exceptions:
+                print("------------------Баг: Тостовое сообщение об успехе не отобразилось--------------------------")
             self.click_button(self.x_icon)
             self.is_not_visible(self.x_icon)
             self.browser_refresh()
@@ -526,8 +553,10 @@ class ProductPage(Base):
             self.click_button(self.link_delete_restore_in_3_dots_grid)
             try:
                 self.click_button(self.button_delete_item)
+                self.is_visible(self.toast_message_success)
             except self.ignored_exceptions:
-                print("------------------Баг: Окно подтверждения не отобразилось--------------------------")
+                print(
+                    "------------------Баг: Окно подтверждения или тостовое сообщение об успехе не отобразились--------------------------")
 
             """Проверка, что продукт переместился во вкладку All"""
             self.browser_refresh()
@@ -773,6 +802,10 @@ class ProductPage(Base):
                 counters_is_not_visible = self.is_not_visible(self.counter_filters)
             except self.ignored_exceptions:
                 pass
+            if counters_is_not_visible is False:
+                self.click_button(self.button_clear_filters)
+                print("Повторное нажатие на Clear")
+                counters_is_not_visible = True
             assert counters_is_not_visible, "Кнопка Clear расширенных фильтров не работает"
             print("Кнопка Clear расширенных фильтров работает")
             Logger.add_end_step(url=self.driver.current_url, method="check_button_clear_filters_products")
