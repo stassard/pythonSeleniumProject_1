@@ -12,7 +12,7 @@ class Base:
 
     def __init__(self, driver):
         self.driver = driver
-        self.wait = WebDriverWait(driver, 30, poll_frequency=1, ignored_exceptions=self.ignored_exceptions)
+        self.wait = WebDriverWait(driver, timeout=30, poll_frequency=1, ignored_exceptions=self.ignored_exceptions)
 
     ignored_exceptions = (NoSuchElementException, StaleElementReferenceException, TimeoutException, ElementClickInterceptedException)
 

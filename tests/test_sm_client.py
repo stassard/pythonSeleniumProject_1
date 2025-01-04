@@ -251,8 +251,8 @@ class TestSmokeClientPage:
         cp.open_clients_dict()
         cp.check_x_icon_inside_filters_clients()
 
-    """Проверить работу индивидуальных кнопок очистки расширенных фильтров"""
 
+    """Изменение логотипа клиента"""
     @allure.title("Update Client's logo")
     @allure.severity("Critical")
     @pytest.mark.smoke
