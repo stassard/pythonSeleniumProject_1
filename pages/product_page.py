@@ -6,8 +6,6 @@ from selenium.common.exceptions import TimeoutException
 from selenium.common.exceptions import ElementClickInterceptedException
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver import Keys
-from selenium.webdriver.common.by import By
-
 from base.base_class import Base
 from utilities.logger import Logger
 
@@ -51,7 +49,6 @@ class ProductPage(Base):
     units_of_measure_selector_card = f" //li[@aria-posinset='{random.randint(1, 7)}']"           # Список Unit of Measure
     input_unit_card = "//input[contains(@data-pc-name,'pcinput')]"                            # Поле Unit
     button_create_card = "//button[contains(@items,'[object Object]')]"                       # Кнопка Create
-    _3_dots_card = "(//div/div/button[@class='prospace-icon-button'])[3]"                     # Троеточие в карточке продукта
     link_delete_in_3_dots_card = "//div[contains(@class,'prospace-dots-item')]"               # Кнопка Delete в троеточии в карточке
     x_icon_card = "(//div/div/button[@class='prospace-icon-button'])[5]"                      # Иконка X в карточке создания продукта
 
@@ -89,6 +86,7 @@ class ProductPage(Base):
     ##  Форма созданного продукта
     mode_switcher = "//span[@class='p-inputswitch-slider']"                              # Свитчер режимов
     button_save = "//button[contains(@class,'prospace-button--with-icon')]"              # Кнопка Сохранить
+    _3_dots_card = "(//div/div/button[@class='prospace-icon-button'])[3]"                # Троеточие в карточке продукта
     product_id = "//div[contains(@class, 'item-id')]"                                    # ID продукта в карточке продукта
     x_icon = "(//div/div/button[@class='prospace-icon-button'])[6]"                      # Иконка X в карточке созданного продукта
     value_of_unit_of_measure_card = "//span[contains(@class,'p-dropdown-label')]/span"   # Значение поля Unit of Measure
