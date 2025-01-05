@@ -69,7 +69,7 @@ class TestSmokeClientPage:
 
 
     """Удаление 4х клиентов через чекбоксы в гриде"""
-    @allure.title("Multiselection Deleted Clients using Checkboxes in Grid")
+    @allure.title("Multiselection Deleting Clients using Checkboxes in Grid")
     @allure.severity("Critical")
     @pytest.mark.smoke
     def test_delete_4_clients_from_checkbox_grid(self, driver):

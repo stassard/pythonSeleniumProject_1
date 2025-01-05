@@ -55,7 +55,7 @@ class ProductPage(Base):
     ## Грид продуктов
     _3_dots_grid = f"(//div[@class='flex justify-center']/button[@class='prospace-icon-button'])[{random.randint(1, 20)}]"  # Троеточие в гриде
     link_delete_restore_in_3_dots_grid = "(//div[contains(@class, 'prospace-dots-item')])[2]"   # Кнопка Delete в троеточии в гриде
-    product_name = f"(//div[contains(@class, 'border-dotted')])[{random.randint(2, 20)}]"                                   # Имя продукта в гриде
+    any_item_name = f"(//div[contains(@class, 'border-dotted')])[{random.randint(2, 20)}]"                                   # Имя продукта в гриде
     input_search_grid = "//input[contains(@data-pc-name,'inputtext')]"                          # Поле Search в гриде
     last_prod_name_in_grid = "(//div[contains(@class,'border-b-purple-400')])[1]"               # Имя последнего созданного продукта в гриде
     last_eanc_in_grid = "(//div[@class='text-ellipsis'])[1]"                                    # EAN Case последнего созданного продукта в гриде
@@ -76,11 +76,11 @@ class ProductPage(Base):
     delete_button_upper_panel = "//button[contains(@class,'prospace-action bg-white transition')]"        # Кнопка Delete в верхней сервисной панели
     counter_upper_panel = "//span[@class='prospace-counter-box']"                                         # Каунтер в верхней сервисной панели
     button_all_fiters = "//div[contains(@class, 'all-filters')]"                                          # Кнопка All filters
-    any_category_in_grid = f"(//span[text()='Category']/following-sibling::div[@class='text-ellipsis'])[{random.randint(1, 20)}]"     # Категория в гриде
-    any_brand_in_grid = f"(//span[text()='Brand']/following-sibling::div[@class='text-ellipsis'])[{random.randint(1, 20)}]"           # Бренд в гриде
-    any_unit_of_measure_in_grid = f"(//span[text()='Unit Of Measure']/following-sibling::div[@class='text-ellipsis'])[{random.randint(1, 20)}]"  # Единица измерения в гриде
-    any_unit_in_grid = f"(//span[text()='Unit']/following-sibling::div[@class='text-ellipsis'])[{random.randint(1, 20)}]"             # Юнит в гриде
-    any_technology_in_grid = f"(//span[text()='Technology']/following-sibling::div[@class='text-ellipsis'])[{random.randint(1, 20)}]"     # Технология в гриде
+    any_category_in_grid = f"(//span[text()='Category']/following-sibling::div[@class='text-ellipsis'])[{random.randint(2, 20)}]"     # Категория в гриде
+    any_brand_in_grid = f"(//span[text()='Brand']/following-sibling::div[@class='text-ellipsis'])[{random.randint(2, 20)}]"           # Бренд в гриде
+    any_unit_of_measure_in_grid = f"(//span[text()='Unit Of Measure']/following-sibling::div[@class='text-ellipsis'])[{random.randint(2, 20)}]"  # Единица измерения в гриде
+    any_unit_in_grid = f"(//span[text()='Unit']/following-sibling::div[@class='text-ellipsis'])[{random.randint(2, 20)}]"             # Юнит в гриде
+    any_technology_in_grid = f"(//span[text()='Technology']/following-sibling::div[@class='text-ellipsis'])[{random.randint(2, 20)}]"     # Технология в гриде
     counter_all_filters = "//div[contains(@class,'all-filters')]/span[@class='prospace-counter-box']"     # Каунтер на кнопке All Filters
 
     ##  Форма созданного продукта
@@ -172,7 +172,7 @@ class ProductPage(Base):
         return self.element_is_clickable(self.last_prod_name_in_grid).click()
 
     def open_any_product(self):
-        return self.element_is_clickable(self.product_name).click()
+        return self.element_is_clickable(self.any_item_name).click()
 
     def enter_in_search_field(self, name):
         return self.get_input_search_grid().send_keys(name)
@@ -415,15 +415,17 @@ class ProductPage(Base):
         """Поиск продукта по имени продукта"""
         with allure.step("Find Product by Name"):
             Logger.add_start_step(method="find_product_by_name")
-            any_name_in_grid = self.get_text(self.product_name)
+            any_name_in_grid = self.get_text(self.any_item_name)
             print(f"Выбранное для поиска имя продукта: {any_name_in_grid}")
             self.enter_in_search_field(any_name_in_grid)
             print(f"Имя продукта '{any_name_in_grid}' введено в поле поиска")
             self.get_input_search_grid().send_keys(Keys.RETURN)
             print("Enter")
+            while self.get_text(self.count_items_in_footer_grid) == "0":
+                time.sleep(1)
 
             """Проверка, что найден корректный продукт"""
-            first_name_in_grid = self.get_text(self.product_name)
+            first_name_in_grid = self.get_text(self.last_prod_name_in_grid)
             print(f"Имя первого отображаемого продукта в гриде: {first_name_in_grid}")
             assert str(any_name_in_grid) == str(first_name_in_grid), "Ошибка при поиске или имена продуктов не совпадают"
             print("Найден корректный продукт")
@@ -444,9 +446,11 @@ class ProductPage(Base):
             print(f"ID продукта '{any_id}' введено в поле поиска")
             self.get_input_search_grid().send_keys(Keys.RETURN)
             print("Enter")
+            while self.get_text(self.count_items_in_footer_grid) == "0":
+                time.sleep(1)
 
             """Проверка, что найден корректный продукт"""
-            self.open_any_product()
+            self.open_last_product()
             first_id = self.get_text(self.product_id)
             print(f"ID первого отображаемого продукта в гриде: {first_id}")
             assert str(any_id) == str(first_id), "Ошибка при поиске или id продуктов не совпадают"
@@ -543,7 +547,7 @@ class ProductPage(Base):
             Logger.add_start_step(method="restore_product_from_three_dots_grid")
             self.open_deleted_tab()
             self.is_visible(self.deleted_tab_grid_is_active)
-            if self.get_text(self.count_items_in_footer_grid) == "0":
+            while self.get_text(self.count_items_in_footer_grid) == "0":
                 time.sleep(1)
             count_of_items_before = self.get_text(self.count_items_in_footer_grid)
             print(f"Количество продуктов на вкладке Deleted до рестора: {count_of_items_before}")
@@ -560,7 +564,7 @@ class ProductPage(Base):
             self.browser_refresh()
             self.open_deleted_tab()
             self.is_visible(self.deleted_tab_grid_is_active)
-            if self.get_text(self.count_items_in_footer_grid) == "0":
+            while self.get_text(self.count_items_in_footer_grid) == "0":
                 time.sleep(1)
             count_of_items_after = self.get_text(self.count_items_in_footer_grid)
             print(f"Количество продуктов на вкладке Deleted после рестора: {count_of_items_after}")
@@ -577,7 +581,7 @@ class ProductPage(Base):
             Logger.add_start_step(method="filters_product_by_sku_name")
             count_of_items_before = self.get_text(self.count_items_in_footer_grid)
             print(f"Количество продуктов на вкладке All до фильтрации: {count_of_items_before}")
-            any_name_in_grid = self.get_text(self.product_name)
+            any_name_in_grid = self.get_text(self.any_item_name)
             print(f"Выбранное для фильтрации имя продукта: {any_name_in_grid}")
             self.click_button(self.button_all_fiters)
             self.enter_in_sku_name_input_filters(any_name_in_grid)
@@ -739,9 +743,20 @@ class ProductPage(Base):
 
 
     def read_product(self):
-        """Получить информацию о последнем созданном продукте из грида"""
+        """Прочесть информацию о найденном продукте и сравнить с данными из грида"""
         with allure.step("Read Product"):
+            """Найти продукт"""
             Logger.add_start_step(method="read_product")
+            any_id = self.get_text(self.any_item_name)
+            print(f"Выбранное для поиска ID элемента: {any_id}")
+            self.enter_in_search_field(any_id)
+            print(f"ID элемента '{any_id}' введено в поле поиска")
+            self.get_input_search_grid().send_keys(Keys.RETURN)
+            print("Enter")
+            while self.get_text(self.count_items_in_footer_grid) == "0":
+                time.sleep(1)
+
+            """Получить информацию о найденном продукте из грида"""
             grid_name = self.get_text(self.last_prod_name_in_grid)
             grid_eanc = self.get_text(self.last_eanc_in_grid)
             grid_eanp = self.get_text(self.last_eanp_in_grid)
