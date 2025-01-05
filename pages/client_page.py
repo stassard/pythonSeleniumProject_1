@@ -62,7 +62,7 @@ class ClientPage(Base):
     ## Грид клиентов
     _3_dots_grid = f"(//div[@class='flex justify-center']/button[@class='prospace-icon-button'])[{random.randint(1, 20)}]"  # Троеточия в гриде
     link_delete_restore_in_3_dots_grid = "(//div[contains(@class, 'prospace-dots-item')])[2]"  # Кнопка Delete в троеточии в гриде
-    client_name = f"(//div[contains(@class, 'border-dotted')])[{random.randint(2, 20)}]"  # Имя клиента в гриде
+    any_item_name = f"(//div[contains(@class, 'border-dotted')])[{random.randint(2, 20)}]"  # Имя клиента в гриде
     input_search_grid = "//input[contains(@data-pc-name,'inputtext')]"  # Поле Search в гриде
     last_client_name_in_grid = "(//div[contains(@class,'border-b-purple-400')])[1]"  # Имя последнего созданного клиента в гриде
     last_id_in_grid = "(//div[@class='text-ellipsis'])[1]"  # ID последнего созданного клиента в гриде
@@ -82,12 +82,12 @@ class ClientPage(Base):
     delete_button_upper_panel = "//button[contains(@class,'prospace-action bg-white transition')]"  # Кнопка Delete в верхней сервисной панели
     counter_upper_panel = "//span[@class='prospace-counter-box']"  # Каунтер в верхней сервисной панели
     button_all_fiters = "//div[contains(@class, 'all-filters')]"  # Кнопка All filters
-    any_id_in_grid = f"(//span[text()='ID']/following-sibling::div[@class='text-ellipsis'])[{random.randint(1, 20)}]"  # ID в гриде
-    any_external_id_in_grid = f"(//span[text()='External ID']/following-sibling::div[@class='text-ellipsis'])[{random.randint(1, 20)}]"  # External ID в гриде
-    any_parent_in_grid = f"(//span[text()='Parent']/following-sibling::div[@class='text-ellipsis'])[{random.randint(1, 20)}]"  # Parent измерения в гриде
-    any_type_in_grid = f"(//span[text()='Type']/following-sibling::div[@class='text-ellipsis'])[{random.randint(1, 20)}]"  # Type в гриде
-    any_affiliation_in_grid = f"(//span[text()='Affiliation']/following-sibling::div[@class='text-ellipsis'])[{random.randint(1, 20)}]"  # Affiliation в гриде
-    any_invoice_type_in_grid = f"(//span[text()='Invoice Type']/following-sibling::div[@class='text-ellipsis'])[{random.randint(1, 20)}]"  # Invoice Type в гриде
+    any_id_in_grid = f"(//span[text()='ID']/following-sibling::div[@class='text-ellipsis'])[{random.randint(2, 20)}]"  # ID в гриде
+    any_external_id_in_grid = f"(//span[text()='External ID']/following-sibling::div[@class='text-ellipsis'])[{random.randint(2, 20)}]"  # External ID в гриде
+    any_parent_in_grid = f"(//span[text()='Parent']/following-sibling::div[@class='text-ellipsis'])[{random.randint(2, 20)}]"  # Parent измерения в гриде
+    any_type_in_grid = f"(//span[text()='Type']/following-sibling::div[@class='text-ellipsis'])[{random.randint(2, 20)}]"  # Type в гриде
+    any_affiliation_in_grid = f"(//span[text()='Affiliation']/following-sibling::div[@class='text-ellipsis'])[{random.randint(2, 20)}]"  # Affiliation в гриде
+    any_invoice_type_in_grid = f"(//span[text()='Invoice Type']/following-sibling::div[@class='text-ellipsis'])[{random.randint(2, 20)}]"  # Invoice Type в гриде
     counter_all_filters = "//div[contains(@class,'all-filters')]/span[@class='prospace-counter-box']"  # Каунтер на кнопке All Filters
 
     ##  Форма созданного клиента
@@ -183,7 +183,7 @@ class ClientPage(Base):
         return self.element_is_clickable(self.last_client_name_in_grid).click()
 
     def open_any_client(self):
-        return self.element_is_clickable(self.client_name).click()
+        return self.element_is_clickable(self.any_item_name).click()
 
     def enter_in_search_field(self, name):
         return self.get_input_search_grid().send_keys(name)
@@ -423,15 +423,17 @@ class ClientPage(Base):
         with allure.step("Find Client by Name"):
             """Поиск клиента по имени продукта"""
             Logger.add_start_step(method="find_client_by_name")
-            any_name_in_grid = self.get_text(self.client_name)
+            any_name_in_grid = self.get_text(self.any_item_name)
             print(f"Выбранное для поиска имя клиента: {any_name_in_grid}")
             self.enter_in_search_field(any_name_in_grid)
             print(f"Имя клиента '{any_name_in_grid}' введено в поле поиска")
             self.get_input_search_grid().send_keys(Keys.RETURN)
             print("Enter")
+            while self.get_text(self.count_items_in_footer_grid) == "0":
+                time.sleep(1)
 
             """Проверка, что найден корректный клиент"""
-            first_name_in_grid = self.get_text(self.client_name)
+            first_name_in_grid = self.get_text(self.last_client_name_in_grid)
             print(f"Имя первого отображаемого клиента в гриде: {str(first_name_in_grid)}")
             assert str(any_name_in_grid) == str(
                 first_name_in_grid), "Ошибка при поиске или имена клиентов не совпадают"
@@ -449,9 +451,11 @@ class ClientPage(Base):
             print(f"ID клиента '{any_id}' введено в поле поиска")
             self.get_input_search_grid().send_keys(Keys.RETURN)
             print("Enter")
+            while self.get_text(self.count_items_in_footer_grid) == "0":
+                time.sleep(1)
 
             """Проверка, что найден корректный клиент"""
-            first_id = self.get_text(self.any_id_in_grid)
+            first_id = self.get_text(self.last_id_in_grid)
             print(f"ID первого отображаемого клиента в гриде: {first_id}")
             assert str(any_id) == str(first_id), "Ошибка при поиске или id клиентов не совпадают"
             print("Найден корректный клиент")
@@ -618,7 +622,7 @@ class ClientPage(Base):
             Logger.add_start_step(method="filters_client_by_name")
             count_of_items_before = self.get_text(self.count_items_in_footer_grid)
             print(f"Количество клиентов на вкладке All до фильтрации: {count_of_items_before}")
-            any_name_in_grid = self.get_text(self.client_name)
+            any_name_in_grid = self.get_text(self.any_item_name)
             print(f"Выбранное для фильтрации имя клиента: {any_name_in_grid}")
             self.click_button(self.button_all_fiters)
             self.enter_in_name_input_filters(any_name_in_grid)
@@ -830,9 +834,20 @@ class ClientPage(Base):
 
 
     def read_client(self):
-        """Получить информацию о последнем созданном клиенте из грида"""
+        """Прочесть информацию о найденном клиенте и сравнить с данными из грида"""
         with allure.step("Read Client"):
+            """Найти клиента"""
             Logger.add_start_step(method="read_client")
+            any_id = self.get_text(self.any_item_name)
+            print(f"Выбранное для поиска ID элемента: {any_id}")
+            self.enter_in_search_field(any_id)
+            print(f"ID элемента '{any_id}' введено в поле поиска")
+            self.get_input_search_grid().send_keys(Keys.RETURN)
+            print("Enter")
+            while self.get_text(self.count_items_in_footer_grid) == "0":
+                time.sleep(1)
+
+            """Получить информацию о найденном клиенте из грида"""
             grid_id = self.get_text(self.last_id_in_grid)
             grid_name = self.get_text(self.last_client_name_in_grid)
             grid_external_id = self.get_text(self.last_external_id_in_grid)

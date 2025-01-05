@@ -105,7 +105,7 @@ class TestSmokeProductPage:
 
 
     """Удаление 4х продуктов через чекбоксы в гриде"""
-    @allure.title("Multiselection Deleted Product using Checkboxes in Grid")
+    @allure.title("Multiselection Deleting Product using Checkboxes in Grid")
     @allure.severity("Critical")
     @pytest.mark.smoke
     def test_delete_4_product_from_checkbox_grid(self, driver):
