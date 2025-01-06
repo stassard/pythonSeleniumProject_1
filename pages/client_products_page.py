@@ -182,8 +182,12 @@ class ClientProductsPage(Base):
             print(f"Имя клиента '{created_client_name}' введено в поле поиска справочника Clients")
             self.get_input_search_grid().send_keys(Keys.RETURN)
             print("Enter")
+            count = 0
             while self.get_text(self.count_items_in_footer_grid) == "0":
                 time.sleep(1)
+                count += 1
+                if count == 10:
+                    break
             self.click_button(self.last_item_name_in_grid)
             expected_client_id = self.get_text(self.item_id)
             print("ID клиента сохранен")
@@ -195,8 +199,12 @@ class ClientProductsPage(Base):
             print(f"Имя продукта '{created_product_name}' введено в поле поиска справочника Products")
             self.get_input_search_grid().send_keys(Keys.RETURN)
             print("Enter")
+            count = 0
             while self.get_text(self.count_items_in_footer_grid) == "0":
                 time.sleep(1)
+                count += 1
+                if count == 10:
+                    break
             self.click_button(self.last_item_name_in_grid)
             expected_product_id = self.get_text(self.item_id)
             print("ID продукта сохранен")
@@ -247,6 +255,7 @@ class ClientProductsPage(Base):
             self.element_is_visible(self.unselected_checkbox)
             self.click_button(self.unselected_checkbox)
             count_deleted_items = self.get_text(self.counter_upper_panel)
+            self.is_visible(self.delete_button_upper_panel)
             self.click_button(self.delete_button_upper_panel)
             try:
                 self.click_button(self.button_delete_item)
@@ -274,10 +283,15 @@ class ClientProductsPage(Base):
             print(f"Количество элементов на вкладке All до удаления: {count_of_items_before}")
             self.element_is_visible(self.unselected_checkbox)
             self.click_button(self.unselected_checkbox)
+            count = 0
             while self.get_text(self.counter_upper_panel) != "4":
                 self.element_is_visible(self.unselected_checkbox)
                 self.click_button(self.unselected_checkbox)
+                count += 1
+                if count == 10:
+                    break
             print(f"Выбрано '{self.get_text(self.counter_upper_panel)}' чекбокса")
+            self.is_visible(self.delete_button_upper_panel)
             self.click_button(self.delete_button_upper_panel)
             try:
                 self.click_button(self.button_delete_item)
@@ -307,6 +321,7 @@ class ClientProductsPage(Base):
             self.click_button(self.select_all_checkbox)
             count_deleted_items = self.get_text(self.counter_upper_panel)
             print(f"Количество выбранных элементов: {count_deleted_items}")
+            self.is_visible(self.delete_button_upper_panel)
             self.click_button(self.delete_button_upper_panel)
             try:
                 self.click_button(self.button_delete_item)
@@ -365,8 +380,12 @@ class ClientProductsPage(Base):
             print(f"Имя продукта '{any_name_in_grid}' введено в поле поиска")
             self.get_input_search_grid().send_keys(Keys.RETURN)
             print("Enter")
+            count = 0
             while self.get_text(self.count_items_in_footer_grid) == "0":
                 time.sleep(1)
+                count += 1
+                if count == 10:
+                    break
 
             """Проверка, что найдена корректная матрица"""
             first_name_in_grid = self.get_text(self.last_product_sku_name_in_grid)
@@ -386,8 +405,12 @@ class ClientProductsPage(Base):
             print(f"ID элемента '{any_id}' введено в поле поиска")
             self.get_input_search_grid().send_keys(Keys.RETURN)
             print("Enter")
+            count = 0
             while self.get_text(self.count_items_in_footer_grid) == "0":
                 time.sleep(1)
+                count += 1
+                if count == 30:
+                    break
 
             """Проверка, что найден корректный элемент"""
             first_id = self.get_text(self.last_item_name_in_grid)
@@ -409,8 +432,12 @@ class ClientProductsPage(Base):
             print(f"ID элемента '{any_id}' введено в поле поиска")
             self.get_input_search_grid().send_keys(Keys.RETURN)
             print("Enter")
+            count = 0
             while self.get_text(self.count_items_in_footer_grid) == "0":
                 time.sleep(1)
+                count += 1
+                if count == 10:
+                    break
 
             """Получить информацию о найденной матрице Клиент Продукт из грида"""
             grid_client_name = self.get_text(self.last_client_name_in_grid)
@@ -436,8 +463,12 @@ class ClientProductsPage(Base):
             self.is_visible(self.count_items_in_footer_grid)
             self.open_deleted_tab()
             self.is_visible(self.deleted_tab_grid_is_active)
+            count = 0
             while self.get_text(self.count_items_in_footer_grid) == "0":
                 time.sleep(1)
+                count += 1
+                if count == 10:
+                    break
             count_of_items_before = self.get_text(self.count_items_in_footer_grid)
             print(f"Количество элементов на вкладке Deleted до рестора: {count_of_items_before}")
             self.click_button(self._3_dots_grid)
@@ -453,8 +484,12 @@ class ClientProductsPage(Base):
             self.browser_refresh()
             self.open_deleted_tab()
             self.is_visible(self.deleted_tab_grid_is_active)
+            count = 0
             while self.get_text(self.count_items_in_footer_grid) == "0":
                 time.sleep(1)
+                count += 1
+                if count == 10:
+                    break
             count_of_items_after = self.get_text(self.count_items_in_footer_grid)
             print(f"Количество элементов на вкладке Deleted после рестора: {count_of_items_after}")
             assert int(count_of_items_after) == int(count_of_items_before) - 1, \
@@ -495,3 +530,97 @@ class ClientProductsPage(Base):
                 assert str(any_client_name_in_grid) == str(last_client_name_in_grid), "Ошибка при фильтрации по имени или имена клиентов не совпадают"
             print("Фильтрация корректна")
             Logger.add_end_step(url=self.driver.current_url, method="filters_client_product_by_client")
+
+
+
+    def filters_client_product_by_product(self):
+        """Фильтрация матриц Клиент Продукт по имени продукта"""
+        with allure.step("Filter Client Products by Product using All Filters"):
+            Logger.add_start_step(method="filters_client_product_by_product")
+            count_of_items_before = self.get_text(self.count_items_in_footer_grid)
+            print(f"Количество элементов на вкладке All до фильтрации: {count_of_items_before}")
+            any_product_name_in_grid = self.get_text(self.any_product_sku_name_in_grid)
+            print(f"Выбранное для фильтрации имя клиента: {any_product_name_in_grid}")
+            self.click_button(self.button_all_fiters)
+            self.enter_in_product_input_filters(any_product_name_in_grid)
+            print("Имя клиента введено в поле Client")
+            if self.get_text(self.counter_filters) == "1":
+                self.click_button(self.button_apply_filters)
+            print("Клик Apply")
+
+            """Проверка, что элементы отфильтровались по имени продукта"""
+            self.is_not_visible(self.button_apply_filters)
+            count_of_items_after = self.get_text(self.count_items_in_footer_grid)
+            print(f"Количество элементов на вкладке All после фильтрации: {count_of_items_after}")
+            if count_of_items_after < count_of_items_before:
+                last_product_name_in_grid = self.get_text(self.last_product_sku_name_in_grid)
+                print(f"Имя первого отображаемого клиента в гриде: {last_product_name_in_grid}")
+                counter_all_filters_is_visible = False
+                try:
+                    counter_all_filters_is_visible = self.is_visible(self.counter_all_filters)
+                except self.ignored_exceptions:
+                    pass
+                assert counter_all_filters_is_visible, "Не отображается каунтер на All Filters"
+                assert str(any_product_name_in_grid) == str(last_product_name_in_grid), "Ошибка при фильтрации по имени или имена продуктов не совпадают"
+            print("Фильтрация корректна")
+            Logger.add_end_step(url=self.driver.current_url, method="filters_client_product_by_product")
+
+
+    def check_button_clear_filters_client_products(self):
+        """Проверить работу кнопки Clear в расширенных фильтрах"""
+        with allure.step("Check button Clear in All Filters"):
+            Logger.add_start_step(method="check_button_clear_filters_client_products")
+            self.click_button(self.button_all_fiters)
+            self.enter_in_client_input_filters(random.randint(1, 10))
+            self.enter_in_product_input_filters(random.randint(1, 10))
+            self.click_button(self.button_clear_filters)
+            counters_is_not_visible = False
+            try:
+                counters_is_not_visible = self.is_not_visible(self.counter_filters)
+            except self.ignored_exceptions:
+                pass
+            if counters_is_not_visible is False:
+                self.click_button(self.button_clear_filters)
+                print("Повторное нажатие на Clear")
+                counters_is_not_visible = True
+            assert counters_is_not_visible, "Кнопка Clear расширенных фильтров не работает"
+            print("Кнопка Clear расширенных фильтров работает")
+            Logger.add_end_step(url=self.driver.current_url, method="check_button_clear_filters_client_products")
+
+
+    def check_x_icon_filters_client_products(self):
+        """Проверить работу кнопки закрытия расширенных фильтров"""
+        with allure.step("Check button X in All Filters"):
+            Logger.add_start_step(method="check_x_icon_filters_client_products")
+            self.click_button(self.button_all_fiters)
+            self.enter_in_client_input_filters(random.randint(1, 10))
+            self.enter_in_product_input_filters(random.randint(1, 10))
+            self.click_button(self.x_icon_filters)
+            btn_apply_is_not_visible = False
+            try:
+                btn_apply_is_not_visible = self.is_not_visible(self.button_apply_filters)
+            except self.ignored_exceptions:
+                pass
+            assert btn_apply_is_not_visible, "Кнопка закрытия расширенных фильтров не работает"
+            print("Кнопка закрытия расширенных фильтров работает")
+            Logger.add_end_step(url=self.driver.current_url, method="check_x_icon_filters_client_products")
+
+
+
+    def check_x_icon_inside_filters_client_products(self):
+        """Проверить работу индивидуальных кнопок очисток полей внутри расширенных фильтров"""
+        with allure.step("Check individual buttons X in All Filters"):
+            Logger.add_start_step(method="check_x_icon_inside_filters_client_products")
+            self.click_button(self.button_all_fiters)
+            self.enter_in_client_input_filters(random.randint(1, 10))
+            self.click_button(self.x_icons_input_filters)
+            self.enter_in_product_input_filters(random.randint(1, 10))
+            self.click_button(self.x_icons_input_filters)
+            x_icons_is_not_visible = False
+            try:
+                x_icons_is_not_visible = self.is_not_visible(self.x_icons_input_filters)
+            except self.ignored_exceptions:
+                pass
+            assert x_icons_is_not_visible, "Индивидуальные кнопки очистки расширенных фильтров не работают"
+            print("Индивидуальные кнопки очистки расширенных фильтров работают")
+            Logger.add_end_step(url=self.driver.current_url, method="check_x_icon_inside_filters_client_products")

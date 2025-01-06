@@ -312,6 +312,7 @@ class ClientPage(Base):
             print(f"Количество клиентов на вкладке All до удаления: {count_of_items_before}")
             self.click_button(self.unselected_checkbox)
             count_deleted_items = self.get_text(self.counter_upper_panel)
+            self.is_visible(self.delete_button_upper_panel)
             self.click_button(self.delete_button_upper_panel)
             try:
                 self.click_button(self.button_delete_item)
@@ -340,10 +341,14 @@ class ClientPage(Base):
             print(f"Количество клиентов на вкладке All до удаления: {count_of_items_before}")
             self.element_is_visible(self.unselected_checkbox)
             self.click_button(self.unselected_checkbox)
+            count = 0
             while self.get_text(self.counter_upper_panel) != "4":
                 self.element_is_visible(self.unselected_checkbox)
                 self.click_button(self.unselected_checkbox)
+                if count == 10:
+                    break
             print(f"Выбрано '{self.get_text(self.counter_upper_panel)}' чекбокса")
+            self.is_visible(self.delete_button_upper_panel)
             self.click_button(self.delete_button_upper_panel)
             try:
                 self.click_button(self.button_delete_item)
@@ -372,6 +377,7 @@ class ClientPage(Base):
             self.click_button(self.select_all_checkbox)
             count_deleted_items = self.get_text(self.counter_upper_panel)
             print(f"Количество выбранных элементов: {count_deleted_items}")
+            self.is_visible(self.delete_button_upper_panel)
             self.click_button(self.delete_button_upper_panel)
             try:
                 self.click_button(self.button_delete_item)
@@ -429,8 +435,12 @@ class ClientPage(Base):
             print(f"Имя клиента '{any_name_in_grid}' введено в поле поиска")
             self.get_input_search_grid().send_keys(Keys.RETURN)
             print("Enter")
+            count = 0
             while self.get_text(self.count_items_in_footer_grid) == "0":
                 time.sleep(1)
+                count += 1
+                if count == 10:
+                    break
 
             """Проверка, что найден корректный клиент"""
             first_name_in_grid = self.get_text(self.last_client_name_in_grid)
@@ -451,8 +461,12 @@ class ClientPage(Base):
             print(f"ID клиента '{any_id}' введено в поле поиска")
             self.get_input_search_grid().send_keys(Keys.RETURN)
             print("Enter")
+            count = 0
             while self.get_text(self.count_items_in_footer_grid) == "0":
                 time.sleep(1)
+                count += 1
+                if count == 10:
+                    break
 
             """Проверка, что найден корректный клиент"""
             first_id = self.get_text(self.last_id_in_grid)
@@ -844,8 +858,12 @@ class ClientPage(Base):
             print(f"ID элемента '{any_id}' введено в поле поиска")
             self.get_input_search_grid().send_keys(Keys.RETURN)
             print("Enter")
+            count = 0
             while self.get_text(self.count_items_in_footer_grid) == "0":
                 time.sleep(1)
+                count += 1
+                if count == 10:
+                    break
 
             """Получить информацию о найденном клиенте из грида"""
             grid_id = self.get_text(self.last_id_in_grid)
