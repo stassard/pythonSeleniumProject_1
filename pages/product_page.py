@@ -46,7 +46,7 @@ class ProductPage(Base):
     input_technology_card = "(//input[contains(@data-pc-name,'inputtext')])[7]"               # Поле Technology
     input_brand_card = "(//input[contains(@data-pc-name,'inputtext')])[8]"                    # Поле Brand
     unit_of_measure_card = "//span[contains(@class,'p-dropdown-label')]"                      # Селектор Unit of Measure
-    units_of_measure_selector_card = f" //li[@aria-posinset='{random.randint(1, 7)}']"           # Список Unit of Measure
+    units_of_measure_selector_card = f"(//li[contains(@class,'p-dropdown-item')])[{random.randint(1, 6)}]"           # Список Unit of Measure
     input_unit_card = "//input[contains(@data-pc-name,'pcinput')]"                            # Поле Unit
     button_create_card = "//button[contains(@items,'[object Object]')]"                       # Кнопка Create
     link_delete_in_3_dots_card = "//div[contains(@class,'prospace-dots-item')]"               # Кнопка Delete в троеточии в карточке
@@ -301,6 +301,7 @@ class ProductPage(Base):
             self.element_is_visible(self.unselected_checkbox)
             self.click_button(self.unselected_checkbox)
             count_deleted_items = self.get_text(self.counter_upper_panel)
+            self.is_visible(self.delete_button_upper_panel)
             self.click_button(self.delete_button_upper_panel)
             try:
                 self.click_button(self.button_delete_item)
@@ -321,8 +322,8 @@ class ProductPage(Base):
 
 
     def delete_4_product_from_checkbox_grid(self):
-        """Удаление четырех продуктов через чекбоксы в гриде"""
         with allure.step("Multiselection Deleted Product using Checkboxes in Grid"):
+            """Удаление четырех продуктов через чекбоксы в гриде"""
             Logger.add_start_step(method="delete_4_product_from_checkbox_grid")
             count_of_items_before = self.get_text(self.count_items_in_footer_grid)
             print(f"Количество продуктов на вкладке All до удаления: {count_of_items_before}")
@@ -332,6 +333,7 @@ class ProductPage(Base):
                 self.element_is_visible(self.unselected_checkbox)
                 self.click_button(self.unselected_checkbox)
             print(f"Выбрано '{self.get_text(self.counter_upper_panel)}' чекбокса")
+            self.is_visible(self.delete_button_upper_panel)
             self.click_button(self.delete_button_upper_panel)
             try:
                 self.click_button(self.button_delete_item)
@@ -362,6 +364,7 @@ class ProductPage(Base):
             self.click_button(self.select_all_checkbox)
             count_deleted_items = self.get_text(self.counter_upper_panel)
             print(f"Количество выбранных элементов: {count_deleted_items}")
+            self.is_visible(self.delete_button_upper_panel)
             self.click_button(self.delete_button_upper_panel)
             try:
                 self.click_button(self.button_delete_item)
@@ -421,8 +424,12 @@ class ProductPage(Base):
             print(f"Имя продукта '{any_name_in_grid}' введено в поле поиска")
             self.get_input_search_grid().send_keys(Keys.RETURN)
             print("Enter")
+            count = 0
             while self.get_text(self.count_items_in_footer_grid) == "0":
                 time.sleep(1)
+                count += 1
+                if count == 10:
+                    break
 
             """Проверка, что найден корректный продукт"""
             first_name_in_grid = self.get_text(self.last_prod_name_in_grid)
@@ -446,8 +453,12 @@ class ProductPage(Base):
             print(f"ID продукта '{any_id}' введено в поле поиска")
             self.get_input_search_grid().send_keys(Keys.RETURN)
             print("Enter")
+            count = 0
             while self.get_text(self.count_items_in_footer_grid) == "0":
                 time.sleep(1)
+                count += 1
+                if count == 10:
+                    break
 
             """Проверка, что найден корректный продукт"""
             self.open_last_product()
@@ -486,11 +497,9 @@ class ProductPage(Base):
             self.get_input_brand_card().clear()
             self.enter_in_brand_input(self.update_brand)
             card_unit_of_measure_before = self.get_text(self.value_of_unit_of_measure_card)
-            print(card_unit_of_measure_before)
             self.click_button(self.unit_of_measure_card)
             self.click_button(self.units_of_measure_selector_card)
             card_unit_of_measure_after = self.get_text(self.value_of_unit_of_measure_card)
-            print(card_unit_of_measure_after)
             count = 0
             while card_unit_of_measure_before == card_unit_of_measure_after:
                 self.click_button(self.unit_of_measure_card)
@@ -547,8 +556,12 @@ class ProductPage(Base):
             Logger.add_start_step(method="restore_product_from_three_dots_grid")
             self.open_deleted_tab()
             self.is_visible(self.deleted_tab_grid_is_active)
+            count = 0
             while self.get_text(self.count_items_in_footer_grid) == "0":
                 time.sleep(1)
+                count += 1
+                if count == 10:
+                    break
             count_of_items_before = self.get_text(self.count_items_in_footer_grid)
             print(f"Количество продуктов на вкладке Deleted до рестора: {count_of_items_before}")
             self.click_button(self._3_dots_grid)
@@ -564,8 +577,12 @@ class ProductPage(Base):
             self.browser_refresh()
             self.open_deleted_tab()
             self.is_visible(self.deleted_tab_grid_is_active)
+            count = 0
             while self.get_text(self.count_items_in_footer_grid) == "0":
                 time.sleep(1)
+                count += 1
+                if count == 10:
+                    break
             count_of_items_after = self.get_text(self.count_items_in_footer_grid)
             print(f"Количество продуктов на вкладке Deleted после рестора: {count_of_items_after}")
             assert int(count_of_items_after) == int(count_of_items_before) - 1, \
@@ -753,8 +770,12 @@ class ProductPage(Base):
             print(f"ID элемента '{any_id}' введено в поле поиска")
             self.get_input_search_grid().send_keys(Keys.RETURN)
             print("Enter")
+            count = 0
             while self.get_text(self.count_items_in_footer_grid) == "0":
                 time.sleep(1)
+                count += 1
+                if count == 10:
+                    break
 
             """Получить информацию о найденном продукте из грида"""
             grid_name = self.get_text(self.last_prod_name_in_grid)

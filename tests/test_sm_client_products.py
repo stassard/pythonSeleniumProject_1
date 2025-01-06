@@ -136,3 +136,51 @@ class TestSmokeClientProductsPage:
         cpp = ClientProductsPage(driver)
         cpp.open_client_products_dict()
         cpp.filters_client_product_by_client()
+
+
+    """Отфильтровать матрицы Клиент Продукт по имени продукта через расширенные фильтры"""
+    @allure.title("Filter Client Products by Product using All Filters")
+    @allure.severity("High")
+    @pytest.mark.smoke
+    def test_filters_client_product_by_product(self, driver):
+        lp = LoginPage(driver)
+        lp.authorization()
+        cpp = ClientProductsPage(driver)
+        cpp.open_client_products_dict()
+        cpp.filters_client_product_by_product()
+
+
+    """Проверить работу кнопки Clear в расширенных фильтрах"""
+    @allure.title("Check button Clear in All Filters")
+    @allure.severity("Critical")
+    @pytest.mark.smoke
+    def test_check_button_clear_filters_client_products(self, driver):
+        lp = LoginPage(driver)
+        lp.authorization()
+        cpp = ClientProductsPage(driver)
+        cpp.open_client_products_dict()
+        cpp.check_button_clear_filters_client_products()
+
+
+    """Проверить работу иконки Х в расширенных фильтрах"""
+    @allure.title("Check button X in All Filters")
+    @allure.severity("Critical")
+    @pytest.mark.smoke
+    def test_check_x_icon_filters_client_products(self, driver):
+        lp = LoginPage(driver)
+        lp.authorization()
+        cpp = ClientProductsPage(driver)
+        cpp.open_client_products_dict()
+        cpp.check_x_icon_filters_client_products()
+
+
+    """Проверить работу индивидуальных кнопок очистки расширенных фильтров"""
+    @allure.title("Check individual buttons X in All Filters")
+    @allure.severity("Critical")
+    @pytest.mark.smoke
+    def test_check_x_icon_inside_filters_client_products(self, driver):
+        lp = LoginPage(driver)
+        lp.authorization()
+        cpp = ClientProductsPage(driver)
+        cpp.open_client_products_dict()
+        cpp.check_x_icon_inside_filters_client_products()
