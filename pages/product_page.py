@@ -51,36 +51,37 @@ class ProductPage(Base):
     button_create_card = "//button[contains(@items,'[object Object]')]"                       # Кнопка Create
     link_delete_in_3_dots_card = "//div[contains(@class,'prospace-dots-item')]"               # Кнопка Delete в троеточии в карточке
     x_icon_card = "(//div/div/button[@class='prospace-icon-button'])[5]"                      # Иконка X в карточке создания продукта
+    dropdown = "//li[contains(@class,'p-dropdown-item')]"
 
     ## Грид продуктов
-    _3_dots_grid = f"(//div[@class='flex justify-center']/button[@class='prospace-icon-button'])[{random.randint(1, 20)}]"  # Троеточие в гриде
+    _3_dots_grid = f"(//div[@class='flex justify-center']/button[@class='prospace-icon-button'])[{random.randint(1, 10)}]"  # Троеточие в гриде
     link_delete_restore_in_3_dots_grid = "(//div[contains(@class, 'prospace-dots-item')])[2]"   # Кнопка Delete в троеточии в гриде
-    any_item_name = f"(//div[contains(@class, 'border-dotted')])[{random.randint(2, 20)}]"                                   # Имя продукта в гриде
+    any_item_name = f"(//div[contains(@class, 'border-dotted')])[{random.randint(2, 10)}]"                                   # Имя продукта в гриде
     input_search_grid = "//input[contains(@data-pc-name,'inputtext')]"                          # Поле Search в гриде
     last_prod_name_in_grid = "(//div[contains(@class,'border-b-purple-400')])[1]"               # Имя последнего созданного продукта в гриде
-    last_eanc_in_grid = "(//div[@class='text-ellipsis'])[1]"                                    # EAN Case последнего созданного продукта в гриде
-    last_eanp_in_grid = "(//div[@class='text-ellipsis'])[2]"                                    # EAN Pc последнего созданного продукта в гриде
-    last_category_in_grid = "(//div[@class='text-ellipsis'])[3]"                                # Категория последнего созданного продукта в гриде
-    last_technology_in_grid = "(//div[@class='text-ellipsis'])[4]"                              # Технология последнего созданного продукта в гриде
-    last_brand_in_grid = "(//div[@class='text-ellipsis'])[5]"                                   # Бренд последнего созданного продукта в гриде
-    last_unit_in_grid = "(//div[@class='text-ellipsis'])[7]"                                    # Юнит последнего созданного продукта в гриде
-    last_unit_of_measure_in_grid = "(//span[text()='Unit Of Measure']/following-sibling::div[@class='text-ellipsis'])[1]"      # Единица измерения последнего созданного продукта в гриде
+    last_eanc_in_grid = "(//div[contains(@class,'text-ellipsis')])[1]"                                    # EAN Case последнего созданного продукта в гриде
+    last_eanp_in_grid = "(//div[contains(@class,'text-ellipsis')])[2]"                                    # EAN Pc последнего созданного продукта в гриде
+    last_category_in_grid = "(//div[contains(@class,'text-ellipsis')])[3]"                                # Категория последнего созданного продукта в гриде
+    last_technology_in_grid = "(//div[contains(@class,'text-ellipsis')])[4]"                              # Технология последнего созданного продукта в гриде
+    last_brand_in_grid = "(//div[contains(@class,'text-ellipsis')])[5]"                                   # Бренд последнего созданного продукта в гриде
+    last_unit_in_grid = "(//div[contains(@class,'text-ellipsis')])[7]"                                    # Юнит последнего созданного продукта в гриде
+    last_unit_of_measure_in_grid = "(//span[text()='Unit Of Measure']/following-sibling::div[contains(@class,'text-ellipsis')])[1]"      # Единица измерения последнего созданного продукта в гриде
     deleted_tab_grid = "(//div[contains(@class, 'h-8')])[2]"                                    # Кнопка-вкладка Deleted
     deleted_tab_grid_is_active = "//div[contains(@class, 'active')]/span[text()='Deleted']"     # Кнопка-вкладка Deleted активна
     all_tab_grid = "(//div[contains(@class, 'h-8')])[1]"                                        # Кнопка-вкладка All
     all_tab_grid_is_active = "//div[contains(@class, 'active')]/span[text()='All']"             # Кнопка-вкладка All активна
     count_items_in_footer_grid = "(//span[@class='text-indigo-950'])[2]"                        # Количество айтемов в футере
     unselected_checkbox = "//input[@type='checkbox' and @aria-label='Row Unselected']/ancestor::div[@class='p-checkbox p-component']"    # Невыбранный чекбокс в гриде
-    selected_checkbox = f"(//div[contains(@class,'p-highlight')])[{random.randint(1, 20)}]"      # Выбранный чекбокс в гриде
+    selected_checkbox = f"(//div[contains(@class,'p-highlight')])[{random.randint(1, 10)}]"      # Выбранный чекбокс в гриде
     select_all_checkbox = "(//div[@class='p-checkbox p-component'])[1]"                                   # Чекбокс Select All в гриде
     delete_button_upper_panel = "//button[contains(@class,'prospace-action bg-white transition')]"        # Кнопка Delete в верхней сервисной панели
     counter_upper_panel = "//span[@class='prospace-counter-box']"                                         # Каунтер в верхней сервисной панели
     button_all_fiters = "//div[contains(@class, 'all-filters')]"                                          # Кнопка All filters
-    any_category_in_grid = f"(//span[text()='Category']/following-sibling::div[@class='text-ellipsis'])[{random.randint(2, 20)}]"     # Категория в гриде
-    any_brand_in_grid = f"(//span[text()='Brand']/following-sibling::div[@class='text-ellipsis'])[{random.randint(2, 20)}]"           # Бренд в гриде
-    any_unit_of_measure_in_grid = f"(//span[text()='Unit Of Measure']/following-sibling::div[@class='text-ellipsis'])[{random.randint(2, 20)}]"  # Единица измерения в гриде
-    any_unit_in_grid = f"(//span[text()='Unit']/following-sibling::div[@class='text-ellipsis'])[{random.randint(2, 20)}]"             # Юнит в гриде
-    any_technology_in_grid = f"(//span[text()='Technology']/following-sibling::div[@class='text-ellipsis'])[{random.randint(2, 20)}]"     # Технология в гриде
+    any_category_in_grid = f"(//span[text()='Category']/following-sibling::div[contains(@class,'text-ellipsis')])[{random.randint(2, 10)}]"     # Категория в гриде
+    any_brand_in_grid = f"(//span[text()='Brand']/following-sibling::div[contains(@class,'text-ellipsis')])[{random.randint(2, 10)}]"           # Бренд в гриде
+    any_unit_of_measure_in_grid = f"(//span[text()='Unit Of Measure']/following-sibling::div[contains(@class,'text-ellipsis')])[{random.randint(2, 10)}]"  # Единица измерения в гриде
+    any_unit_in_grid = f"(//span[text()='Unit']/following-sibling::div[contains(@class,'text-ellipsis')])[{random.randint(2, 10)}]"             # Юнит в гриде
+    any_technology_in_grid = f"(//span[text()='Technology']/following-sibling::div[contains(@class,'text-ellipsis')])[{random.randint(2, 10)}]"     # Технология в гриде
     counter_all_filters = "//div[contains(@class,'all-filters')]/span[@class='prospace-counter-box']"     # Каунтер на кнопке All Filters
 
     ##  Форма созданного продукта
@@ -303,6 +304,7 @@ class ProductPage(Base):
             count_deleted_items = self.get_text(self.counter_upper_panel)
             self.is_visible(self.delete_button_upper_panel)
             self.click_button(self.delete_button_upper_panel)
+            self.invisibility_of_element_located(self.delete_button_upper_panel)
             try:
                 self.click_button(self.button_delete_item)
                 self.is_visible(self.toast_message_success)
@@ -329,12 +331,17 @@ class ProductPage(Base):
             print(f"Количество продуктов на вкладке All до удаления: {count_of_items_before}")
             self.element_is_visible(self.unselected_checkbox)
             self.click_button(self.unselected_checkbox)
+            count = 0
             while self.get_text(self.counter_upper_panel) != "4":
                 self.element_is_visible(self.unselected_checkbox)
                 self.click_button(self.unselected_checkbox)
+                count += 1
+                if count == 10:
+                    break
             print(f"Выбрано '{self.get_text(self.counter_upper_panel)}' чекбокса")
             self.is_visible(self.delete_button_upper_panel)
             self.click_button(self.delete_button_upper_panel)
+            self.invisibility_of_element_located(self.delete_button_upper_panel)
             try:
                 self.click_button(self.button_delete_item)
                 self.is_visible(self.toast_message_success)
@@ -366,6 +373,7 @@ class ProductPage(Base):
             print(f"Количество выбранных элементов: {count_deleted_items}")
             self.is_visible(self.delete_button_upper_panel)
             self.click_button(self.delete_button_upper_panel)
+            self.invisibility_of_element_located(self.delete_button_upper_panel)
             try:
                 self.click_button(self.button_delete_item)
                 self.is_visible(self.toast_message_success)
@@ -496,17 +504,12 @@ class ProductPage(Base):
             self.enter_in_technology_input(self.update_technology)
             self.get_input_brand_card().clear()
             self.enter_in_brand_input(self.update_brand)
-            card_unit_of_measure_before = self.get_text(self.value_of_unit_of_measure_card)
+            card_unit_of_measure_before = self.element_is_present(self.unit_of_measure_card).get_attribute("aria-label")
             self.click_button(self.unit_of_measure_card)
-            self.click_button(self.units_of_measure_selector_card)
-            card_unit_of_measure_after = self.get_text(self.value_of_unit_of_measure_card)
-            count = 0
-            while card_unit_of_measure_before == card_unit_of_measure_after:
-                self.click_button(self.unit_of_measure_card)
-                self.click_button(self.units_of_measure_selector_card)
-                card_unit_of_measure_after = self.get_text(self.value_of_unit_of_measure_card)
-                count += 1
-                if count == 10:
+            for item in self.elements_are_present(self.dropdown):
+                el = item.get_attribute("aria-label")
+                if el != card_unit_of_measure_before:
+                    item.click()
                     break
             self.get_input_unit_card().clear()
             self.enter_in_unit_input(self.update_unit)

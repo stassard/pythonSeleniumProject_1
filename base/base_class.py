@@ -21,6 +21,7 @@ class Base:
     link_products = "//a[text()='Products']"
     link_clients = "//a[text()='Clients']"
     link_client_products = "//a[text()='Client Products']"
+    link_client_product_prices = "//a[text()='Client Product Prices']"
 
     # Actions
     def element_is_visible(self, locator):
@@ -53,8 +54,8 @@ class Base:
     def browser_refresh(self):
         return self.driver.refresh()
 
-    def element_is_selected(self, locator):
-        return self.wait.until(EC.element_located_selection_state_to_be((By.XPATH, locator), True))
+    def invisibility_of_element_located(self, locator):
+        return self.wait.until(EC.invisibility_of_element_located((By.XPATH, locator)))
 
     def get_screenshot(self):
         """Создание скриншота"""

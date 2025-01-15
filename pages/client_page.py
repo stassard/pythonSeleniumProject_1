@@ -60,34 +60,34 @@ class ClientPage(Base):
     name_of_added_file = "//span[contains(@class,'text-purple-800')]"     # Имя прикрепленного файла
 
     ## Грид клиентов
-    _3_dots_grid = f"(//div[@class='flex justify-center']/button[@class='prospace-icon-button'])[{random.randint(1, 20)}]"  # Троеточия в гриде
+    _3_dots_grid = f"(//div[@class='flex justify-center']/button[@class='prospace-icon-button'])[{random.randint(1, 10)}]"  # Троеточия в гриде
     link_delete_restore_in_3_dots_grid = "(//div[contains(@class, 'prospace-dots-item')])[2]"  # Кнопка Delete в троеточии в гриде
-    any_item_name = f"(//div[contains(@class, 'border-dotted')])[{random.randint(2, 20)}]"  # Имя клиента в гриде
+    any_item_name = f"(//div[contains(@class, 'border-dotted')])[{random.randint(2, 10)}]"  # Имя клиента в гриде
     input_search_grid = "//input[contains(@data-pc-name,'inputtext')]"  # Поле Search в гриде
     last_client_name_in_grid = "(//div[contains(@class,'border-b-purple-400')])[1]"  # Имя последнего созданного клиента в гриде
-    last_id_in_grid = "(//div[@class='text-ellipsis'])[1]"  # ID последнего созданного клиента в гриде
-    last_external_id_in_grid = "(//div[@class='text-ellipsis'])[2]"  # External ID последнего созданного клиента в гриде
-    last_parent_in_grid = "(//div[@class='text-ellipsis'])[3]"  # Parent последнего созданного клиента в гриде
-    last_type_in_grid = "(//div[@class='text-ellipsis'])[4]"  # Type последнего созданного клиента в гриде
-    last_affiliation_in_grid = "(//div[@class='text-ellipsis'])[5]"  # Affiliation последнего созданного клиента в гриде
-    last_invoice_type_in_grid = "(//div[@class='text-ellipsis'])[6]"  # Invoice Type последнего созданного клиента в гриде
+    last_id_in_grid = "(//div[contains(@class,'text-ellipsis')])[1]"  # ID последнего созданного клиента в гриде
+    last_external_id_in_grid = "(//div[contains(@class,'text-ellipsis')])[2]"  # External ID последнего созданного клиента в гриде
+    last_parent_in_grid = "(//div[contains(@class,'text-ellipsis')])[3]"  # Parent последнего созданного клиента в гриде
+    last_type_in_grid = "(//div[contains(@class,'text-ellipsis')])[4]"  # Type последнего созданного клиента в гриде
+    last_affiliation_in_grid = "(//div[contains(@class,'text-ellipsis')])[5]"  # Affiliation последнего созданного клиента в гриде
+    last_invoice_type_in_grid = "(//div[contains(@class,'text-ellipsis')])[6]"  # Invoice Type последнего созданного клиента в гриде
     deleted_tab_grid = "(//div[contains(@class, 'h-8')])[2]"  # Кнопка-вкладка Deleted
     deleted_tab_grid_is_active = "//div[contains(@class, 'active')]/span[text()='Deleted']"  # Кнопка-вкладка Deleted активна
     all_tab_grid = "(//div[contains(@class, 'h-8')])[1]"  # Кнопка-вкладка All
     all_tab_grid_is_active = "//div[contains(@class, 'active')]/span[text()='All']"  # Кнопка-вкладка All активна
     count_items_in_footer_grid = "(//span[@class='text-indigo-950'])[2]"  # Количество айтемов в футере
-    unselected_checkbox = f"(//input[@type='checkbox' and @aria-label='Row Unselected']/ancestor::div[@class='p-checkbox p-component'])[{random.randint(1, 20)}]"  # Чекбоксы в гриде
-    selected_checkbox = f"(//div[contains(@class,'p-highlight')])[{random.randint(1, 20)}]"      # Выбранный чекбокс в гриде
+    unselected_checkbox = f"(//input[@type='checkbox' and @aria-label='Row Unselected']/ancestor::div[@class='p-checkbox p-component'])[{random.randint(1, 10)}]"  # Чекбоксы в гриде
+    selected_checkbox = f"(//div[contains(@class,'p-highlight')])[{random.randint(1, 10)}]"      # Выбранный чекбокс в гриде
     select_all_checkbox = "(//div[@class='p-checkbox p-component'])[1]"  # Чекбокс Select All в гриде
     delete_button_upper_panel = "//button[contains(@class,'prospace-action bg-white transition')]"  # Кнопка Delete в верхней сервисной панели
     counter_upper_panel = "//span[@class='prospace-counter-box']"  # Каунтер в верхней сервисной панели
     button_all_fiters = "//div[contains(@class, 'all-filters')]"  # Кнопка All filters
-    any_id_in_grid = f"(//span[text()='ID']/following-sibling::div[@class='text-ellipsis'])[{random.randint(2, 20)}]"  # ID в гриде
-    any_external_id_in_grid = f"(//span[text()='External ID']/following-sibling::div[@class='text-ellipsis'])[{random.randint(2, 20)}]"  # External ID в гриде
-    any_parent_in_grid = f"(//span[text()='Parent']/following-sibling::div[@class='text-ellipsis'])[{random.randint(2, 20)}]"  # Parent измерения в гриде
-    any_type_in_grid = f"(//span[text()='Type']/following-sibling::div[@class='text-ellipsis'])[{random.randint(2, 20)}]"  # Type в гриде
-    any_affiliation_in_grid = f"(//span[text()='Affiliation']/following-sibling::div[@class='text-ellipsis'])[{random.randint(2, 20)}]"  # Affiliation в гриде
-    any_invoice_type_in_grid = f"(//span[text()='Invoice Type']/following-sibling::div[@class='text-ellipsis'])[{random.randint(2, 20)}]"  # Invoice Type в гриде
+    any_id_in_grid = f"(//span[text()='ID']/following-sibling::div[contains(@class,'text-ellipsis')])[{random.randint(2, 10)}]"  # ID в гриде
+    any_external_id_in_grid = f"(//span[text()='External ID']/following-sibling::div[contains(@class,'text-ellipsis')])[{random.randint(2, 10)}]"  # External ID в гриде
+    any_parent_in_grid = f"(//span[text()='Parent']/following-sibling::div[contains(@class,'text-ellipsis')])[{random.randint(2, 10)}]"  # Parent измерения в гриде
+    any_type_in_grid = f"(//span[text()='Type']/following-sibling::div[contains(@class,'text-ellipsis')])[{random.randint(2, 10)}]"  # Type в гриде
+    any_affiliation_in_grid = f"(//span[text()='Affiliation']/following-sibling::div[contains(@class,'text-ellipsis')])[{random.randint(2, 10)}]"  # Affiliation в гриде
+    any_invoice_type_in_grid = f"(//span[text()='Invoice Type']/following-sibling::div[contains(@class,'text-ellipsis')])[{random.randint(2, 10)}]"  # Invoice Type в гриде
     counter_all_filters = "//div[contains(@class,'all-filters')]/span[@class='prospace-counter-box']"  # Каунтер на кнопке All Filters
 
     ##  Форма созданного клиента
@@ -310,10 +310,12 @@ class ClientPage(Base):
             Logger.add_start_step(method="delete_client_from_checkbox_grid")
             count_of_items_before = self.get_text(self.count_items_in_footer_grid)
             print(f"Количество клиентов на вкладке All до удаления: {count_of_items_before}")
+            self.element_is_visible(self.unselected_checkbox)
             self.click_button(self.unselected_checkbox)
             count_deleted_items = self.get_text(self.counter_upper_panel)
             self.is_visible(self.delete_button_upper_panel)
             self.click_button(self.delete_button_upper_panel)
+            self.invisibility_of_element_located(self.delete_button_upper_panel)
             try:
                 self.click_button(self.button_delete_item)
                 self.is_visible(self.toast_message_success)
@@ -345,18 +347,19 @@ class ClientPage(Base):
             while self.get_text(self.counter_upper_panel) != "4":
                 self.element_is_visible(self.unselected_checkbox)
                 self.click_button(self.unselected_checkbox)
+                count += 1
                 if count == 10:
                     break
             print(f"Выбрано '{self.get_text(self.counter_upper_panel)}' чекбокса")
             self.is_visible(self.delete_button_upper_panel)
             self.click_button(self.delete_button_upper_panel)
+            self.invisibility_of_element_located(self.delete_button_upper_panel)
             try:
                 self.click_button(self.button_delete_item)
                 self.is_visible(self.toast_message_success)
             except self.ignored_exceptions:
                 print(
                     "------------------Баг: Окно подтверждения или тостовое сообщение об успехе не отобразились--------------------------")
-
 
             """Проверка, что клиенты переместились во вкладку Deleted"""
             self.browser_refresh()
@@ -374,11 +377,13 @@ class ClientPage(Base):
             Logger.add_start_step(method="select_all_delete_client")
             count_of_items_before = self.get_text(self.count_items_in_footer_grid)
             print(f"Количество клиентов на вкладке All до удаления: {count_of_items_before}")
+            self.element_is_visible(self.select_all_checkbox)
             self.click_button(self.select_all_checkbox)
             count_deleted_items = self.get_text(self.counter_upper_panel)
             print(f"Количество выбранных элементов: {count_deleted_items}")
             self.is_visible(self.delete_button_upper_panel)
             self.click_button(self.delete_button_upper_panel)
+            self.invisibility_of_element_located(self.delete_button_upper_panel)
             try:
                 self.click_button(self.button_delete_item)
                 self.is_visible(self.toast_message_success)
@@ -603,8 +608,12 @@ class ClientPage(Base):
             Logger.add_start_step(method="restore_client_from_three_dots_grid")
             self.open_deleted_tab()
             self.is_visible(self.deleted_tab_grid_is_active)
-            if self.get_text(self.count_items_in_footer_grid) == "0":
+            count = 0
+            while self.get_text(self.count_items_in_footer_grid) == "0":
                 time.sleep(1)
+                count += 1
+                if count == 10:
+                    break
             count_of_items_before = self.get_text(self.count_items_in_footer_grid)
             print(f"Количество клиентов на вкладке Deleted до рестора: {count_of_items_before}")
             self.click_button(self._3_dots_grid)
@@ -620,8 +629,12 @@ class ClientPage(Base):
             self.browser_refresh()
             self.open_deleted_tab()
             self.is_visible(self.deleted_tab_grid_is_active)
-            if self.get_text(self.count_items_in_footer_grid) == "0":
+            count = 0
+            while self.get_text(self.count_items_in_footer_grid) == "0":
                 time.sleep(1)
+                count += 1
+                if count == 10:
+                    break
             count_of_items_after = self.get_text(self.count_items_in_footer_grid)
             print(f"Количество клиентов на вкладке Deleted после рестора: {count_of_items_after}")
             assert int(count_of_items_after) == int(count_of_items_before) - 1, \
@@ -719,6 +732,12 @@ class ClientPage(Base):
 
             """Проверка, что клиенты отфильтровались по Invoice Type"""
             self.is_not_visible(self.button_apply_filters)
+            count = 0
+            while self.get_text(self.count_items_in_footer_grid) == "0":
+                time.sleep(1)
+                count += 1
+                if count == 10:
+                    break
             count_of_items_after = self.get_text(self.count_items_in_footer_grid)
             print(f"Количество клиентов на вкладке All после фильтрации: {count_of_items_after}")
             last_invoice_type_in_grid_after = self.get_text(self.last_invoice_type_in_grid)
@@ -791,9 +810,16 @@ class ClientPage(Base):
 
             """Проверка, что клиенты отфильтровались по Dispatch Start Before Day"""
             self.is_not_visible(self.button_apply_filters)
+            count = 0
+            while self.get_text(self.count_items_in_footer_grid) == "0":
+                time.sleep(1)
+                count += 1
+                if count == 10:
+                    break
             count_of_items_after = self.get_text(self.count_items_in_footer_grid)
             print(f"Количество клиентов на вкладке All после фильтрации: {count_of_items_after}")
-            self.open_last_client()
+            self.is_visible(self.last_client_name_in_grid)
+            self.click_button(self.last_client_name_in_grid)
             last_dispatch_start_before_day_after = self.is_visible(self.input_dispatch_start_before_day).get_attribute("aria-valuenow")
             print(f"Значения отфильтрованных клиентов: {last_dispatch_start_before_day_after}")
             counter_all_filters_is_visible = False
@@ -828,12 +854,16 @@ class ClientPage(Base):
 
             """Проверка, что клиенты отфильтровались по Dispatch End Before Day"""
             self.is_not_visible(self.button_apply_filters)
+            count = 0
+            while self.get_text(self.count_items_in_footer_grid) == "0":
+                time.sleep(1)
+                count += 1
+                if count == 10:
+                    break
             count_of_items_after = self.get_text(self.count_items_in_footer_grid)
             print(f"Количество клиентов на вкладке All после фильтрации: {count_of_items_after}")
-            try:
-                self.open_last_client()
-            except self.ignored_exceptions:
-                self.open_last_client()
+            self.is_visible(self.last_client_name_in_grid)
+            self.click_button(self.last_client_name_in_grid)
             last_dispatch_end_before_day_after = self.is_visible(self.input_dispatch_end_before_day).get_attribute("aria-valuenow")
             print(f"Значения отфильтрованных клиентов: {last_dispatch_end_before_day_after}")
             counter_all_filters_is_visible = False
