@@ -66,7 +66,7 @@ class TestSmokeClientProductsPage:
         cpp.select_all_delete_client_product()
 
 
-    """Удаление матрицы Клиент Продукт через карточку продукта"""
+    """Удаление матрицы Клиент Продукт через карточку матрицы"""
     @allure.title("Delete Client Product from Card")
     @allure.severity("Critical")
     @pytest.mark.smoke
@@ -102,7 +102,7 @@ class TestSmokeClientProductsPage:
         cpp.find_client_product_by_id()
 
 
-    """Прочитать информацию о матрице Клиент Продукт и сравнить с данными из грида"""
+    """Прочитать информацию о найденной матрице Клиент Продукт и сравнить с данными из грида"""
     @allure.title("Read Client Product")
     @allure.severity("Critical")
     @pytest.mark.smoke

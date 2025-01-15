@@ -25,40 +25,40 @@ class ClientProductsPage(Base):
     toast_message_success = "//div[contains(@class,'p-toast-message-success')]"               # Тостовое сообщение об успехе
 
     ##  Форма создания айтема
-    client_id_card = "(//span[contains(@class,'p-dropdown-label')])[1]"                      # Селектор Client ID
+    selector_client_id_card = "(//span[contains(@class,'p-dropdown-label')])[1]"                      # Селектор Client ID
     list_client_id_card = f"//li[@aria-posinset='{random.randint(1, 5)}']"             # Список в селекторе Client ID
-    product_card = "(//span[contains(@class,'p-dropdown-label')])[2]"                         # Селектор Product
+    selector_product_card = "(//span[contains(@class,'p-dropdown-label')])[2]"                         # Селектор Product
     list_product_card = f"//li[@aria-posinset='{random.randint(1, 5)}']"                # Список в селекторе Product
     button_create_card = "//button[contains(@items,'[object Object]')]"                       # Кнопка Create
     x_icon_card = "(//div/div/button[@class='prospace-icon-button'])[5]"                      # Иконка X в карточке создания айтема
-    dropdown = "//div[@class='p-dropdown-items-wrapper']"                                     # Развернутый селектор
+    dropdown = "//li[contains(@class,'p-dropdown-item')]"                                     # Развернутый селектор
 
     ## Грид айтемов
     button_create_new_card = "//button[contains(@class,'prospace-button')]"                   # Кнопка Create New
-    _3_dots_grid = f"(//div[@class='flex justify-center']/button[@class='prospace-icon-button'])[{random.randint(1, 20)}]"  # Троеточие в гриде
+    _3_dots_grid = f"(//div[@class='flex justify-center']/button[@class='prospace-icon-button'])[{random.randint(1, 10)}]"  # Троеточие в гриде
     link_delete_restore_in_3_dots_grid = "(//div[contains(@class, 'prospace-dots-item')])[2]"   # Кнопка Delete в троеточии в гриде
-    any_item_name = f"(//div[contains(@class, 'border-dotted')])[{random.randint(2, 20)}]"     # Имя продукта в гриде
+    any_item_name = f"(//div[contains(@class, 'border-dotted')])[{random.randint(2, 10)}]"     # Имя продукта в гриде
     input_search_grid = "//input[contains(@data-pc-name,'inputtext')]"                          # Поле Search в гриде
     last_item_name_in_grid = "(//div[contains(@class,'border-b-purple-400')])[1]"               # Имя последнего созданного айтема в гриде
-    last_client_id_in_grid = "(//div[@class='text-ellipsis'])[1]"                               # Cient ID последнего созданного айтема в гриде
-    last_client_name_in_grid = "(//div[@class='text-ellipsis'])[2]"                             # Client Name последнего созданного айтема в гриде
-    last_product_in_grid = "(//div[@class='text-ellipsis'])[3]"                                 # Product последнего созданного айтема в гриде
-    last_product_sku_name_in_grid = "(//div[@class='text-ellipsis'])[4]"                        # Product SKU Name последнего созданного айтема в гриде
+    last_client_id_in_grid = "(//div[contains(@class,'text-ellipsis')])[1]"                               # Cient ID последнего созданного айтема в гриде
+    last_client_name_in_grid = "(//div[contains(@class,'text-ellipsis')])[2]"                             # Client Name последнего созданного айтема в гриде
+    last_product_in_grid = "(//div[contains(@class,'text-ellipsis')])[3]"                                 # Product последнего созданного айтема в гриде
+    last_product_sku_name_in_grid = "(//div[contains(@class,'text-ellipsis')])[4]"                        # Product SKU Name последнего созданного айтема в гриде
     deleted_tab_grid = "(//div[contains(@class, 'h-8')])[2]"                                    # Кнопка-вкладка Deleted
     deleted_tab_grid_is_active = "//div[contains(@class, 'active')]/span[text()='Deleted']"     # Кнопка-вкладка Deleted активна
     all_tab_grid = "(//div[contains(@class, 'h-8')])[1]"                                        # Кнопка-вкладка All
     all_tab_grid_is_active = "//div[contains(@class, 'active')]/span[text()='All']"             # Кнопка-вкладка All активна
     count_items_in_footer_grid = "(//span[@class='text-indigo-950'])[2]"                        # Количество айтемов в футере
     unselected_checkbox = "//input[@type='checkbox' and @aria-label='Row Unselected']/ancestor::div[@class='p-checkbox p-component']"    # Невыбранный чекбокс в гриде
-    selected_checkbox = f"(//div[contains(@class,'p-highlight')])[{random.randint(1, 20)}]"      # Выбранный чекбокс в гриде
+    selected_checkbox = f"(//div[contains(@class,'p-highlight')])[{random.randint(1, 10)}]"      # Выбранный чекбокс в гриде
     select_all_checkbox = "(//div[@class='p-checkbox p-component'])[1]"                                   # Чекбокс Select All в гриде
     delete_button_upper_panel = "//button[contains(@class,'prospace-action bg-white transition')]"        # Кнопка Delete в верхней сервисной панели
     counter_upper_panel = "//span[@class='prospace-counter-box']"                                         # Каунтер в верхней сервисной панели
     button_all_fiters = "//div[contains(@class, 'all-filters')]"                                          # Кнопка All filters
-    any_client_id_in_grid = f"(//span[text()='Client ID']/following-sibling::div[@class='text-ellipsis'])[{random.randint(2, 20)}]"     # Любой Client ID в гриде
-    any_client_name_in_grid = f"(//span[text()='Client name']/following-sibling::div[@class='text-ellipsis'])[{random.randint(2, 20)}]"  # Любой Client Name в гриде
-    any_product_in_grid = f"(//span[text()='Product']/following-sibling::div[@class='text-ellipsis'])[{random.randint(2, 20)}]"  # Любой Product в гриде
-    any_product_sku_name_in_grid = f"(//span[text()='Product SKU Name']/following-sibling::div[@class='text-ellipsis'])[{random.randint(2, 20)}]"   # Любой Product SKU Name в гриде
+    any_client_id_in_grid = f"(//span[text()='Client ID']/following-sibling::div[contains(@class,'text-ellipsis')])[{random.randint(2, 10)}]"     # Любой Client ID в гриде
+    any_client_name_in_grid = f"(//span[text()='Client name']/following-sibling::div[contains(@class,'text-ellipsis')])[{random.randint(2, 10)}]"  # Любой Client Name в гриде
+    any_product_in_grid = f"(//span[text()='Product']/following-sibling::div[contains(@class,'text-ellipsis')])[{random.randint(2, 10)}]"  # Любой Product в гриде
+    any_product_sku_name_in_grid = f"(//span[text()='Product SKU Name']/following-sibling::div[contains(@class,'text-ellipsis')])[{random.randint(2, 10)}]"   # Любой Product SKU Name в гриде
     counter_all_filters = "//div[contains(@class,'all-filters')]/span[@class='prospace-counter-box']"     # Каунтер на кнопке All Filters
 
     ##  Форма созданного айтема
@@ -145,18 +145,23 @@ class ClientProductsPage(Base):
             self.is_visible(self.count_items_in_footer_grid)
             self.click_button(self.button_create_new_card)
             try:
-                self.click_button(self.product_card)
+                self.click_button(self.selector_product_card)
                 self.click_button(self.list_product_card)
             except self.ignored_exceptions:
-                self.click_button(self.product_card)
+                self.click_button(self.selector_product_card)
                 self.click_button(self.list_product_card)
             try:
-                self.click_button(self.client_id_card)
+                self.click_button(self.selector_client_id_card)
                 self.click_button(self.list_client_id_card)
             except self.ignored_exceptions:
-                self.click_button(self.client_id_card)
+                self.click_button(self.selector_client_id_card)
                 self.click_button(self.list_client_id_card)
             print("Все поля карточки айтема заполнены")
+
+            """Получение информации о созданном айтеме из карточки"""
+            created_client_name = self.is_visible(self.selector_client_id_card).get_attribute("aria-label")
+            created_product_name = self.is_visible(self.selector_product_card).get_attribute("aria-label")
+
             self.click_button(self.button_create_card)
             self.is_not_visible(self.button_create_card)
             try:
@@ -166,8 +171,6 @@ class ClientProductsPage(Base):
             self.browser_refresh()
 
             """Получение информации о созданном айтеме из грида"""
-            created_client_name = self.get_text(self.last_client_name_in_grid)
-            created_product_name = self.get_text(self.last_product_sku_name_in_grid)
             created_client_id = self.get_text(self.last_client_id_in_grid)
             created_product_id = self.get_text(self.last_product_in_grid)
 
@@ -205,12 +208,19 @@ class ClientProductsPage(Base):
                 count += 1
                 if count == 10:
                     break
+            item_name = "//div[contains(@class, 'border-dotted')]"
+            for item in self.elements_are_present(item_name):
+                el = item.text
+                print(el)
+                if el == created_client_name:
+                    item.click()
+                    break
             self.click_button(self.last_item_name_in_grid)
             expected_product_id = self.get_text(self.item_id)
             print("ID продукта сохранен")
 
-            print(f"Веденный Client Name при создании Клиента Продукта: {created_client_name}, значение в гриде: {expected_client_name}")
-            print(f"Веденный Product Name при создании Клиента Продукта: {created_product_name}, значение в гриде: {expected_product_sku_name}")
+            print(f"Выбранный Client Name при создании Клиента Продукта: {created_client_name}, значение в гриде: {expected_client_name}")
+            print(f"Выбранный Product Name при создании Клиента Продукта: {created_product_name}, значение в гриде: {expected_product_sku_name}")
             print(f"Client ID полученный при создании Клиента Продукта: {created_client_id}, ожидаемое значение: {expected_client_id}")
             print(f"Product ID полученный при создании Клиента Продукта: {created_product_id}, ожидаемое значение: {expected_product_id}")
             assert created_client_name == expected_client_name, "Client Name не соответствует"
@@ -257,6 +267,7 @@ class ClientProductsPage(Base):
             count_deleted_items = self.get_text(self.counter_upper_panel)
             self.is_visible(self.delete_button_upper_panel)
             self.click_button(self.delete_button_upper_panel)
+            self.invisibility_of_element_located(self.delete_button_upper_panel)
             try:
                 self.click_button(self.button_delete_item)
                 self.is_visible(self.toast_message_success)
@@ -276,8 +287,8 @@ class ClientProductsPage(Base):
 
 
     def delete_4_client_product_from_checkbox_grid(self):
-        """Удаление четырех матриц Клиент Продукт через чекбоксы в гриде"""
         with allure.step("Multiselection Deleted Client Product using Checkboxes in Grid"):
+            """Удаление четырех матриц Клиент Продукт через чекбоксы в гриде"""
             Logger.add_start_step(method="delete_4_client_product_from_checkbox_grid")
             count_of_items_before = self.get_text(self.count_items_in_footer_grid)
             print(f"Количество элементов на вкладке All до удаления: {count_of_items_before}")
@@ -293,6 +304,7 @@ class ClientProductsPage(Base):
             print(f"Выбрано '{self.get_text(self.counter_upper_panel)}' чекбокса")
             self.is_visible(self.delete_button_upper_panel)
             self.click_button(self.delete_button_upper_panel)
+            self.invisibility_of_element_located(self.delete_button_upper_panel)
             try:
                 self.click_button(self.button_delete_item)
                 self.is_visible(self.toast_message_success)
@@ -323,6 +335,7 @@ class ClientProductsPage(Base):
             print(f"Количество выбранных элементов: {count_deleted_items}")
             self.is_visible(self.delete_button_upper_panel)
             self.click_button(self.delete_button_upper_panel)
+            self.invisibility_of_element_located(self.delete_button_upper_panel)
             try:
                 self.click_button(self.button_delete_item)
                 self.is_visible(self.toast_message_success)
@@ -409,7 +422,7 @@ class ClientProductsPage(Base):
             while self.get_text(self.count_items_in_footer_grid) == "0":
                 time.sleep(1)
                 count += 1
-                if count == 30:
+                if count == 60:
                     break
 
             """Проверка, что найден корректный элемент"""
@@ -445,8 +458,8 @@ class ClientProductsPage(Base):
 
             """Проверка, что информация в правой панели соответствует информации в гриде"""
             self.open_last_item()
-            card_client_id = self.get_text(self.client_id_card)
-            card_product = self.get_text(self.product_card)
+            card_client_id = self.get_text(self.selector_client_id_card)
+            card_product = self.get_text(self.selector_product_card)
             print(f"Имя клиента в гриде: {grid_client_name}, в карточке: {card_client_id}")
             print(f"Имя продукта в гриде: {grid_product_sku_name}, в карточке: {card_product}")
             assert grid_client_name == card_client_id, "Имена клиентов не совпадают"
