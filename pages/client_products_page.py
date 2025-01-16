@@ -32,6 +32,7 @@ class ClientProductsPage(Base):
     button_create_card = "//button[contains(@items,'[object Object]')]"                       # Кнопка Create
     x_icon_card = "(//div/div/button[@class='prospace-icon-button'])[5]"                      # Иконка X в карточке создания айтема
     dropdown = "//li[contains(@class,'p-dropdown-item')]"                                     # Развернутый селектор
+    placeholders = "//span[contains(@class,'p-placeholder')]"  # Плейсхолдеры в селекторах
 
     ## Грид айтемов
     button_create_new_card = "//button[contains(@class,'prospace-button')]"                   # Кнопка Create New
@@ -449,21 +450,36 @@ class ClientProductsPage(Base):
             while self.get_text(self.count_items_in_footer_grid) == "0":
                 time.sleep(1)
                 count += 1
-                if count == 10:
+                if count == 60:
                     break
 
             """Получить информацию о найденной матрице Клиент Продукт из грида"""
+            grid_id = self.get_text(self.last_item_name_in_grid)
             grid_client_name = self.get_text(self.last_client_name_in_grid)
             grid_product_sku_name = self.get_text(self.last_product_sku_name_in_grid)
 
             """Проверка, что информация в правой панели соответствует информации в гриде"""
             self.open_last_item()
-            card_client_id = self.get_text(self.selector_client_id_card)
-            card_product = self.get_text(self.selector_product_card)
-            print(f"Имя клиента в гриде: {grid_client_name}, в карточке: {card_client_id}")
-            print(f"Имя продукта в гриде: {grid_product_sku_name}, в карточке: {card_product}")
-            assert grid_client_name == card_client_id, "Имена клиентов не совпадают"
-            assert grid_product_sku_name == card_product, "Имена продуктов не совпадают"
+            try:
+                card_id = self.get_text(self.item_id)
+            except self.ignored_exceptions:
+                card_id = "ID в карточке не отображается"
+            try:
+                self.invisibility_of_element_located(self.placeholders)
+                card_client_id = self.is_visible(self.selector_client_id_card).get_attribute("aria-label")
+            except self.ignored_exceptions:
+                card_client_id = "Отображается плейсхолдер"
+            try:
+                self.invisibility_of_element_located(self.placeholders)
+                card_product_sku_name = self.is_visible(self.selector_product_card).get_attribute("aria-label")
+            except self.ignored_exceptions:
+                card_product_sku_name = "Отображается плейсхолдер"
+            print(f"ID в гриде: {grid_id}, в карточке: {card_id}")
+            print(f"Client Name в гриде: {grid_client_name}, в карточке: {card_client_id}")
+            print(f"Product SKU Name в гриде: {grid_product_sku_name}, в карточке: {card_product_sku_name}")
+            assert grid_id == card_id, f"ID элементов не совпадают: {grid_id} - {card_id}"
+            assert grid_client_name == card_client_id, f"Имена клиентов не совпадают: {grid_client_name} - {card_client_id}"
+            assert grid_product_sku_name == card_product_sku_name, f"Имена продуктов не совпадают: {grid_product_sku_name} - {card_product_sku_name}"
             print("Информация о матрице Клиент Продукт в карточке соответствует информации о матрице Клиент Продукт в гриде")
             Logger.add_end_step(url=self.driver.current_url, method="read_client_product")
 
