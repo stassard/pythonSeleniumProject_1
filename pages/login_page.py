@@ -11,7 +11,7 @@ class LoginPage(Base):
     load_dotenv(find_dotenv())
 
     # Locators
-    button_login = "(//button[contains(@class,'prospace-button')])[1]"        # Кнопка ProSpace
+    button_login = "(//button[contains(@aria-label,'ProSpace')])"             # Кнопка ProSpace
     input_login_field = "//input[@type='text']"                               # Поле Логин
     input_password_field = "//input[@type='password']"                        # Поле Пароль
     button_signin = "//span[text()='Sign In']"                                # Кнопка Sign in

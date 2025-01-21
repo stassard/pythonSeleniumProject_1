@@ -1,10 +1,6 @@
 import random
 import time
 import allure
-from selenium.common.exceptions import StaleElementReferenceException
-from selenium.common.exceptions import TimeoutException
-from selenium.common.exceptions import ElementClickInterceptedException
-from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver import Keys
 from base.base_class import Base
 from utilities.logger import Logger
@@ -14,8 +10,6 @@ class ClientPage(Base):
     """ Класс содержащий локаторы и методы для справочника Клиенты"""
 
     # Data
-    ignored_exceptions = (
-    NoSuchElementException, StaleElementReferenceException, TimeoutException, ElementClickInterceptedException)
     create_path_upload = "D:\\PythonEducation\\autoProjectOnlineStore\\files_upload\\магнит.jpg"
     update_path_upload = "D:\\PythonEducation\\autoProjectOnlineStore\\files_upload\\спар.png"
     create_name = f"Test {random.randint(11234, 987659)}"
@@ -31,13 +25,8 @@ class ClientPage(Base):
     update_dispatch_end = random.randint(1, 20)
 
     # Locators
-    head_of_client_page = "//div[@class='ps-font-TopHeader text-indigo-950']"  # Заголовок страницы Клиенты
-
-    ## General
-    toast_message_success = "//div[contains(@class,'p-toast-message-success')]"   # Тостовое сообщение об успехе
 
     ##  Форма создания клиента
-    button_create_new_card = "//button[contains(@class,'prospace-button')]"  # Кнопка Create New
     input_name_card = "(//input[contains(@data-pc-name,'inputtext')])[3]"  # Поле Имя клиента
     input_external_id_card = "(//input[contains(@data-pc-name,'inputtext')])[4]"  # Поле External ID
     input_parent_card = "(//input[contains(@data-pc-name,'inputtext')])[5]"  # Поле Parent
@@ -53,17 +42,9 @@ class ClientPage(Base):
     international_affiliation_selector = "//li[@aria-posinset='1']"  # Тип Affiliation - International
     local_affiliation_selector = "//li[@aria-posinset='2']"  # Тип Affiliation - Local
     button_upload_file = "//input[@type='file']"  # Кнопка Upload File
-    button_create_card = "//button[contains(@items,'[object Object]')]"  # Кнопка Create
-    _3_dots_card = "(//div/div/button[@class='prospace-icon-button'])[3]"  # Троеточие в карточке продукта
-    link_delete_in_3_dots_card = "//div[contains(@class,'prospace-dots-item')]"  # Кнопка Delete в троеточии в карточке
-    x_icon_card = "(//div/div/button[@class='prospace-icon-button'])[5]"  # Иконка X в карточке создания продукта
     name_of_added_file = "//span[contains(@class,'text-purple-800')]"     # Имя прикрепленного файла
 
     ## Грид клиентов
-    _3_dots_grid = f"(//div[@class='flex justify-center']/button[@class='prospace-icon-button'])[{random.randint(1, 10)}]"  # Троеточия в гриде
-    link_delete_restore_in_3_dots_grid = "(//div[contains(@class, 'prospace-dots-item')])[2]"  # Кнопка Delete в троеточии в гриде
-    any_item_name = f"(//div[contains(@class, 'border-dotted')])[{random.randint(2, 10)}]"  # Имя клиента в гриде
-    input_search_grid = "//input[contains(@data-pc-name,'inputtext')]"  # Поле Search в гриде
     last_client_name_in_grid = "(//div[contains(@class,'border-b-purple-400')])[1]"  # Имя последнего созданного клиента в гриде
     last_id_in_grid = "(//div[contains(@class,'text-ellipsis')])[1]"  # ID последнего созданного клиента в гриде
     last_external_id_in_grid = "(//div[contains(@class,'text-ellipsis')])[2]"  # External ID последнего созданного клиента в гриде
@@ -71,36 +52,17 @@ class ClientPage(Base):
     last_type_in_grid = "(//div[contains(@class,'text-ellipsis')])[4]"  # Type последнего созданного клиента в гриде
     last_affiliation_in_grid = "(//div[contains(@class,'text-ellipsis')])[5]"  # Affiliation последнего созданного клиента в гриде
     last_invoice_type_in_grid = "(//div[contains(@class,'text-ellipsis')])[6]"  # Invoice Type последнего созданного клиента в гриде
-    deleted_tab_grid = "(//div[contains(@class, 'h-8')])[2]"  # Кнопка-вкладка Deleted
-    deleted_tab_grid_is_active = "//div[contains(@class, 'active')]/span[text()='Deleted']"  # Кнопка-вкладка Deleted активна
-    all_tab_grid = "(//div[contains(@class, 'h-8')])[1]"  # Кнопка-вкладка All
-    all_tab_grid_is_active = "//div[contains(@class, 'active')]/span[text()='All']"  # Кнопка-вкладка All активна
-    count_items_in_footer_grid = "(//span[@class='text-indigo-950'])[2]"  # Количество айтемов в футере
-    unselected_checkbox = f"(//input[@type='checkbox' and @aria-label='Row Unselected']/ancestor::div[@class='p-checkbox p-component'])[{random.randint(1, 10)}]"  # Чекбоксы в гриде
-    selected_checkbox = f"(//div[contains(@class,'p-highlight')])[{random.randint(1, 10)}]"      # Выбранный чекбокс в гриде
-    select_all_checkbox = "(//div[@class='p-checkbox p-component'])[1]"  # Чекбокс Select All в гриде
-    delete_button_upper_panel = "//button[contains(@class,'prospace-action bg-white transition')]"  # Кнопка Delete в верхней сервисной панели
-    counter_upper_panel = "//span[@class='prospace-counter-box']"  # Каунтер в верхней сервисной панели
-    button_all_fiters = "//div[contains(@class, 'all-filters')]"  # Кнопка All filters
     any_id_in_grid = f"(//span[text()='ID']/following-sibling::div[contains(@class,'text-ellipsis')])[{random.randint(2, 10)}]"  # ID в гриде
     any_external_id_in_grid = f"(//span[text()='External ID']/following-sibling::div[contains(@class,'text-ellipsis')])[{random.randint(2, 10)}]"  # External ID в гриде
     any_parent_in_grid = f"(//span[text()='Parent']/following-sibling::div[contains(@class,'text-ellipsis')])[{random.randint(2, 10)}]"  # Parent измерения в гриде
     any_type_in_grid = f"(//span[text()='Type']/following-sibling::div[contains(@class,'text-ellipsis')])[{random.randint(2, 10)}]"  # Type в гриде
     any_affiliation_in_grid = f"(//span[text()='Affiliation']/following-sibling::div[contains(@class,'text-ellipsis')])[{random.randint(2, 10)}]"  # Affiliation в гриде
     any_invoice_type_in_grid = f"(//span[text()='Invoice Type']/following-sibling::div[contains(@class,'text-ellipsis')])[{random.randint(2, 10)}]"  # Invoice Type в гриде
-    counter_all_filters = "//div[contains(@class,'all-filters')]/span[@class='prospace-counter-box']"  # Каунтер на кнопке All Filters
 
     ##  Форма созданного клиента
-    mode_switcher = "//span[@class='p-inputswitch-slider']"  # Свитчер режимов
-    button_save = "//button[contains(@class,'prospace-button--with-icon')]"  # Кнопка Сохранить
-    client_id = "//div[contains(@class, 'item-id')]"  # ID клиента в карточке клиента
-    x_icon = "(//div/div/button[@class='prospace-icon-button'])[6]"  # Иконка X в карточке созданного продукта
-    x_icon_upload_file = "(//div/div/button[@class='prospace-icon-button'])[7]"  # Иконка X в окне Upload File
+    x_icon_upload_file = "(//div/div/button[@type='icon-secondary'])[7]"  # Иконка X в окне Upload File
     value_of_invoice_type_card = "(//span[contains(@class,'p-dropdown-label')]/span)[1]"   # Значение поля Invoice Type
     value_of_affiliation_card = "(//span[contains(@class,'p-dropdown-label')]/span)[2]"   # Значение поля Affiliation
-
-    ## Окно Delete Item
-    button_delete_item = "(//button[contains(@class,'prospace-button--primary')])[2]"  # Кнопка Удалить айтем
 
     ## Таба расширенных фильтров
     input_name_filters = "(//input[contains(@data-pc-name,'inputtext')])[2]"  # Поле Name
@@ -113,11 +75,6 @@ class ClientPage(Base):
     input_dispatch_start_before_day_to_filters = "(//input[@data-pc-name='pcinput'])[2]"  # Поле Dispatch Start Before Day(To)
     input_dispatch_end_before_day_from_filters = "(//input[@data-pc-name='pcinput'])[3]"  # Поле Dispatch End Before Day(From)
     input_dispatch_end_before_day_to_filters = "(//input[@data-pc-name='pcinput'])[4]"  # Поле Dispatch End Before Day(To)
-    button_apply_filters = "(//button[contains(@class,'prospace-button--primary')])[2]"  # Кнопка Apply
-    counter_filters = "//div[@class='header']/span[@class='prospace-counter-box']"  # Каунтеры в фильтрах
-    button_clear_filters = "//button[contains(@class, 'prospace-button--secondary')]"  # Кнопка Clear
-    x_icon_filters = "(//div[contains(@class, 'prospace-boxed-icon-button')]/button[@class='prospace-icon-button'])[3]"  # Иконка X в расширенных фильтрах
-    x_icons_input_filters = "//div[@class='header']/div[contains(@class,'items-center')]"  # Иконки X в расширенных фильтрах индивидуально для каждого поля
 
     # Getters
     def upload_file(self, file):
@@ -148,19 +105,6 @@ class ClientPage(Base):
         return self.element_is_clickable(self.input_search_grid)
 
     # Actions
-    def click_button(self, el):
-        return self.element_is_clickable(el).click()
-
-    def get_text(self, el):
-        return self.element_is_visible(el).text
-
-    def is_visible(self, el):
-        return self.element_is_visible(el)
-
-    def is_not_visible(self, el):
-        return self.element_is_not_visible(el)
-
-
     def enter_in_name_input(self, el):
         return self.get_input_name_card().send_keys(el)
 
@@ -179,20 +123,8 @@ class ClientPage(Base):
     def enter_in_dispatch_end_before_day(self, el):
         return self.get_input_dispatch_end_before_day().send_keys(el)
 
-    def open_last_client(self):
-        return self.element_is_clickable(self.last_client_name_in_grid).click()
-
-    def open_any_client(self):
-        return self.element_is_clickable(self.any_item_name).click()
-
     def enter_in_search_field(self, name):
         return self.get_input_search_grid().send_keys(name)
-
-    def open_deleted_tab(self):
-        return self.element_is_clickable(self.deleted_tab_grid).click()
-
-    def open_all_tab(self):
-        return self.element_is_clickable(self.all_tab_grid).click()
 
     def enter_in_name_input_filters(self, el):
         return self.element_is_clickable(self.input_name_filters).send_keys(el)
@@ -219,7 +151,7 @@ class ClientPage(Base):
             Logger.add_start_step(method="open_clients_dict")
             self.click_button(self.side_button_modules)
             self.click_button(self.link_clients)
-            self.assert_word(self.is_visible(self.head_of_client_page), "Clients")
+            self.assert_word(self.is_visible(self.head_of_page), "Clients")
             print("Открыта страница Clients")
             Logger.add_end_step(url=self.driver.current_url, method="open_clients_dict")
 
@@ -407,7 +339,7 @@ class ClientPage(Base):
             Logger.add_start_step(method="delete_client_from_card")
             count_of_items_before = self.get_text(self.count_items_in_footer_grid)
             print(f"Количество клиентов на вкладке All до удаления: {count_of_items_before}")
-            self.open_last_client()
+            self.click_button(self.last_client_name_in_grid)
             print("Карточка Клиента открыта")
             self.click_button(self._3_dots_card)
             print("Клик на троеточие")
@@ -495,7 +427,7 @@ class ClientPage(Base):
             invoice_type_before = self.is_visible(self.last_invoice_type_in_grid).get_attribute("title")
 
             """Открытие правой панели и редактирование информации"""
-            self.open_last_client()
+            self.click_button(self.last_client_name_in_grid)
             self.click_button(self.mode_switcher)
             self.get_input_name_card().clear()
             self.enter_in_name_input(self.update_name)
@@ -562,7 +494,7 @@ class ClientPage(Base):
         with allure.step("Update Client's logo"):
             Logger.add_start_step(method="update_logo_client")
             """Загрузка первого файла и проверка, что сохранение успешно"""
-            self.open_last_client()
+            self.click_button(self.last_client_name_in_grid)
             self.click_button(self.mode_switcher)
             try:
                 self.click_button(self.x_icon_upload_file)
@@ -579,7 +511,7 @@ class ClientPage(Base):
             self.click_button(self.x_icon)
             self.is_not_visible(self.x_icon)
             self.browser_refresh()
-            self.open_last_client()
+            self.click_button(self.last_client_name_in_grid)
             self.click_button(self.mode_switcher)
             print(f"Имя загруженного логотипа клиента: магнит.jpg, фактическое: {name_of_added_file_before}")
             assert "магнит.jpg" == name_of_added_file_before, "Имя добавленного файла отображается некорректно"
@@ -595,7 +527,7 @@ class ClientPage(Base):
             self.click_button(self.x_icon)
             self.is_not_visible(self.x_icon)
             self.browser_refresh()
-            self.open_last_client()
+            self.click_button(self.last_client_name_in_grid)
             name_of_added_file_after = self.get_text(self.name_of_added_file)
             print(f"Имя измененного логотипа клиента: спар.png, фактическое: {name_of_added_file_after}")
             assert "спар.png" == name_of_added_file_after, "Имя измененного файла отображается некорректно"
@@ -606,7 +538,7 @@ class ClientPage(Base):
         with allure.step("Restore Client using Dots in Grid"):
             """Восстановление клиента из помеченных на удаление через троеточие в гриде"""
             Logger.add_start_step(method="restore_client_from_three_dots_grid")
-            self.open_deleted_tab()
+            self.click_button(self.deleted_tab_grid)
             self.is_visible(self.deleted_tab_grid_is_active)
             count = 0
             while self.get_text(self.count_items_in_footer_grid) == "0":
@@ -627,7 +559,7 @@ class ClientPage(Base):
 
             """Проверка, что клиент переместился во вкладку All"""
             self.browser_refresh()
-            self.open_deleted_tab()
+            self.click_button(self.deleted_tab_grid)
             self.is_visible(self.deleted_tab_grid_is_active)
             count = 0
             while self.get_text(self.count_items_in_footer_grid) == "0":
@@ -796,7 +728,7 @@ class ClientPage(Base):
             Logger.add_start_step(method="filters_client_by_dispatch_start_before_day")
             count_of_items_before = self.get_text(self.count_items_in_footer_grid)
             print(f"Количество клиентов на вкладке All до фильтрации: {count_of_items_before}")
-            self.open_any_client()
+            self.click_button(self.any_item_name)
             any_dispatch_start_before_day_before = self.is_visible(self.input_dispatch_start_before_day).get_attribute("aria-valuenow")
             print(f"Выбранное для фильтрации количество дней: {any_dispatch_start_before_day_before}")
             self.click_button(self.x_icon_card)
@@ -840,7 +772,7 @@ class ClientPage(Base):
             Logger.add_start_step(method="filters_client_by_dispatch_end_before_day")
             count_of_items_before = self.get_text(self.count_items_in_footer_grid)
             print(f"Количество клиентов на вкладке All до фильтрации: {count_of_items_before}")
-            self.open_any_client()
+            self.click_button(self.any_item_name)
             any_dispatch_end_before_day_before = self.is_visible(self.input_dispatch_end_before_day).get_attribute("aria-valuenow")
             print(f"Выбранное для фильтрации количество дней: {any_dispatch_end_before_day_before}")
             self.click_button(self.x_icon_card)
@@ -905,8 +837,8 @@ class ClientPage(Base):
             grid_invoice_type = self.get_text(self.last_invoice_type_in_grid)
 
             """Проверка, что информация в правой панели соответствует информации в гриде"""
-            self.open_last_client()
-            card_id = self.get_text(self.client_id)
+            self.click_button(self.last_client_name_in_grid)
+            card_id = self.get_text(self.item_id)
             card_name = self.is_visible(self.input_name_card).get_attribute("value")
             card_external_id = self.is_visible(self.input_external_id_card).get_attribute("value")
             card_type = self.is_visible(self.input_type_card).get_attribute("value")

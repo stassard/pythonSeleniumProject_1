@@ -1,10 +1,6 @@
 import random
 import time
 import allure
-from selenium.common.exceptions import StaleElementReferenceException
-from selenium.common.exceptions import TimeoutException
-from selenium.common.exceptions import ElementClickInterceptedException
-from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver import Keys
 from base.base_class import Base
 from utilities.logger import Logger
@@ -14,8 +10,6 @@ class ProductPage(Base):
     """ Класс содержащий локаторы и методы для справочника Продукты"""
 
     # Data
-    ignored_exceptions = (
-    NoSuchElementException, StaleElementReferenceException, TimeoutException, ElementClickInterceptedException)
     create_name = f"Test {random.randint(11234, 98765)}"
     update_name = f"UPD Test {random.randint(11234, 98765)}"
     create_eanc = random.randint(11234, 98765)
@@ -32,13 +26,8 @@ class ProductPage(Base):
     update_unit = random.randint(1, 100) / 10
 
     # Locators
-    head_of_product_page = "//div[@class='ps-font-TopHeader text-indigo-950']"                # Заголовок страницы Продукты
-
-    ## General
-    toast_message_success = "//div[contains(@class,'p-toast-message-success')]"               # Тостовое сообщение об успехе
 
     ##  Форма создания продукта
-    button_create_new_card = " //button[contains(@class,'prospace-button')]"                  # Кнопка Create New
     input_name_card = "(//input[contains(@data-pc-name,'inputtext')])[3]"                     # Поле Имя продукта
     input_EANC_card = "(//input[contains(@data-pc-name,'inputtext')])[4]"                     # Поле EANC
     input_EANP_card = "(//input[contains(@data-pc-name,'inputtext')])[5]"                     # Поле EANC
@@ -48,16 +37,8 @@ class ProductPage(Base):
     unit_of_measure_card = "//span[contains(@class,'p-dropdown-label')]"                      # Селектор Unit of Measure
     units_of_measure_selector_card = f"(//li[contains(@class,'p-dropdown-item')])[{random.randint(1, 6)}]"           # Список Unit of Measure
     input_unit_card = "//input[contains(@data-pc-name,'pcinput')]"                            # Поле Unit
-    button_create_card = "//button[contains(@items,'[object Object]')]"                       # Кнопка Create
-    link_delete_in_3_dots_card = "//div[contains(@class,'prospace-dots-item')]"               # Кнопка Delete в троеточии в карточке
-    x_icon_card = "(//div/div/button[@class='prospace-icon-button'])[5]"                      # Иконка X в карточке создания продукта
-    dropdown = "//li[contains(@class,'p-dropdown-item')]"
 
     ## Грид продуктов
-    _3_dots_grid = f"(//div[@class='flex justify-center']/button[@class='prospace-icon-button'])[{random.randint(1, 10)}]"  # Троеточие в гриде
-    link_delete_restore_in_3_dots_grid = "(//div[contains(@class, 'prospace-dots-item')])[2]"   # Кнопка Delete в троеточии в гриде
-    any_item_name = f"(//div[contains(@class, 'border-dotted')])[{random.randint(2, 10)}]"                                   # Имя продукта в гриде
-    input_search_grid = "//input[contains(@data-pc-name,'inputtext')]"                          # Поле Search в гриде
     last_prod_name_in_grid = "(//div[contains(@class,'border-b-purple-400')])[1]"               # Имя последнего созданного продукта в гриде
     last_eanc_in_grid = "(//div[contains(@class,'text-ellipsis')])[1]"                                    # EAN Case последнего созданного продукта в гриде
     last_eanp_in_grid = "(//div[contains(@class,'text-ellipsis')])[2]"                                    # EAN Pc последнего созданного продукта в гриде
@@ -66,34 +47,14 @@ class ProductPage(Base):
     last_brand_in_grid = "(//div[contains(@class,'text-ellipsis')])[5]"                                   # Бренд последнего созданного продукта в гриде
     last_unit_in_grid = "(//div[contains(@class,'text-ellipsis')])[7]"                                    # Юнит последнего созданного продукта в гриде
     last_unit_of_measure_in_grid = "(//span[text()='Unit Of Measure']/following-sibling::div[contains(@class,'text-ellipsis')])[1]"      # Единица измерения последнего созданного продукта в гриде
-    deleted_tab_grid = "(//div[contains(@class, 'h-8')])[2]"                                    # Кнопка-вкладка Deleted
-    deleted_tab_grid_is_active = "//div[contains(@class, 'active')]/span[text()='Deleted']"     # Кнопка-вкладка Deleted активна
-    all_tab_grid = "(//div[contains(@class, 'h-8')])[1]"                                        # Кнопка-вкладка All
-    all_tab_grid_is_active = "//div[contains(@class, 'active')]/span[text()='All']"             # Кнопка-вкладка All активна
-    count_items_in_footer_grid = "(//span[@class='text-indigo-950'])[2]"                        # Количество айтемов в футере
-    unselected_checkbox = "//input[@type='checkbox' and @aria-label='Row Unselected']/ancestor::div[@class='p-checkbox p-component']"    # Невыбранный чекбокс в гриде
-    selected_checkbox = f"(//div[contains(@class,'p-highlight')])[{random.randint(1, 10)}]"      # Выбранный чекбокс в гриде
-    select_all_checkbox = "(//div[@class='p-checkbox p-component'])[1]"                                   # Чекбокс Select All в гриде
-    delete_button_upper_panel = "//button[contains(@class,'prospace-action bg-white transition')]"        # Кнопка Delete в верхней сервисной панели
-    counter_upper_panel = "//span[@class='prospace-counter-box']"                                         # Каунтер в верхней сервисной панели
-    button_all_fiters = "//div[contains(@class, 'all-filters')]"                                          # Кнопка All filters
     any_category_in_grid = f"(//span[text()='Category']/following-sibling::div[contains(@class,'text-ellipsis')])[{random.randint(2, 10)}]"     # Категория в гриде
     any_brand_in_grid = f"(//span[text()='Brand']/following-sibling::div[contains(@class,'text-ellipsis')])[{random.randint(2, 10)}]"           # Бренд в гриде
     any_unit_of_measure_in_grid = f"(//span[text()='Unit Of Measure']/following-sibling::div[contains(@class,'text-ellipsis')])[{random.randint(2, 10)}]"  # Единица измерения в гриде
     any_unit_in_grid = f"(//span[text()='Unit']/following-sibling::div[contains(@class,'text-ellipsis')])[{random.randint(2, 10)}]"             # Юнит в гриде
     any_technology_in_grid = f"(//span[text()='Technology']/following-sibling::div[contains(@class,'text-ellipsis')])[{random.randint(2, 10)}]"     # Технология в гриде
-    counter_all_filters = "//div[contains(@class,'all-filters')]/span[@class='prospace-counter-box']"     # Каунтер на кнопке All Filters
 
     ##  Форма созданного продукта
-    mode_switcher = "//span[@class='p-inputswitch-slider']"                              # Свитчер режимов
-    button_save = "//button[contains(@class,'prospace-button--with-icon')]"              # Кнопка Сохранить
-    _3_dots_card = "(//div/div/button[@class='prospace-icon-button'])[3]"                # Троеточие в карточке продукта
-    product_id = "//div[contains(@class, 'item-id')]"                                    # ID продукта в карточке продукта
-    x_icon = "(//div/div/button[@class='prospace-icon-button'])[6]"                      # Иконка X в карточке созданного продукта
     value_of_unit_of_measure_card = "//span[contains(@class,'p-dropdown-label')]/span"   # Значение поля Unit of Measure
-
-    ## Окно Delete Item
-    button_delete_item = "(//button[contains(@class,'prospace-button--primary')])[2]"    # Кнопка Удалить айтем
 
     ## Таба расширенных фильтров
     input_sku_name_filters = "(//input[contains(@data-pc-name,'inputtext')])[2]"                 # Поле SKU Name
@@ -103,11 +64,6 @@ class ProductPage(Base):
     input_unit_of_measure_filters = "(//input[contains(@data-pc-name,'inputtext')])[6]"          # Поле Unit of Measure
     input_unit_from_filters = "(//input[@data-pc-name='pcinput'])[1]"                            # Поле Unit(From)
     input_unit_to_filters = "(//input[@data-pc-name='pcinput'])[2]"                              # Поле Unit(To)
-    button_apply_filters = "(//button[contains(@class,'prospace-button--primary')])[2]"                  # Кнопка Apply
-    counter_filters = "(//div[@class='header']/span[@class='prospace-counter-box'])[1]"                # Каунтеры в фильтрах
-    button_clear_filters = "//button[contains(@class, 'prospace-button--secondary')]"                    # Кнопка Clear
-    x_icon_filters = "(//div[contains(@class, 'prospace-boxed-icon-button')]/button[@class='prospace-icon-button'])[3]"       # Иконка X в расширенных фильтрах
-    x_icons_input_filters = "//div[@class='header']/div[contains(@class,'items-center')]"                                     # Иконки X в расширенных фильтрах индивидуально для каждого поля
 
     # Getters
     def get_text_to_be_present_in_element_value_name(self, el1, el2):
@@ -135,18 +91,6 @@ class ProductPage(Base):
         return self.element_is_clickable(self.input_search_grid)
 
     # Actions
-    def click_button(self, el):
-        return self.element_is_clickable(el).click()
-
-    def get_text(self, el):
-        return self.element_is_visible(el).text
-
-    def is_visible(self, el):
-        return self.element_is_visible(el)
-
-    def is_not_visible(self, el):
-        return self.element_is_not_visible(el)
-
 
     def enter_in_name_input(self, el):
         return self.get_input_name_card().send_keys(el)
@@ -169,20 +113,9 @@ class ProductPage(Base):
     def enter_in_unit_input(self, el):
         return self.get_input_unit_card().send_keys(el)
 
-    def open_last_product(self):
-        return self.element_is_clickable(self.last_prod_name_in_grid).click()
-
-    def open_any_product(self):
-        return self.element_is_clickable(self.any_item_name).click()
-
     def enter_in_search_field(self, name):
         return self.get_input_search_grid().send_keys(name)
 
-    def open_deleted_tab(self):
-        return self.element_is_clickable(self.deleted_tab_grid).click()
-
-    def open_all_tab(self):
-        return self.element_is_clickable(self.all_tab_grid).click()
 
     def enter_in_sku_name_input_filters(self, el):
         return self.element_is_clickable(self.input_sku_name_filters).send_keys(el)
@@ -212,7 +145,7 @@ class ProductPage(Base):
             Logger.add_start_step(method="open_products_dict")
             self.click_button(self.side_button_modules)
             self.click_button(self.link_products)
-            self.assert_word(self.is_visible(self.head_of_product_page), "Products")
+            self.assert_word(self.is_visible(self.head_of_page), "Products")
             print("Открыта страница Products")
             Logger.add_end_step(url=self.driver.current_url, method="open_products_dict")
 
@@ -399,7 +332,7 @@ class ProductPage(Base):
             Logger.add_start_step(method="delete_product_from_card")
             count_of_items_before = self.get_text(self.count_items_in_footer_grid)
             print(f"Количество продуктов на вкладке All до удаления: {count_of_items_before}")
-            self.open_last_product()
+            self.click_button(self.last_prod_name_in_grid)
             print("Карточка продукта открыта")
             self.click_button(self._3_dots_card)
             print("Клик на троеточие")
@@ -452,8 +385,8 @@ class ProductPage(Base):
         """Поиск созданного продукта по ID"""
         with allure.step("Find Product by ID"):
             Logger.add_start_step(method="find_product_by_id")
-            self.open_any_product()
-            any_id = self.get_text(self.product_id)
+            self.click_button(self.any_item_name)
+            any_id = self.get_text(self.item_id)
             print(f"Выбранное для поиска ID продукта: {any_id}")
             self.click_button(self.x_icon_card)
             self.is_not_visible(self.button_create_card)
@@ -469,8 +402,8 @@ class ProductPage(Base):
                     break
 
             """Проверка, что найден корректный продукт"""
-            self.open_last_product()
-            first_id = self.get_text(self.product_id)
+            self.click_button(self.last_prod_name_in_grid)
+            first_id = self.get_text(self.item_id)
             print(f"ID первого отображаемого продукта в гриде: {first_id}")
             assert str(any_id) == str(first_id), "Ошибка при поиске или id продуктов не совпадают"
             print("Найден корректный продукт")
@@ -492,7 +425,7 @@ class ProductPage(Base):
             unit_of_measure_before = self.is_visible(self.last_unit_of_measure_in_grid).get_attribute("title")
 
             """Открытие правой панели и редактирование информации"""
-            self.open_last_product()
+            self.click_button(self.last_prod_name_in_grid)
             self.click_button(self.mode_switcher)
             self.get_input_name_card().clear()
             self.enter_in_name_input(self.update_name)
@@ -557,7 +490,7 @@ class ProductPage(Base):
         """Восстановление продукта из помеченных на удаление через троеточие в гриде"""
         with allure.step("Restore Product using Dots in Grid"):
             Logger.add_start_step(method="restore_product_from_three_dots_grid")
-            self.open_deleted_tab()
+            self.click_button(self.deleted_tab_grid)
             self.is_visible(self.deleted_tab_grid_is_active)
             count = 0
             while self.get_text(self.count_items_in_footer_grid) == "0":
@@ -578,7 +511,7 @@ class ProductPage(Base):
 
             """Проверка, что продукт переместился во вкладку All"""
             self.browser_refresh()
-            self.open_deleted_tab()
+            self.click_button(self.deleted_tab_grid)
             self.is_visible(self.deleted_tab_grid_is_active)
             count = 0
             while self.get_text(self.count_items_in_footer_grid) == "0":
@@ -791,7 +724,7 @@ class ProductPage(Base):
             grid_unit = self.get_text(self.last_unit_in_grid)
 
             """Проверка, что информация в правой панели соответствует информации в гриде"""
-            self.open_last_product()
+            self.click_button(self.last_prod_name_in_grid)
             card_name = self.is_visible(self.input_name_card).get_attribute("value")
             card_eanc = self.is_visible(self.input_EANC_card).get_attribute("value")
             card_eanp = self.is_visible(self.input_EANP_card).get_attribute("value")
