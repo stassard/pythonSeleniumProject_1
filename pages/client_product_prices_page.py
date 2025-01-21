@@ -1,10 +1,6 @@
 import random
 import time
 import allure
-from selenium.common.exceptions import StaleElementReferenceException
-from selenium.common.exceptions import TimeoutException
-from selenium.common.exceptions import ElementClickInterceptedException
-from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver import Keys
 from base.base_class import Base
 from utilities.logger import Logger
@@ -14,24 +10,17 @@ import datetime
 
 
 class ClientProductPricesPage(Base):
-    """ Класс содержащий локаторы и методы для справочника Клиенты Продукты Цены"""
+    """ Класс содержащий локаторы и методы для справочника Client Product Prices"""
 
     # Data
     faker_ru = Faker('ru_RU')
     create_date = faker_ru.date_between(start_date='today', end_date='+5y').strftime("%d.%m.%Y")
     update_date = faker_ru.date_between(start_date='today', end_date='+5y').strftime("%d.%m.%Y")
     current_date = datetime.datetime.now().strftime("%d.%m.%Y")
-    ignored_exceptions = (
-    NoSuchElementException, StaleElementReferenceException, TimeoutException, ElementClickInterceptedException)
     create_price = random.randint(1, 1000) / 10
     update_price = random.randint(1, 1000) / 10
 
     # Locators
-    head_of_product_page = "//div[@class='ps-font-TopHeader text-indigo-950']"                # Заголовок страницы Клиенты Продукты Цены
-
-    ## General
-    item_id = "//div[contains(@class, 'item-id')]"  # ID продукта в карточке продукта
-    toast_message_success = "//div[contains(@class,'p-toast-message-success')]"  # Тостовое сообщение об успехе
 
     ##  Форма создания айтема
     selector_client_product_id_card = "(//span[contains(@class,'p-dropdown-label')])[1]"  # Селектор Client Product ID
@@ -39,49 +28,22 @@ class ClientProductPricesPage(Base):
     input_price_card = "(//input[contains(@data-pc-name,'pcinput')])[1]"  # Поле Price
     input_start_date_card = "(//input[contains(@data-pc-name,'pcinput')])[2]"  # Поле Start Date
     input_end_date_card = "(//input[contains(@data-pc-name,'pcinput')])[3]"  # Поле End Date
-    button_create_card = "//button[contains(@items,'[object Object]')]"  # Кнопка Create
-    x_icon_card = "(//div/div/button[@class='prospace-icon-button'])[5]"  # Иконка X в карточке создания айтема
     placeholders = "//span[contains(@class,'p-placeholder')]"        # Плейсхолдеры в селекторах
 
     ## Грид айтемов
-    button_create_new_card = "//button[contains(@class,'prospace-button')]"  # Кнопка Create New
-    _3_dots_grid = f"(//div[@class='flex justify-center']/button[@class='prospace-icon-button'])[{random.randint(1, 20)}]"  # Троеточие в гриде
-    link_delete_restore_in_3_dots_grid = "(//div[contains(@class, 'prospace-dots-item')])[2]"  # Кнопка Delete в троеточии в гриде
-    any_item_name = f"(//div[contains(@class, 'border-dotted')])[{random.randint(2, 20)}]"  # Имя айтема в гриде
-    input_search_grid = "//input[contains(@data-pc-name,'inputtext')]"  # Поле Search в гриде
     last_item_name_in_grid = "(//div[contains(@class,'border-b-purple-400')])[1]"  # Имя последнего созданного айтема в гриде
     last_client_product_id_in_grid = "(//div[contains(@class,'text-ellipsis')])[1]"  # Cient Product ID последнего созданного айтема в гриде
     last_price_in_grid = "(//div[contains(@class,'text-ellipsis')])[2]"  # Price последнего созданного айтема в гриде
     last_start_date_in_grid = "(//div[contains(@class,'text-ellipsis')])[3]"  # Start Date последнего созданного айтема в гриде
     last_end_date_in_grid = "(//div[contains(@class,'text-ellipsis')])[4]"  # End Date последнего созданного айтема в гриде
-    deleted_tab_grid = "(//div[contains(@class, 'h-8')])[2]"  # Кнопка-вкладка Deleted
-    deleted_tab_grid_is_active = "//div[contains(@class, 'active')]/span[text()='Deleted']"  # Кнопка-вкладка Deleted активна
-    all_tab_grid = "(//div[contains(@class, 'h-8')])[1]"  # Кнопка-вкладка All
-    all_tab_grid_is_active = "//div[contains(@class, 'active')]/span[text()='All']"  # Кнопка-вкладка All активна
-    count_items_in_footer_grid = "(//span[@class='text-indigo-950'])[2]"  # Количество айтемов в футере
-    unselected_checkbox = "//input[@type='checkbox' and @aria-label='Row Unselected']/ancestor::div[@class='p-checkbox p-component']"  # Невыбранный чекбокс в гриде
-    selected_checkbox = f"(//div[contains(@class,'p-highlight')])[{random.randint(1, 20)}]"  # Выбранный чекбокс в гриде
-    select_all_checkbox = "(//div[@class='p-checkbox p-component'])[1]"  # Чекбокс Select All в гриде
-    delete_button_upper_panel = "//button[contains(@class,'prospace-action bg-white transition')]"  # Кнопка Delete в верхней сервисной панели
-    counter_upper_panel = "//span[@class='prospace-counter-box']"  # Каунтер в верхней сервисной панели
-    button_all_fiters = "//div[contains(@class, 'all-filters')]"  # Кнопка All filters
     any_client_product_id_in_grid = f"(//span[text()='Client Product ID']/following-sibling::div[@class='text-ellipsis'])[{random.randint(2, 20)}]"  # Любой Client Product ID в гриде
     any_price_in_grid = f"(//span[text()='Price']/following-sibling::div[@class='text-ellipsis'])[{random.randint(2, 20)}]"  # Любой Price в гриде
     any_start_date_in_grid = f"(//span[text()='Start Date']/following-sibling::div[@class='text-ellipsis'])[{random.randint(2, 20)}]"  # Любой Start Date в гриде
     any_end_date_in_grid = f"(//span[text()='End Date']/following-sibling::div[@class='text-ellipsis'])[{random.randint(2, 20)}]"  # Любой End Date в гриде
-    counter_all_filters = "//div[contains(@class,'all-filters')]/span[@class='prospace-counter-box']"  # Каунтер на кнопке All Filters
 
     ##  Форма созданного айтема
-    link_delete_in_3_dots_card = "//div[contains(@class,'prospace-dots-item')]"  # Кнопка Delete в троеточии в карточке
-    _3_dots_card = "(//div/div/button[@class='prospace-icon-button'])[3]"  # Троеточие в карточке
-    mode_switcher = "//span[@class='p-inputswitch-slider']"  # Свитчер режимов
-    button_save = "//button[contains(@class,'prospace-button--with-icon')]"  # Кнопка Сохранить
-    x_icon = "(//div/div/button[@class='prospace-icon-button'])[6]"  # Иконка X в карточке созданного айтема
-    icon_inside_start_date_input = "(//span/following-sibling::button[contains(@class,'prospace-icon-button')])[1]"   # Иконка крестик/календарь в поле Start Date
-    icon_inside_end_date_input = "(//span/following-sibling::button[contains(@class,'prospace-icon-button')])[2]"     # Иконка крестик/календарь в поле End Date
-
-    ## Окно Delete Item
-    button_delete_item = "(//button[contains(@class,'prospace-button--primary')])[2]"  # Кнопка Удалить айтем
+    icon_inside_start_date_input = "(//div[contains(@class,'absolute')]/div[contains(@class,'flex')])[1]"   # Иконка крестик/календарь в поле Start Date
+    icon_inside_end_date_input = "(//div[contains(@class,'absolute')]/div[contains(@class,'flex')])[2]"     # Иконка крестик/календарь в поле End Date
 
     ## Таба расширенных фильтров - пока не довезли
 
@@ -99,12 +61,6 @@ class ClientProductPricesPage(Base):
         return self.element_is_clickable(self.input_search_grid)
 
     # Actions
-    def click_button(self, el):
-        return self.element_is_clickable(el).click()
-
-    def is_visible(self, el):
-        return self.element_is_visible(el)
-
     def enter_in_price_input(self, el):
         return self.get_input_price_card().send_keys(el)
     
@@ -114,15 +70,6 @@ class ClientProductPricesPage(Base):
     def enter_in_end_date_input(self, el):
         return self.get_input_end_date_card().send_keys(el)
 
-    def is_not_visible(self, el):
-        return self.element_is_not_visible(el)
-
-    def get_text(self, el):
-        return self.element_is_visible(el).text
-
-    def enter_in_search_field(self, name):
-        return self.get_input_search_grid().send_keys(name)
-
 
     # Methods
     def open_client_product_prices_dict(self):
@@ -130,12 +77,12 @@ class ClientProductPricesPage(Base):
             Logger.add_start_step(method="open_client_product_prices_dict")
             self.click_button(self.side_button_modules)
             self.click_button(self.link_client_product_prices)
-            self.assert_word(self.is_visible(self.head_of_product_page), "Client Product Prices")
+            self.assert_word(self.is_visible(self.head_of_page), "Client Product Prices")
             print("Открыта страница Client Product Prices")
             Logger.add_end_step(url=self.driver.current_url, method="open_client_product_prices_dict")
 
     def create_client_product_prices(self):
-        """Создание цены"""
+        """Создание элемента"""
         with allure.step("Create Client Product Prices"):
             Logger.add_start_step(method="create_client_product_prices")
             self.is_visible(self.count_items_in_footer_grid)
@@ -151,7 +98,7 @@ class ClientProductPricesPage(Base):
             self.enter_in_end_date_input(self.create_date)
             print("Все поля карточки заполнены")
 
-            """Получение информации о созданном айтеме из карточки"""
+            """Получение информации о созданном элементе из карточки"""
             created_client_product_id = self.is_visible(self.selector_client_product_id_card).get_attribute("aria-label")
             created_price = self.is_visible(self.input_price_card).get_attribute("aria-valuenow")
             created_start_date = self.is_visible(self.input_start_date_card).get_attribute("value")
@@ -165,7 +112,7 @@ class ClientProductPricesPage(Base):
                 print("------------------Баг: Тостовое сообщение об успехе не отобразилось--------------------------")
             self.browser_refresh()
 
-            """Проверка, что создана корректная цена"""
+            """Проверка, что создан корректный элемент"""
             grid_client_product_id = self.get_text(self.last_client_product_id_in_grid)
             grid_price = self.get_text(self.last_price_in_grid)
             grid_start_date = self.get_text(self.last_start_date_in_grid)
@@ -182,17 +129,16 @@ class ClientProductPricesPage(Base):
             assert str(created_price) == str(grid_price), f"Price не соответствует созданному: {str(created_price)} - {str(grid_price)}"
             assert str(created_start_date.replace(' ', '')) == str(grid_start_date), f"Start Date не соответствует созданному: {str(created_start_date.replace(' ', ''))} - {str(grid_start_date)}"
             assert str(created_end_date.replace(' ', '')) == str(grid_end_date), f"End Date не соответствует созданному: {str(created_end_date.replace(' ', ''))} - {str(grid_end_date)}"
-            print("Создана корректная цена")
+            print("Создан корректный элемент")
             Logger.add_end_step(url=self.driver.current_url, method="create_client_product_prices")
 
 
 
     def read_client_product_prices(self):
-        """Прочесть информацию о найденной цене и сравнить с данными из грида"""
+        """Прочесть информацию об элементе и сравнить с данными из грида"""
         with allure.step("Read Client Product Prices"):
-            """Найти цену"""
             Logger.add_start_step(method="read_client_product_prices")
-            """Получить информацию о найденной цене из грида"""
+            """Получить информацию об элементе из грида"""
             grid_name_id = self.get_text(self.last_item_name_in_grid)
             grid_client_product_id = self.get_text(self.last_client_product_id_in_grid)
             grid_price = self.get_text(self.last_price_in_grid)
@@ -278,6 +224,7 @@ class ClientProductPricesPage(Base):
             print("Элемент успешно отредактирован")
             Logger.add_end_step(url=self.driver.current_url, method="update_client_product_prices")
 
+
     def delete_client_product_prices_from_three_dots_grid(self):
         """Удаление элемента через троеточие в гриде"""
         with allure.step("Delete Client Product Prices using Dots In Grid"):
@@ -301,6 +248,7 @@ class ClientProductPricesPage(Base):
                 "Ошибка при удалении через троеточие в гриде"
             print("Элемент успешно удален")
             Logger.add_end_step(url=self.driver.current_url, method="delete_client_product_prices_from_three_dots_grid")
+
 
     def delete_client_product_prices_from_checkbox_grid(self):
         """Удаление элемента через чекбокс в гриде"""
@@ -329,6 +277,7 @@ class ClientProductPricesPage(Base):
                 "Ошибка при удалении через чекбокс"
             print("Элемент успешно удален")
             Logger.add_end_step(url=self.driver.current_url, method="delete_client_product_prices_from_checkbox_grid")
+
 
     def delete_4_client_product_prices_from_checkbox_grid(self):
         with allure.step("Multiselection Deleted Client Product Prices using Checkboxes in Grid"):
@@ -365,6 +314,7 @@ class ClientProductPricesPage(Base):
             print("Элементы успешно удалены")
             Logger.add_end_step(url=self.driver.current_url, method="delete_4_client_product_prices_from_checkbox_grid")
 
+
     def select_all_delete_client_product_prices(self):
         """Массовое удаление элементов через Select All в гриде"""
         with allure.step("Delete Client Product Prices using Select All"):
@@ -395,6 +345,7 @@ class ClientProductPricesPage(Base):
             print("Элементы успешно удалены")
             Logger.add_end_step(url=self.driver.current_url, method="select_all_delete_client_product_prices")
 
+
     def delete_client_product_prices_from_card(self):
         """Удаление элемента через карточку продукта"""
         with allure.step("Delete Client Product Prices from Card"):
@@ -422,3 +373,46 @@ class ClientProductPricesPage(Base):
                 "Ошибка при удалении элемента через карточку"
             print("Элемент успешно удален")
             Logger.add_end_step(url=self.driver.current_url, method="delete_client_product_prices_from_card")
+
+
+    def restore_client_product_prices_from_three_dots_grid(self):
+        """Восстановление элемента из помеченных на удаление через троеточие в гриде"""
+        with allure.step("Restore Client Product Prices using Dots in Grid"):
+            Logger.add_start_step(method="restore_client_product_prices_from_three_dots_grid")
+            self.is_visible(self.count_items_in_footer_grid)
+            self.click_button(self.deleted_tab_grid)
+            self.is_visible(self.deleted_tab_grid_is_active)
+            count = 0
+            while self.get_text(self.count_items_in_footer_grid) == "0":
+                time.sleep(1)
+                count += 1
+                if count == 10:
+                    break
+            count_of_items_before = self.get_text(self.count_items_in_footer_grid)
+            print(f"Количество элементов на вкладке Deleted до рестора: {count_of_items_before}")
+            self.click_button(self._3_dots_grid)
+            self.click_button(self.link_delete_restore_in_3_dots_grid)
+            try:
+                self.click_button(self.button_delete_item)
+                self.is_visible(self.toast_message_success)
+            except self.ignored_exceptions:
+                print(
+                    "------------------Баг: Окно подтверждения или тостовое сообщение об успехе не отобразились--------------------------")
+
+            """Проверка, что элемент переместился во вкладку All"""
+            self.browser_refresh()
+            self.is_visible(self.count_items_in_footer_grid)
+            self.click_button(self.deleted_tab_grid)
+            self.is_visible(self.deleted_tab_grid_is_active)
+            count = 0
+            while self.get_text(self.count_items_in_footer_grid) == "0":
+                time.sleep(1)
+                count += 1
+                if count == 10:
+                    break
+            count_of_items_after = self.get_text(self.count_items_in_footer_grid)
+            print(f"Количество элементов на вкладке Deleted после рестора: {count_of_items_after}")
+            assert int(count_of_items_after) == int(count_of_items_before) - 1, \
+                "Ошибка при восстановлении элемента через троеточие в гриде"
+            print("Элемент успешно восстановлен")
+            Logger.add_end_step(url=self.driver.current_url, method="restore_client_product_prices_from_three_dots_grid")
