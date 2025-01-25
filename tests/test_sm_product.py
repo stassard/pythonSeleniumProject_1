@@ -1,9 +1,8 @@
-from base.base_class import Base
-from selenium import webdriver
 import allure
 from pages.login_page import LoginPage
 from pages.product_page import ProductPage
 import pytest
+from utilities.logger import logger
 
 @allure.feature("Smoke Suite for Product Page")
 class TestSmokeProductPage:
@@ -11,6 +10,7 @@ class TestSmokeProductPage:
     """Создание продукта"""
     @allure.title("Create Product")
     @allure.severity("Critical")
+    @logger.catch(reraise=True, level="CRITICAL")
     @pytest.mark.smoke
     def test_create_product(self, driver):
 
@@ -24,6 +24,7 @@ class TestSmokeProductPage:
     """Редактирование продукта"""
     @allure.title("Update Product")
     @allure.severity("Critical")
+    @logger.catch(reraise=True, level="CRITICAL")
     @pytest.mark.smoke
     def test_update_product(self, driver):
 
@@ -37,6 +38,7 @@ class TestSmokeProductPage:
     """Найти продукт по имени через поле Search"""
     @allure.title("Find Product by Name")
     @allure.severity("Critical")
+    @logger.catch(reraise=True, level="CRITICAL")
     @pytest.mark.smoke
     def test_find_product_by_name(self, driver):
 
@@ -51,6 +53,7 @@ class TestSmokeProductPage:
     """Найти продукт по ID через поле Search"""
     @allure.title("Find Product by ID")
     @allure.severity("Critical")
+    @logger.catch(reraise=True, level="CRITICAL")
     @pytest.mark.smoke
     def test_find_product_by_id(self, driver):
 
@@ -65,6 +68,7 @@ class TestSmokeProductPage:
     """Удаление продукта через карточку продукта"""
     @allure.title("Delete Product from Card")
     @allure.severity("Critical")
+    @logger.catch(reraise=True, level="CRITICAL")
     @pytest.mark.smoke
     def test_delete_product_from_card(self, driver):
 
@@ -79,6 +83,7 @@ class TestSmokeProductPage:
     """Удаление продукта через троеточие в гриде"""
     @allure.title("Delete Product using Dots In Grid")
     @allure.severity("Critical")
+    @logger.catch(reraise=True, level="CRITICAL")
     @pytest.mark.smoke
     def test_delete_product_from_three_dots_grid(self, driver):
 
@@ -93,6 +98,7 @@ class TestSmokeProductPage:
     """Удаление продукта через чекбокс в гриде"""
     @allure.title("Delete Product using Checkbox in Grid")
     @allure.severity("Critical")
+    @logger.catch(reraise=True, level="CRITICAL")
     @pytest.mark.smoke
     def test_delete_product_from_checkbox_grid(self, driver):
 
@@ -107,6 +113,7 @@ class TestSmokeProductPage:
     """Удаление 4х продуктов через чекбоксы в гриде"""
     @allure.title("Multiselection Deleting Product using Checkboxes in Grid")
     @allure.severity("Critical")
+    @logger.catch(reraise=True, level="CRITICAL")
     @pytest.mark.smoke
     def test_delete_4_product_from_checkbox_grid(self, driver):
 
@@ -120,6 +127,7 @@ class TestSmokeProductPage:
     """Удаление продуктов через Select All"""
     @allure.title("Delete Product using Select All")
     @allure.severity("Critical")
+    @logger.catch(reraise=True, level="CRITICAL")
     @pytest.mark.smoke
     # @pytest.mark.skip
     def test_select_all_delete_product(self, driver):
@@ -135,6 +143,7 @@ class TestSmokeProductPage:
     """Рестор продукта через троеточие в гриде"""
     @allure.title("Restore Product using Dots in Grid")
     @allure.severity("Critical")
+    @logger.catch(reraise=True, level="CRITICAL")
     @pytest.mark.smoke
     def test_restore_product_from_three_dots_grid(self, driver):
 
@@ -149,6 +158,7 @@ class TestSmokeProductPage:
     """Отфильтровать продукт по имени через расширенные фильтры"""
     @allure.title("Filter Products by Name using All Filters")
     @allure.severity("High")
+    @logger.catch(reraise=True, level="CRITICAL")
     @pytest.mark.smoke
     def test_filters_product_by_sku_name(self, driver):
 
@@ -162,6 +172,7 @@ class TestSmokeProductPage:
     """Отфильтровать продукт по категории через расширенные фильтры"""
     @allure.title("Filter Products by Category using All Filters")
     @allure.severity("High")
+    @logger.catch(reraise=True, level="CRITICAL")
     @pytest.mark.smoke
     def test_filters_product_by_category(self, driver):
 
@@ -175,6 +186,7 @@ class TestSmokeProductPage:
     """Отфильтровать продукт по бренду через расширенные фильтры"""
     @allure.title("Filter Products by Brand using All Filters")
     @allure.severity("High")
+    @logger.catch(reraise=True, level="CRITICAL")
     @pytest.mark.smoke
     def test_filters_product_by_brand(self, driver):
 
@@ -188,6 +200,7 @@ class TestSmokeProductPage:
     """Отфильтровать продукт по единице измерения через расширенные фильтры"""
     @allure.title("Filter Products by Unit of Measure using All Filters")
     @allure.severity("High")
+    @logger.catch(reraise=True, level="CRITICAL")
     @pytest.mark.smoke
     def test_filters_product_by_unit_of_measure(self, driver):
 
@@ -201,6 +214,7 @@ class TestSmokeProductPage:
     """Отфильтровать продукт по юниту через расширенные фильтры"""
     @allure.title("Filter Products by Unit using All Filters")
     @allure.severity("High")
+    @logger.catch(reraise=True, level="CRITICAL")
     @pytest.mark.smoke
     def test_filters_product_by_unit(self, driver):
 
@@ -214,6 +228,7 @@ class TestSmokeProductPage:
     """Прочитать информацию о продукте"""
     @allure.title("Read Product")
     @allure.severity("Critical")
+    @logger.catch(reraise=True, level="CRITICAL")
     @pytest.mark.smoke
     def test_read_product(self, driver):
 
@@ -227,6 +242,7 @@ class TestSmokeProductPage:
     """Проверить работу кнопки Clear в расширенных фильтрах"""
     @allure.title("Check button Clear in All Filters")
     @allure.severity("Critical")
+    @logger.catch(reraise=True, level="CRITICAL")
     @pytest.mark.smoke
     def test_check_button_clear_filters_products(self, driver):
 
@@ -240,6 +256,7 @@ class TestSmokeProductPage:
     """Проверить работу иконки Х в расширенных фильтрах"""
     @allure.title("Check button X in All Filters")
     @allure.severity("Critical")
+    @logger.catch(reraise=True, level="CRITICAL")
     @pytest.mark.smoke
     def test_check_x_icon_filters_products(self, driver):
 
@@ -253,6 +270,7 @@ class TestSmokeProductPage:
     """Проверить работу индивидуальных кнопок очистки расширенных фильтров"""
     @allure.title("Check individual buttons X in All Filters")
     @allure.severity("Critical")
+    @logger.catch(reraise=True, level="CRITICAL")
     @pytest.mark.smoke
     def test_check_x_icon_inside_filters_products(self, driver):
 
