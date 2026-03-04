@@ -1,1 +1,1 @@
-An example of building an automated testing project using Selenium in Python
+An example of building an automated testing project using Selenium + Python
